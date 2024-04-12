@@ -1,0 +1,26 @@
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+
+.sector-card {
+  display: flex;
+  width: 21vw;
+  height: 15vw;
+  padding: 2vw;
+  flex-direction: column;
+  align-items: end;
+  .card-header {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    .title {
+      @include font-style;
+      font-weight: 600;
+      font-size: 2vw;
+    }
+    .buttons {
+      display: flex;
+      justify-self: flex-start;
+      align-self: flex-start;
+    }
+  }
+}

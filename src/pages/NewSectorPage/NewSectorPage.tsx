@@ -1,8 +1,9 @@
-import {  NewSector } from '../../components';
+import { Navbar, NewSector } from '../../components';
 const NewSectorPage = () => {
     return (
         <div>
-            <NewSector/>
+            <Navbar />
+            <NewSector />
         </div>
 
     )

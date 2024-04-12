@@ -1,8 +1,9 @@
-import { LoginHero } from '../../components';
+import { LoginHero, Navbar } from '../../components';
 const Login = () => {
     return (
         <div>
-            <LoginHero/>
+            <Navbar />
+            <LoginHero />
         </div>
 
     )

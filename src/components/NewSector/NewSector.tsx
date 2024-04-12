@@ -8,6 +8,7 @@ import {
   HospitalIcon,
   PasswordIcon,
 } from "../../photos";
+import { Link } from "react-router-dom";
 
 const NewSector = () => {
   return (
@@ -48,7 +49,9 @@ const NewSector = () => {
           />
         </div>
         <div className="final-buttons">
-          <button className="button-s">התחבר</button>
+          <Link to="/NewSector">
+            <button className="button-s">התחבר</button>
+          </Link>
           <button className="button-s">לְבַטֵל</button>
         </div>
       </div>

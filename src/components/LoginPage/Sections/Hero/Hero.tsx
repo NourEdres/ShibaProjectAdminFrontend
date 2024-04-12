@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import {DoctorUserIcon , HeroPhoto,PasswordIcon } from "../../../../photos";
+import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../../photos";
 import "../Hero/Hero.scss";
 
 const Hero = () => {
@@ -17,7 +17,7 @@ const Hero = () => {
                   className="admin-user-name-input"
                   placeholder="שם משתמש"
                 />
-                <img className="navbar-icon" src={DoctorUserIcon } alt="admin-icon" />
+                <img className="navbar-icon" src={DoctorUserIcon} alt="admin-icon" />
               </div>
               <div className="admin-code">
                 <input
@@ -27,7 +27,7 @@ const Hero = () => {
                 />
                 <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
               </div>
-              <Link to="/NewSector"> {/* Use Link here */}
+              <Link to="/AdminHome">
                 <button className="login-button">התחבר</button>
               </Link>
             </div>
