@@ -1,4 +1,5 @@
-import { Navbar, NewSector } from '../../components';
+import { Navbar } from '../../../components';
+import NewSector from './NewSector/NewSector'
 const NewSectorPage = () => {
     return (
         <div>

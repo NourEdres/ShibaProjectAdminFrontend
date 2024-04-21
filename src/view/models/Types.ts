@@ -1,7 +1,3 @@
-import { ReactNode } from "react";
-
-// Defines the structure of each individual card
-
 export type Page = {
   sectorPage: 1;
   gamesPage: 2;
@@ -17,6 +13,13 @@ export const buttonsName = {
 };
 
 export type Sector = {
+  name: string;
+  userName: string;
+  password: string;
+  gamesNumber: number;
+  color: string;
+};
+export type Room = {
   name: string;
   userName: string;
   password: string;

@@ -1,6 +1,6 @@
-@import "../../themes/mixins";
-@import "../../themes/variables";
-.sectors-page {
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+.home-page {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +16,7 @@
   // max-width: 1200px;
 }
 
-.sector-grid {
+.homePage-grid {
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: wrap;
@@ -30,7 +30,7 @@
   margin-bottom: 2vw;
 }
 
-.add-sector {
+.add {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +41,7 @@
   }
 }
 
-.add-sector-button {
+.add-button {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,7 +1,7 @@
 import LoginPage from './LoginPage/Login';
-import NewSectorPage from './NewSectorPage/NewSectorPage';
-import Base from './Base/Base';
-import SectorDetails from './SectorDetails/SectorDetails';
+import NewSectorPage from './Sectors/NewSectorPage/NewSectorPage';
+import Base from '../components/Common/Base/Base';
+import SectorDetails from './Sectors/SectorDetails/SectorDetails';
 import SectorsPage from './Sectors/SectorsPage';
 
 export {

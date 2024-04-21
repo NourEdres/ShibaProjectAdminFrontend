@@ -1,9 +1,8 @@
 import React, { ReactNode, useState } from "react";
-import { MainNavbar, AdminMenu } from "../../components";
+import { MainNavbar, AdminMenu } from "../..";
 import './Base.scss';
-import { buttonsName } from "../../models/Types";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { RootState } from "../../../../redux/store";
 
 interface BaseProps {
     children: ReactNode;
@@ -20,7 +19,7 @@ function Base({ children }: BaseProps) {
                     <div className="main-navbar">
                         <MainNavbar activeButton={menuActiveButton} />
                     </div>
-                    <div className="content" style={{ backgroundColor: (sector && !buttonsName.Sectors ? sector.color : "#d9d9d9") }}>
+                    <div className="content" style={{ backgroundColor: sector.color }}>
                         {children}
                     </div>
                 </div>
@@ -30,7 +29,7 @@ function Base({ children }: BaseProps) {
                         activeButton={menuActiveButton} />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

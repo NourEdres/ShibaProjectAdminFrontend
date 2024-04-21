@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SketchPicker } from "react-color";
-import { HospitalIcon, DoctorUserIcon, PasswordIcon, ViewPasswordIcon, ColorPicker, HeroPhoto } from "../../photos";
+import { HospitalIcon, DoctorUserIcon, PasswordIcon, ViewPasswordIcon, ColorPicker, HeroPhoto } from "../../../../photos";
 import "./NewSector.scss";
 
 const NewSector = () => {

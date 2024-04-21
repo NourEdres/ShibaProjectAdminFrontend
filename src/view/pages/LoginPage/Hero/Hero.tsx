@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../../photos";
+import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import "../Hero/Hero.scss";
 
 const Hero = () => {

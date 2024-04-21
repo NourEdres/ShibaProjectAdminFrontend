@@ -1,18 +1,18 @@
 import React, { FC } from 'react'
-import './SectorCard.scss'
-import { Sector } from '../../../models/Types';
+import './RoomCard.scss'
+import { Room } from '../../../models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
-interface SectorCardProps {
-    sector: Sector;
+interface RoomCardProps {
+    room: Room;
 }
 const sectionTitles = {
     userName: "שם משתמש : ",
     gamesNumber: "מספר המשחקים : ",
 };
-const SectorCard: FC<SectorCardProps> = ({ sector }) => {
+const RoomCard: FC<RoomCardProps> = ({ room }) => {
     return (
-        <div className='sector-card' style={{ backgroundColor: sector.color }}>
+        <div className='room-card' style={{ backgroundColor: room.color }}>
             <div className='card-header'>
                 <div className='buttons'>
                     <button className="edit-button">
@@ -22,15 +22,15 @@ const SectorCard: FC<SectorCardProps> = ({ sector }) => {
                         <img className='delete-icon' src={DeleteIcon} />
                     </button>
                 </div>
-                <div className='title'>{sector.name}</div>
+                <div className='title'>{room.name}</div>
             </div>
-            <div className='sector-card-content'>
+            <div className='room-card-content'>
                 <div className='sections'>
                     <div className='section-title'>
-                        {sectionTitles.userName + sector.userName}
+                        {sectionTitles.userName + room.userName}
                     </div>
                     <div className='section-title'>
-                        {sectionTitles.gamesNumber + sector.gamesNumber}
+                        {sectionTitles.gamesNumber + room.gamesNumber}
                     </div>
                 </div>
             </div>
@@ -38,4 +38,4 @@ const SectorCard: FC<SectorCardProps> = ({ sector }) => {
     )
 }
 
-export default SectorCard;
+export default RoomCard;
