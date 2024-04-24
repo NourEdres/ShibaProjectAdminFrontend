@@ -19,10 +19,27 @@ export type Sector = {
   gamesNumber: number;
   color: string;
 };
+export type Task = {
+  name: string;
+  description: string;
+  sector: string;
+};
+export type Game = {
+  name: string;
+  image: string;
+  description: string;
+  lastModifiedDate: Date;
+  sector: string;
+};
 export type Room = {
   name: string;
-  userName: string;
-  password: string;
-  gamesNumber: number;
-  color: string;
+  description: string;
+  objects: Object[];
+};
+export type Object = {
+  name: string;
+  image: string;
+  description: string;
+  lastModifiedDate: Date;
+  sector: string;
 };

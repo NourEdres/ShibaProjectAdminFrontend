@@ -4,7 +4,7 @@ import { Sector } from '../../../models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface SectorCardProps {
-    sector?: Sector;
+    object?: Sector;
 }
 
 const sectionTitles = {
@@ -12,11 +12,11 @@ const sectionTitles = {
     gamesNumber: "מספר המשחקים : ",
 };
 
-const SectorCard: FC<SectorCardProps> = ({ sector }) => {
+const SectorCard: FC<SectorCardProps> = ({ object }) => {
     return (
         <div>
-            {sector && (
-                <div className='sector-card' style={{ backgroundColor: sector.color }}>
+            {object && (
+                <div className='sector-card' style={{ backgroundColor: object.color }}>
                     <div className='card-header'>
                         <div className='buttons'>
                             <button className="edit-button">
@@ -26,15 +26,15 @@ const SectorCard: FC<SectorCardProps> = ({ sector }) => {
                                 <img className='delete-icon' src={DeleteIcon} alt="delete icon" />
                             </button>
                         </div>
-                        <div className='title'>{sector.name}</div>
+                        <div className='title'>{object.name}</div>
                     </div>
                     <div className='sector-card-content'>
                         <div className='sections'>
                             <div className='section-title'>
-                                {sectionTitles.userName + sector.userName}
+                                {sectionTitles.userName + object.userName}
                             </div>
                             <div className='section-title'>
-                                {sectionTitles.gamesNumber + sector.gamesNumber}
+                                {sectionTitles.gamesNumber + object.gamesNumber}
                             </div>
                         </div>
                     </div>

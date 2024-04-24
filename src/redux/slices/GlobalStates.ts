@@ -7,7 +7,7 @@ interface GlobalStates {
 
 const initialState: GlobalStates = {
   selectedCard: {},
-  page: "home",
+  page: "Sectors",
 };
 
 const globalStatesSlice = createSlice({
