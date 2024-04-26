@@ -10,7 +10,8 @@ interface BaseProps {
 
 function Base({ children }: BaseProps) {
     const [menuActiveButton, setMenuActiveButton] = useState("סקטורים");
-    const sector = useSelector((state: RootState) => state.globalStates.selectedCard);
+    const object = useSelector((state: RootState) => state.globalStates.selectedCard);
+    { console.log(object.color) }
 
     return (
         <div className="home-page">
@@ -19,7 +20,7 @@ function Base({ children }: BaseProps) {
                     <div className="main-navbar">
                         <MainNavbar activeButton={menuActiveButton} />
                     </div>
-                    <div className="content" style={{ backgroundColor: sector.color }}>
+                    <div className="content" style={{ backgroundColor: object != undefined ? object.color : "#D9D9D9" }}>
                         {children}
                     </div>
                 </div>

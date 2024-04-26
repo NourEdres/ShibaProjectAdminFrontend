@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { HospitalIcon, ApplicationsIcon, RoomIcon, TaskIcon, LogOutIcon, WhiteLogo } from '../../../photos';
 import './AdminMenu.scss';
-import { buttonsName } from '../../../models/Types';
+import { buttonsName } from '../../../../redux/models/Types';
 import { Link } from 'react-router-dom';
 import { setPage } from '../../../../redux/slices/GlobalStates';
 import { useDispatch } from 'react-redux';

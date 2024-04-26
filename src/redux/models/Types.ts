@@ -34,6 +34,7 @@ export type Game = {
 export type Room = {
   name: string;
   description: string;
+  floor: number;
   objects: Object[];
 };
 export type Object = {

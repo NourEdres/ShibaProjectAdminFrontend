@@ -1,4 +1,4 @@
-import { Sector } from "../view/models/Types";
+import { Sector } from "../redux/models/Types";
 
 export const sectors: Sector[] = [
     {

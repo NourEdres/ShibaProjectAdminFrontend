@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import './GameCard.scss'
-import { Game } from '../../../models/Types';
+import { Game } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface GameCardProps {

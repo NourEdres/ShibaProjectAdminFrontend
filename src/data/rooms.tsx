@@ -1,4 +1,4 @@
-import { Room } from "../view/models/Types";
+import { Room } from "../redux/models/Types";
 
 export const rooms: Room[] = [
     {

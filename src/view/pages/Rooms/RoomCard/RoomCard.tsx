@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-// import './RoomCard.scss';
-import { Room } from '../../../models/Types';
+import './RoomCard.scss';
+import { Room } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface RoomCardProps {

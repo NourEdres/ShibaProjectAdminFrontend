@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import './SectorCard.scss';
-import { Sector } from '../../../models/Types';
+import { Sector } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface SectorCardProps {

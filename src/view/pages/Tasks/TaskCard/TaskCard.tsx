@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import './TaskCard.scss'
-import { Task } from '../../../models/Types';
+import { Task } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface TaskCardProps {

@@ -3,7 +3,7 @@ import { Fade } from "react-awesome-reveal";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCard, setPage } from "../../../../redux/slices/GlobalStates";
-import { Sector } from "../../../models/Types";
+import { Sector } from "../../../../redux/models/Types";
 import "./HomePage.scss";
 
 interface HomePageProps {
