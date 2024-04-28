@@ -13,7 +13,7 @@ const roomSectionTitles = {
 };
 
 const RoomCard: FC<RoomCardProps> = ({ object }) => {
-    { console.log("roomCard: ", object.name); }
+    // { console.log("roomCard: ", object.name); }
     return (
         <div className='room-card' dir="rtl" style={{ backgroundColor: 'white' }}>
             <div className='card-header'>

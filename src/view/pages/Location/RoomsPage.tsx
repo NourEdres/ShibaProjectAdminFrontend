@@ -11,7 +11,7 @@ const RoomsPage: FC = () => {
 
     return (
         <>
-            {console.log("page :", page)}
+            {/* {console.log("page :", page)} */}
             {page == "Rooms" && <HomePage objects={rooms} page="Room" Component={RoomCard} addButton="הוספת חדר חדש" />}
         </>
     );

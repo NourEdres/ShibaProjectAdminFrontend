@@ -11,7 +11,7 @@ const GamesPage: FC = () => {
 
     return (
         <>
-            {console.log("page :", page)}
+            {/* {console.log("page :", page)} */}
             {/* {page == "Games" && <HomePage objects={games} page="Game" Component={GameCard} />} */}
         </>
     );

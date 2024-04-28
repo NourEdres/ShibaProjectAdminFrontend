@@ -11,7 +11,7 @@ interface BaseProps {
 function Base({ children }: BaseProps) {
     const [menuActiveButton, setMenuActiveButton] = useState("סקטורים");
     const object = useSelector((state: RootState) => state.globalStates.selectedCard);
-    { console.log(object.color) }
+    // { console.log(object.color) }
 
     return (
         <div className="home-page">

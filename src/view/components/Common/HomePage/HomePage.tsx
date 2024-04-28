@@ -3,7 +3,7 @@ import { Fade } from "react-awesome-reveal";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCard, setPage } from "../../../../redux/slices/GlobalStates";
-import { Sector } from "../../../../redux/models/Types";
+// import { Sector } from "../../../../redux/models/Interfaces";
 import "./HomePage.scss";
 
 interface HomePageProps {
@@ -15,13 +15,13 @@ interface HomePageProps {
 
 const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton }) => {
     const dispatch = useDispatch();
-    { console.log("objects: ") }
-    { console.log("objects: ", objects) }
+    // { console.log("objects: ") }
+    // { console.log("objects: ", objects) }
     return (
-        <div className="home-page">
+        <div className="home-page" style={{ background: "#D9D9D9" }}>
             <div className="content">
                 <div className="homePage-grid">
-                    {objects.map((ob: Sector, index: number) => (
+                    {objects.map((ob: any, index: number) => (
                         <Fade key={index}>
                             <Link
                                 to={`/${page}Details/${encodeURIComponent(ob.name)}`}
@@ -31,6 +31,7 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton }) =>
                                     dispatch(setPage(`${page}Details`));
                                 }}
                             >
+                                {/* {console.log("objects ", Component)}; */}
                                 <Component object={ob} />
                             </Link>
                         </Fade>
@@ -38,7 +39,7 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton }) =>
                 </div>
             </div>
             <div className="add-new">
-                <Link to="/newSector" className="link">
+                <Link to="/addTask" className="link">
                     <button className="add-button">{addButton}</button>
                 </Link>
             </div>

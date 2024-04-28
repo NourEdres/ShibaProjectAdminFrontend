@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import "../Hero/Hero.scss";
+import { taskAPI } from "../../../../redux/services/TaskApi";
 
 const Hero = () => {
   return (
@@ -28,7 +29,7 @@ const Hero = () => {
                 <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
               </div>
               <Link to="/Sectors">
-                <button className="login-button">התחבר</button>
+                <button className="login-button" onClick={() => (taskAPI.getAllTasks())}>התחבר</button>
               </Link>
             </div>
           </div>

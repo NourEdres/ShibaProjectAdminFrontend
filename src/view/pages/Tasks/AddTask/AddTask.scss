@@ -1,0 +1,115 @@
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+
+.add-task-container {
+height: 80%;
+display: flex;
+flex-direction: column;
+padding: 2vw;
+overflow-y: scroll;
+}
+
+.add-new-task-title {
+  font-size: 2.5vh; /* Responsiveness for both width and height */
+  margin-bottom: 2vh;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 2vh;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 1vh;
+}
+
+.task-input, .task-textarea {
+  width: 100%;
+  padding: 1.5vh 1vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1.5vh;
+}
+
+.task-textarea {
+  height: 15vh; /* Responsive height */
+  resize: vertical;
+}
+
+.file-upload-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.file-upload-button {
+  border: 1px solid #ccc;
+  color: white;
+  background-color: #4CAF50;
+  padding: 1.5vh 2vw;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  font-size: 1.5vh;
+}
+
+.add-answer-button {
+  margin-left: 1vw;
+  border: none;
+  padding: 1.5vh;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 2.5vh;
+}
+
+.save-task-button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 2vh;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  font-size: 2vh;
+}
+
+/* Adjustments for smaller screens */
+@media screen and (max-width: 400px) {
+  .add-new-task-title, .task-input, .task-textarea, .file-upload-button, .add-answer-button, .save-task-button {
+    font-size: 4vh; /* Larger font size for very small screens */
+  }
+}
+
+/* Checkbox and radio button customization */
+input[type='checkbox'], input[type='radio'] {
+  margin-right: 2vw;
+}
+
+/* Adjust the label style */
+input[type='checkbox'] + label, input[type='radio'] + label {
+  cursor: pointer;
+  font-size: 1.5vh;
+}
+
+/* Hide the default file input */
+input[type='file'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.option-section {
+    margin-bottom: 10px;
+}
+

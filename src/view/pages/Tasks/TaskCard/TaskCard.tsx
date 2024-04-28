@@ -1,18 +1,19 @@
 import React, { FC } from 'react'
 import './TaskCard.scss'
-import { Task } from '../../../../redux/models/Types';
+import { Task } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface TaskCardProps {
-    task: Task;
+    object: Task;
 }
 const sectionTitles = {
-    userName: "שם משתמש : ",
-    gamesNumber: "מספר המשחקים : ",
+    userName: "",
+    gamesNumber: "תיאור : ",
 };
-const TaskCard: FC<TaskCardProps> = ({ task }) => {
+const TaskCard: FC<TaskCardProps> = ({ object }) => {
+    console.log("task in tasks card: ", object)
     return (
-        <div className='task-card' style={{ backgroundColor: task.color }}>
+        <div className='task-card' style={{ backgroundColor: "#D9D9D9" }}>
             <div className='card-header'>
                 <div className='buttons'>
                     <button className="edit-button">
@@ -22,15 +23,15 @@ const TaskCard: FC<TaskCardProps> = ({ task }) => {
                         <img className='delete-icon' src={DeleteIcon} />
                     </button>
                 </div>
-                <div className='title'>{task.name}</div>
+                <div className='title'>{object.name}</div>
             </div>
             <div className='task-card-content'>
                 <div className='sections'>
                     <div className='section-title'>
-                        {sectionTitles.userName + task.userName}
+                        {sectionTitles.userName + object.description}
                     </div>
                     <div className='section-title'>
-                        {sectionTitles.gamesNumber + task.gamesNumber}
+                        {/* {sectionTitles.gamesNumber + task.sector} */}
                     </div>
                 </div>
             </div>
