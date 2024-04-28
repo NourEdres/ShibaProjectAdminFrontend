@@ -1,6 +1,6 @@
-import { Room } from "../redux/models/Types";
+import { Location } from "../redux/models/Types";
 
-export const Locations: Room[] = [
+export const Locations: Location[] = [
     {
         name: "מטבח",
         description: "המטבח בקומה 2 שנמצא בכניסה הראשונה",
@@ -12,7 +12,8 @@ export const Locations: Room[] = [
                 lastModifiedDate: new Date(2024, 2, 1),
                 sector: "סקטור 2"
             }
-        ]
+        ],
+        floor: 0
     },
     {
         name: "סלון",
@@ -32,7 +33,8 @@ export const Locations: Room[] = [
                 lastModifiedDate: new Date(2024, 2, 5),
                 sector: "סקטור 1"
             }
-        ]
+        ],
+        floor: 0
     },
     {
         name: "חדר שינה",
@@ -52,6 +54,7 @@ export const Locations: Room[] = [
                 lastModifiedDate: new Date(2024, 2, 10),
                 sector: "סקטור 3"
             }
-        ]
+        ],
+        floor: 0
     }
 ];

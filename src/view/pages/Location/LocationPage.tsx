@@ -1,20 +1,20 @@
 import { FC } from "react";
-import RoomCard from "./LocationCard/LocationCard";
+import LocationCard from "./LocationCard/LocationCard";
 import "./LocationPage.scss";
-import { Locations } from "../../../data/rooms";
+import { Locations } from "../../../data/Locations";
 import HomePage from "../../components/Common/HomePage/HomePage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 
-const RoomsPage: FC = () => {
+const LocationsPage: FC = () => {
     const page = useSelector((state: RootState) => state.globalStates.page);
 
     return (
         <>
             {/* {console.log("page :", page)} */}
-            {page == "Rooms" && <HomePage objects={Locations} page="Room" Component={RoomCard} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
+            {page == "Locations" && <HomePage objects={Locations} page="Location" Component={LocationCard} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
         </>
     );
 };
 
-export default RoomsPage;
+export default LocationsPage;

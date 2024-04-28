@@ -1,5 +1,5 @@
 import { createBrowserRouter, Routes, Route } from 'react-router-dom';
-import { LoginPage, NewSectorPage, Base, SectorDetails, SectorsPage, RoomsPage, TasksPage } from '../pages';
+import { LoginPage, NewSectorPage, Base, SectorDetails, SectorsPage, LocationPage, TasksPage } from '../pages';
 import { Outlet } from "react-router-dom";
 import GamesPage from '../pages/Games/GamesPage';
 import AddTask from '../pages/Tasks/AddTask/AddTask';
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
         path: '/Sectors',
         element: <SectorsPage />
       }, {
-        path: '/Rooms',
-        element: <RoomsPage />
+        path: '/Locations',
+        element: <LocationPage />
       }, {
         path: '/Tasks',
         element: <TasksPage />

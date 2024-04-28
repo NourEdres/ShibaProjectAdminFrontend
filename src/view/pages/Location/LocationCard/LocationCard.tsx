@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
-import './RoomCard.scss';
-import { Room } from '../../../../redux/models/Types';
+import './LocationCard.scss';
+import { Location } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
-interface RoomCardProps {
-    object: Room;
+interface LocationCardProps {
+    object: Location;
 }
 const LocationSectionTitles = {
     LocationName: " שם החדר : ",
@@ -12,7 +12,7 @@ const LocationSectionTitles = {
     objectsNumber: " מספר האובייקטים : ",
 };
 
-const RoomCard: FC<RoomCardProps> = ({ object }) => {
+const LocationCard: FC<LocationCardProps> = ({ object }) => {
     // { console.log("LocationCard: ", object.name); }
     return (
         <div className='Location-card' dir="rtl" style={{ backgroundColor: 'white' }}>
@@ -44,4 +44,4 @@ const RoomCard: FC<RoomCardProps> = ({ object }) => {
     )
 }
 
-export default RoomCard;
+export default LocationCard;

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { HospitalIcon, ApplicationsIcon, RoomIcon, TaskIcon, LogOutIcon, WhiteLogo } from '../../../photos';
+import { HospitalIcon, ApplicationsIcon, LocationIcon, TaskIcon, LogOutIcon, WhiteLogo } from '../../../photos';
 import './AdminMenu.scss';
 import { buttonsName } from '../../../../redux/models/Types';
 import { Link } from 'react-router-dom';
@@ -45,18 +45,18 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                         <img className="navbar-icon" src={ApplicationsIcon} alt="menu-icon" />
                     </button>
                 </Link>
-                <Link className="menu-button" to="/Rooms" >
+                <Link className="menu-button" to="/Locations" >
                     <button
-                        className={`menu-button ${activeButton === buttonsName.Rooms ? "active" : ""}`}
+                        className={`menu-button ${activeButton === buttonsName.Locations ? "active" : ""}`}
                         onClick={() => {
                             console.log("yess");
-                            dispatch(setPage("Rooms"));
-                            setActiveButton(buttonsName.Rooms);
+                            dispatch(setPage("Locations"));
+                            setActiveButton(buttonsName.Locations);
 
                         }}
                     >
-                        <div className='button-txt'>{buttonsName.Rooms}</div>
-                        <img className="navbar-icon" src={RoomIcon} alt="menu-icon" />
+                        <div className='button-txt'>{buttonsName.Locations}</div>
+                        <img className="navbar-icon" src={LocationIcon} alt="menu-icon" />
                     </button>
                 </Link>
                 <Link className="menu-button" to="/Tasks" >

@@ -7,7 +7,7 @@ export type Page = {
 export const buttonsName = {
   Sectors: "סקטורים",
   Games: "משחקים",
-  Rooms: "חדרים",
+  Locations: "חדרים",
   Tasks: "משימות",
   Logout: "יציאה",
 };
@@ -31,7 +31,7 @@ export type Game = {
   lastModifiedDate: Date;
   sector: string;
 };
-export type Room = {
+export type Location = {
   name: string;
   description: string;
   floor: number;

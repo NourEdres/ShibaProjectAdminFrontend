@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import './LocationDetails.scss'
-import { Room } from '../../../../redux/models/Types'
-interface RoomDetailsProps {
-    Location: Room;
+import { Location } from '../../../../redux/models/Types'
+interface LocationDetailsProps {
+    Location: Location;
 }
 
-const RoomDetails: FC<RoomDetailsProps> = ({ Location }) => {
+const LocationDetails: FC<LocationDetailsProps> = ({ Location }) => {
     return (
         <div className='Location-details'>
             <div className='Location-d-title'>Location</div>
@@ -13,4 +13,4 @@ const RoomDetails: FC<RoomDetailsProps> = ({ Location }) => {
     )
 }
 
-export default RoomDetails
+export default LocationDetails
