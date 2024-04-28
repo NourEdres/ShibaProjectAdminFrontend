@@ -1,7 +1,7 @@
 export type Page = {
   sectorPage: 1;
   gamesPage: 2;
-  roomsPage: 3;
+  LocationsPage: 3;
 };
 
 export const buttonsName = {

@@ -12,7 +12,7 @@ const SectorsPage: FC = () => {
   return (
     <>
       {/* {console.log("page :", page)} */}
-      {page == "Sectors" && <HomePage objects={sectors} page="Sector" Component={SectorCard} addButton="הוספת סקטור חדש" />}
+      {page == "Sectors" && <HomePage objects={sectors} page="Sector" Component={SectorCard} addButton="הוספת סקטור חדש" addButtonPath="AddSector" />}
     </>
   );
 };

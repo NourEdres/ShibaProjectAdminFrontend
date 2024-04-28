@@ -1,6 +1,6 @@
 import { Room } from "../redux/models/Types";
 
-export const rooms: Room[] = [
+export const Locations: Room[] = [
     {
         name: "מטבח",
         description: "המטבח בקומה 2 שנמצא בכניסה הראשונה",

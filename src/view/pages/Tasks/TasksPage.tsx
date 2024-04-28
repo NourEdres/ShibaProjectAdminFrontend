@@ -26,7 +26,7 @@ const TasksPage: FC = () => {
     return (
         <>
             {console.log("in tasks page: ", tasks)}
-            {<HomePage objects={tasks} page="Task" Component={TaskCard} addButton="הוספת משימה חדשה" />}
+            {<HomePage objects={tasks} page="Task" Component={TaskCard} addButton="הוספת משימה חדשה" addButtonPath="addTask" />}
         </>
     );
 };

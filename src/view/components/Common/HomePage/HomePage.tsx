@@ -11,9 +11,10 @@ interface HomePageProps {
     page: string;
     Component: React.ElementType;
     addButton: string;
+    addButtonPath: string;
 }
 
-const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton }) => {
+const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addButtonPath }) => {
     const dispatch = useDispatch();
     // { console.log("objects: ") }
     // { console.log("objects: ", objects) }
@@ -39,7 +40,7 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton }) =>
                 </div>
             </div>
             <div className="add-new">
-                <Link to="/addTask" className="link">
+                <Link to={`/${addButtonPath}`} className="link">
                     <button className="add-button">{addButton}</button>
                 </Link>
             </div>

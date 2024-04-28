@@ -1,7 +1,7 @@
 @import "../../../themes/mixins";
 @import "../../../themes/variables";
 
-.room-card {
+.Location-card {
   display: flex;
   width: 22vw;
   height: 15vw;
@@ -44,7 +44,7 @@
       }
     }
   }
-  .room-card-content {
+  .Location-card-content {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
