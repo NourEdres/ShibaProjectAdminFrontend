@@ -29,9 +29,9 @@ export interface Location {
   name: string;
   description?: string;
   floor: number;
-  QRCode: string;
+  qrcode: string;
   locationImage?: LocationImage; 
-  objectsList: ObjectLocation[];
+  objectsList?: ObjectLocation[];
 }
 
 export interface LocationImage {

@@ -36,7 +36,7 @@ const LocationCard: FC<LocationCardProps> = ({ object }) => {
                         {LocationSectionTitles.LocationDescription + object.description}
                     </div>
                     <div className='section-title'>
-                        {LocationSectionTitles.objectsNumber + object.objects.length}
+                        {/* {LocationSectionTitles.objectsNumber + object.objects.length} */}
                     </div>
                 </div>
             </div>

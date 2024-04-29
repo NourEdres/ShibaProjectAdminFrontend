@@ -12,11 +12,8 @@ const TasksPage: FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
-        console.log("tasks in fetch ");
         const fetchTasks = async () => {
-            console.log("tasks in fetch2 ");
             const fetchedTasks = await taskAPI.getAllTasks();
-            console.log("fetch ", fetchTasks);
             setTasks(fetchedTasks);
         };
         fetchTasks()

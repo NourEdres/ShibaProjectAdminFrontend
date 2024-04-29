@@ -6,6 +6,7 @@ class LocationAPI {
 
   async getAllLocations(): Promise<any[]> {
     const response = await genericAPI.get<Location[]>(`${LocationAPI.endpoint}`);
+    console.log("curr locations ",response.data);
     return response.data;
   }
 }
