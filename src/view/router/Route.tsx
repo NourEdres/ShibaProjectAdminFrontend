@@ -3,6 +3,7 @@ import { LoginPage, NewSectorPage, Base, SectorDetails, SectorsPage, LocationPag
 import { Outlet } from "react-router-dom";
 import GamesPage from '../pages/Games/GamesPage';
 import AddTask from '../pages/Tasks/AddTask/AddTask';
+import TaskDetails from '../pages/Tasks/TaskDetails/TaskDetails';
 import AddLocation from '../pages/Location/AddLocation/AddLocation';
 
 function Layout() {
@@ -47,6 +48,9 @@ const router = createBrowserRouter([
       }, {
         path: '/AddLocation',
         element: <AddLocation />
+      }, {
+        path: '/TaskDetails/:task',
+        element: <TaskDetails />
       }
     ]
   }

@@ -1,13 +1,14 @@
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+
 /**
  * Swiper configuration options including navigation, pagination, scrollbar, and accessibility modules.
  * It enables autoplay with a delay, adjusts space between slides, and provides breakpoints for responsiveness.
  */
-export const SwiperConfig = (directionType: unknown) => ({
+export const SwiperConfig = (directionType: "vertical" | "horizontal") => ({
   modules: [Navigation, Pagination, Scrollbar, A11y],
-  direction: directionType, // Set direction to vertical for column layout
+  direction: directionType, // Now correctly typed as "vertical" or "horizontal"
   initialSlide: 0,
-  spaceBetween: 5, // Adjust the space between cards here
+  spaceBetween: 5,
   slidesPerView: "auto" as const,
   loop: true,
   autoplay: {
@@ -18,7 +19,7 @@ export const SwiperConfig = (directionType: unknown) => ({
   breakpoints: {
     900: {
       autoplay: false,
-      spaceBetween: 5, // Adjust the space between cards for larger screens if needed
+      spaceBetween: 5,
       slidesPerView: "auto" as const,
     },
   },

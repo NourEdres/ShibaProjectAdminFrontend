@@ -1,0 +1,89 @@
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+
+.task-container {
+  display: flex;
+  flex-direction: column;
+  background: $secondary-whitegrey-color;
+  padding: 2vw;
+  border-radius: 1vw;
+  box-shadow: 0.1vw 0.1vw 1vw $secondary-grey-color;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-0.5vw);
+  }
+}
+
+.task-title {
+  @include font-style;
+  font-size: 2vw;
+  margin-bottom: 1vw;
+  text-align: center;
+  color: $primary-blue-logo-color;
+}
+
+.task-details, .task-content {
+  @include font-style;
+  color: $secondary-darkblue-color;
+  font-size: 1.5vw;
+}
+
+.task-desc {
+  margin-bottom: 1vw;
+  padding: 1vw;
+  background-color: $secondary-white-color;
+  border: 0.1vw solid $secondary-grey-color;
+  border-radius: 0.5vw;
+}
+
+.task-free-text, .task-ques {
+  margin: 1vw 0;
+}
+
+.question-section {
+  background-color: $primary-green-logo-color;
+  padding: 1vw;
+  border-radius: 0.5vw;
+
+  h2 {
+    font-size: 1.8vw;
+    color: $secondary-white-color;
+  }
+
+  div {
+    margin-top: 1vw;
+
+    .correct-answer {
+      color: $primary-pink-logo-color;
+      font-weight: bold;
+    }
+  }
+}
+
+.task-media-list .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 0.5vw;
+  
+  img {
+    max-width: 100%;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Animation on task text elements
+.task-free-text p, .task-ques div {
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(1vw); }
+  to { opacity: 1; transform: translateY(0); }
+}

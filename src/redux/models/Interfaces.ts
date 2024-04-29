@@ -4,7 +4,7 @@ export interface Task {
   description: string;
   taskFreeTexts?: string[];
   questionTask?: QuestionTask; // This is optional because a task might not have a question task associated with it
-  mediaLis?: MediaTask[];
+  mediaList?: MediaTask[];
 }
 export interface QuestionTask {
   questionTaskID: number;
@@ -18,7 +18,42 @@ export interface MediaTask {
   fileName: string;
   mediaPath: string;
   mediaType: string;
-  // fileSize?: number; // Optional, uncomment if you decide to include file size
-  // uploadedDate?: Date; // Optional, uncomment if you decide to include upload date
-  taskID: number; // This is the foreign key reference to the Task
+  // fileSize?: number; 
+  // uploadedDate?: Date; 
+  taskID: number; 
 }
+
+
+export interface Location {
+  locationID: number;
+  name: string;
+  description?: string;
+  floor: number;
+  QRCode: string;
+  locationImage?: LocationImage; 
+  objectsList: ObjectLocation[];
+}
+
+export interface LocationImage {
+  locationImgID: number;
+  name: string;
+  type: string;
+  imagePath: string;
+}
+
+
+export interface ObjectLocation {
+  objectID: number;
+  name: string;
+  description: string;
+  location: Location;
+  objectImages: ObjectImage[];
+}
+
+export interface ObjectImage {
+  id: number;
+  name: string;
+  imagePath: string;
+  object: ObjectLocation;
+}
+

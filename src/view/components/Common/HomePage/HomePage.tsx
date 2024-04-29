@@ -26,10 +26,12 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addB
                         <Fade key={index}>
                             <Link
                                 to={`/${page}Details/${encodeURIComponent(ob.name)}`}
+
+                                // to={`/TaskDetails/${encodeURIComponent(ob.name)}`}
                                 className="link"
                                 onClick={() => {
                                     dispatch(setCard(ob));
-                                    dispatch(setPage(`${page}Details`));
+                                    dispatch(setPage(page));
                                 }}
                             >
                                 {/* {console.log("objects ", Component)}; */}

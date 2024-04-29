@@ -1,0 +1,43 @@
+.location-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+
+    .location-name {
+        font-size: 2vw;
+    }
+
+    .location-meta {
+        margin: 2vh 0;
+
+        .location-floor {
+            font-size: 1.5vw;
+        }
+
+        .location-description {
+            font-size: 1.2vw;
+            h2 {
+                font-size: 1.4vw;
+            }
+            p {
+                font-size: 1.2vw;
+            }
+        }
+    }
+
+    .location-qr, .location-image {
+        margin: 1vh 0;
+        img {
+            max-width: 10vw;
+            max-height: 10vh;
+        }
+    }
+
+    .view-objects {
+        font-size: 1.2vw;
+        padding: 1vh 2vw;
+        margin-top: 2vh;
+        cursor: pointer;
+    }
+}
