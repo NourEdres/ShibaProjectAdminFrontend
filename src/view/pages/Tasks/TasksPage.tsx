@@ -6,22 +6,23 @@ import HomePage from "../../components/Common/HomePage/HomePage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { taskAPI } from "../../../redux/services/TaskApi";
+import { tasks } from "../../../data/Tasks";
 
 const TasksPage: FC = () => {
     const page = useSelector((state: RootState) => state.globalStates.page);
-    const [tasks, setTasks] = useState<Task[]>([]);
+    // const [tasks, setTasks] = useState<Task[]>([]);
 
-    useEffect(() => {
-        console.log("tasks in fetch ");
-        const fetchTasks = async () => {
-            console.log("tasks in fetch2 ");
-            const fetchedTasks = await taskAPI.getAllTasks();
-            console.log("fetch ", fetchTasks);
-            setTasks(fetchedTasks);
-        };
-        fetchTasks()
+    // useEffect(() => {
+    //     console.log("tasks in fetch ");
+    //     const fetchTasks = async () => {
+    //         console.log("tasks in fetch2 ");
+    //         const fetchedTasks = await taskAPI.getAllTasks();
+    //         console.log("fetch ", fetchTasks);
+    //         setTasks(fetchedTasks);
+    //     };
+    //     fetchTasks()
 
-    }, []);
+    // }, []);
 
     return (
         <>
