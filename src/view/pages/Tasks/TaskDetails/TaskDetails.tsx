@@ -28,7 +28,7 @@ const TaskDetails: React.FC = () => {
             </div>
             <div className='task-details'>
                 <div className='task-title'>{task.name}</div>
-                {task.description.length > 0 &&
+                {task.description &&
                     < div className='section-title'>{TaskDetailsHebrew.Description}</div> &&
                     <div className='task-desc'>{task.description}</div>}
                 <div className='task-content'>
@@ -38,7 +38,7 @@ const TaskDetails: React.FC = () => {
                             {task.taskFreeTexts.map((text: string, index: number) => <div className='text-free' key={index}>{text}</div>)}
                         </div>}
                     <div className='task-ques'>
-                        {task.questionTask.question.length > 0 && (
+                        {task.questionTask && (
                             <div className='question-section'>
                                 <div className='q-head'>
                                     <div className='section-title'>{TaskDetailsHebrew.Q}</div>

@@ -2,6 +2,9 @@ import React, { FC } from 'react'
 import './TaskCard.scss'
 import { Task } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setCard } from '../../../../redux/slices/GlobalStates';
 
 interface TaskCardProps {
     object: Task;
@@ -12,13 +15,16 @@ const sectionTitles = {
 };
 const TaskCard: FC<TaskCardProps> = ({ object }) => {
     console.log("task in tasks card: ", object)
+    const dispatch = useDispatch();
     return (
         <div className='task-card' style={{ backgroundColor: "#D9D9D9" }}>
             <div className='card-header'>
                 <div className='buttons'>
-                    <button className="edit-button">
-                        <img className='edit-icon' src={EditIcon} />
-                    </button>
+                    <Link to="/EditTask">
+                        <button className="edit-button" onClick={() => dispatch(setCard(object))}>
+                            <img className='edit-icon' src={EditIcon} />
+                        </button>
+                    </Link>
                     <button className="delete-button">
                         <img className='delete-icon' src={DeleteIcon} />
                     </button>

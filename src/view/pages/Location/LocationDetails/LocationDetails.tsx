@@ -6,7 +6,6 @@ import { RootState } from '../../../../redux/store';
 const LocationDetails: React.FC = () => {
     const location = useSelector((state: RootState) => state.globalStates.selectedCard);
 
-
     return (
         <div className='location-details' dir='rtl'>
             <div className="location-header">
@@ -34,7 +33,15 @@ const LocationDetails: React.FC = () => {
                     <img src={location.qrcode.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
                         alt='QR Code' className='qr-code-image' />
                 </div>
-                <button className='download-qr-btn' onClick={() => { }}>
+                <button className='download-qr-btn' onClick={() => {
+                    const fileName = location.qrcode.substring(location.qrcode.lastIndexOf('/') + 1);
+                    const link = document.createElement('a');
+                    link.href = location.qrcode.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..');
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }}>
                     הורדת QR
                 </button>
             </div>

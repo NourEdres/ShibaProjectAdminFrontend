@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import './AddTask.scss';
+import './EditTask.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/store';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { SwiperConfig } from '../../../components';
+import { MediaTask } from '../../../../redux/models/Interfaces';
 
 const AddNewTaskHebrew = {
-    CreateNewTask: "הוספת משימה חדשה",
+    CreateNewTask: "עריכת משימה ",
     Name: "שם : ",
     Description: "תיאור : ",
     AddMedia: "הוספת מדיה : ",
@@ -19,10 +24,13 @@ const AddNewTaskHebrew = {
     DeleteAnswer: "מחיקת תשובה",
     Answer: "תשובה",
     HideNotes: "מחיקת הטקסט",
-    AddAnswer: "הוספת תשובה"
+    AddAnswer: "הוספת תשובה",
+    FreeText: "טקסט חופשי :",
+    Media: "מדיה :",
+    answers: "תשובות :"
 };
 
-function AddTask() {
+function EditTask() {
     const [answers, setAnswers] = useState<string[]>([]);
     const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -30,27 +38,66 @@ function AddTask() {
     const [showMedia, setShowMedia] = useState<boolean>(false);
     const [showQuestion, setShowQuestion] = useState<boolean>(false);
     const [showNotes, setShowNotes] = useState<boolean>(false);
-    console.log("in add task");
+    const task = useSelector((state: RootState) => state.globalStates.selectedCard);
 
     return (
-        <div className='main-container-add-task'>
-            <div className='add-task-header'>
+        <div className='main-container-edit-task'>
+            <div className='edit-task-header'>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
                 <div className='sector-name'>פיזוטרפיה</div>
             </div>
-            <div className='add-task-container' dir="rtl">
-                <div className='add-task-title'>{AddNewTaskHebrew.CreateNewTask}</div>
+            <div className='edit-task-container' dir="rtl">
+                <div className='edit-task-title'>{AddNewTaskHebrew.CreateNewTask}</div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewTaskHebrew.Name}</label>
-                    <input type='text' className='task-input' />
+                    <input placeholder={task.name} type='text' className='task-input' />
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewTaskHebrew.Description}</label>
-                    <textarea className='task-textarea'></textarea>
+                    <textarea placeholder={task.description} className='task-textarea'></textarea>
                 </div>
-
                 <div className='options-container'>
                     <div className="option-section">
+                        <div className='task-content'>
+                            {task.taskFreeTexts.length > 0 &&
+                                <div className='task-free-text'>
+                                    < div className='section-title'>{AddNewTaskHebrew.FreeText}</div>
+                                    {task.taskFreeTexts.map((text: string, index: number) => <div className='text-free' key={index}>{text}</div>)}
+                                </div>}
+                            <div className='task-ques'>
+                                {task.questionTask && (
+                                    <div className='question-section'>
+                                        <div className='q-head'>
+                                            <div className='section-title'>{AddNewTaskHebrew.Q}</div>
+                                            <div className='q-task-text'>{task.questionTask.question}</div>
+                                        </div>
+                                        < div className='section-title'>{AddNewTaskHebrew.answers}</div>
+                                        <div className='answers'>
+                                            {task.questionTask.answers.map((answer: string, index: number) => (
+                                                <div key={index} className={index === task.questionTask.correctAnswer ? 'correct-answer' : ''}>
+                                                    {answer}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className='task-media-list'>
+                                <div className='section-title'>{AddNewTaskHebrew.Media}</div>
+                                <Swiper {...SwiperConfig("horizontal")}>
+                                    {task.mediaList.map((media: MediaTask, index: number) => (
+                                        <SwiperSlide key={media.mediaTaskID} className='swiper-slide'>
+                                            <img className='img-media'
+                                                src={
+                                                    media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')
+                                                }
+                                                alt={media.fileName}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            </div>
+                        </div>
                         {showMedia && (
                             <div className='input-group'>
                                 <label className='input-label'>{AddNewTaskHebrew.AddMedia}</label>
@@ -73,8 +120,6 @@ function AddTask() {
                                 <button type="button" className='delete-option-button' onClick={() => setShowMedia(false)}>{AddNewTaskHebrew.HideMedia}</button>
                             </div>
                         )}
-
-
                         {showQuestion && (
                             <div className='input-group'>
                                 <label className='input-label'>{AddNewTaskHebrew.Q}</label>
@@ -100,7 +145,7 @@ function AddTask() {
                                         </button>
                                     </div>
                                 ))}
-                                {answers.length < 4 && <button type="button" className='add-answer-button' onClick={() => setAnswers([...answers, ''])}>{AddNewTaskHebrew.AddAnswer}</button>}
+                                {answers.length < 4 && <button type="button" className='edit-answer-button' onClick={() => setAnswers([...answers, ''])}>{AddNewTaskHebrew.AddAnswer}</button>}
                                 <button type="button" className='delete-option-button' onClick={() => setShowQuestion(false)}>{AddNewTaskHebrew.HideQuestion}</button>
                             </div>
                         )}
@@ -112,10 +157,10 @@ function AddTask() {
                                 <button type="button" className='delete-option-button' onClick={() => setShowNotes(false)}>{AddNewTaskHebrew.HideMedia}</button>
                             </div>
                         )}
-                        <div className='add-buttons'>
+                        <div className='edit-buttons'>
                             <button type="button" className='option-button' onClick={() => setShowMedia(true)}>{AddNewTaskHebrew.ToggleMedia}</button>
-                            <button type="button" className='option-button' onClick={() => setShowQuestion(true)}>{AddNewTaskHebrew.ToggleQuestion}</button>
-                            <button type="button" className='option-button' onClick={() => setShowNotes(true)}>{AddNewTaskHebrew.AdditionalNotes}</button>
+                            {<button type="button" className='option-button' onClick={() => setShowQuestion(true)}>{AddNewTaskHebrew.ToggleQuestion}</button>}
+                            {<button type="button" className='option-button' onClick={() => setShowNotes(true)}>{AddNewTaskHebrew.AdditionalNotes}</button>}
                         </div>
 
                     </div>
@@ -128,4 +173,4 @@ function AddTask() {
     );
 }
 
-export default AddTask;
+export default EditTask;

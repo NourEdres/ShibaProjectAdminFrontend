@@ -6,6 +6,7 @@ import AddTask from '../pages/Tasks/AddTask/AddTask';
 import TaskDetails from '../pages/Tasks/TaskDetails/TaskDetails';
 import AddLocation from '../pages/Location/AddLocation/AddLocation';
 import LocationDetails from '../pages/Location/LocationDetails/LocationDetails';
+import EditTask from '../pages/Tasks/EditTask/EditTask';
 
 function Layout() {
   return (
@@ -43,6 +44,9 @@ const router = createBrowserRouter([
       }, {
         path: '/Games',
         element: <GamesPage />
+      }, {
+        path: '/EditTask',
+        element: <EditTask />
       }, {
         path: '/AddTask',
         element: <AddTask />
