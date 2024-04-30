@@ -15,14 +15,15 @@ const AddLocationHebrew = {
 const AddLocation = () => {
     return (
         <div className='main-container-add-room'>
-            <div className='add-room-header'>
+            <div className='add-location-header'>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
-                <div className='room-name'>{AddLocationHebrew.AddNewRoom}</div>
+                <div className='sector-name'>פיזוטרפיה</div>
             </div>
-            <div className='add-room-container' dir="rtl">
+            <div className='add-location-container' dir="rtl">
+                <div className='add-location-title'>{AddLocationHebrew.AddNewRoom}</div>
                 <div className='input-group'>
                     <label className='input-label'>{AddLocationHebrew.Name}</label>
-                    <input type='text' className='room-input' />
+                    <input type='text' className='location-input' />
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddLocationHebrew.Description}</label>
