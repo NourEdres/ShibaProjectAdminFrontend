@@ -45,7 +45,7 @@ export interface LocationImage {
 export interface ObjectLocation {
   objectID: number;
   name: string;
-  description: string;
+  description?: string;
   location: Location;
   objectImages: ObjectImage[];
 }
@@ -56,4 +56,6 @@ export interface ObjectImage {
   imagePath: string;
   object: ObjectLocation;
 }
+
+
 

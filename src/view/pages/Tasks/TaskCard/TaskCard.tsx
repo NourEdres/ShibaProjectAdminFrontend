@@ -5,6 +5,7 @@ import { EditIcon, DeleteIcon } from '../../../photos';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCard } from '../../../../redux/slices/GlobalStates';
+import { taskAPI } from '../../../../redux/services/TaskApi';
 
 interface TaskCardProps {
     object: Task;
@@ -14,7 +15,6 @@ const sectionTitles = {
     gamesNumber: "תיאור : ",
 };
 const TaskCard: FC<TaskCardProps> = ({ object }) => {
-    console.log("task in tasks card: ", object)
     const dispatch = useDispatch();
     return (
         <div className='task-card' style={{ backgroundColor: "#D9D9D9" }}>
@@ -25,9 +25,11 @@ const TaskCard: FC<TaskCardProps> = ({ object }) => {
                             <img className='edit-icon' src={EditIcon} />
                         </button>
                     </Link>
-                    <button className="delete-button">
-                        <img className='delete-icon' src={DeleteIcon} />
-                    </button>
+                    <Link to="/Tasks">
+                        <button type='button' className="delete-button" onClick={() => { (taskAPI.deleteTask(object.taskID)) }}>
+                            <img className='delete-icon' src={DeleteIcon} />
+                        </button>
+                    </Link>
                 </div>
                 <div className='title'>{object.name}</div>
             </div>

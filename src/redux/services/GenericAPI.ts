@@ -36,7 +36,7 @@ class GenericAPI {
   };
 
   delete = async <T>(url: string, headers?: AxiosRequestConfig["headers"], options: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
-    return axiosInstance.delete<T>(`${URL}${url}/delete`, { ...options, headers });
+    return axiosInstance.delete<T>(`${URL}${url}`, { ...options, headers });
   };
 
 }

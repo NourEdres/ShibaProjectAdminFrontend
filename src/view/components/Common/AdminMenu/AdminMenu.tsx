@@ -49,7 +49,6 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                     <button
                         className={`menu-button ${activeButton === buttonsName.Locations ? "active" : ""}`}
                         onClick={() => {
-                            console.log("yess");
                             dispatch(setPage("Locations"));
                             setActiveButton(buttonsName.Locations);
 

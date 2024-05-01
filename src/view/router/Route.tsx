@@ -7,6 +7,7 @@ import TaskDetails from '../pages/Tasks/TaskDetails/TaskDetails';
 import AddLocation from '../pages/Location/AddLocation/AddLocation';
 import LocationDetails from '../pages/Location/LocationDetails/LocationDetails';
 import EditTask from '../pages/Tasks/EditTask/EditTask';
+import AddObjectLocation from '../pages/ObjectLocation/AddObjectLocation/AddObjectLocation';
 
 function Layout() {
   return (
@@ -60,6 +61,14 @@ const router = createBrowserRouter([
       {
         path: '/LocationDetails/:location',
         element: <LocationDetails />
+      },
+      // {
+      //   path: '/AddLocation/:location',
+      //   element: <AddObjectLocation />
+      // },
+      {
+        path: '/AddObjectLocation',
+        element: <AddObjectLocation />
       }
     ]
   }
