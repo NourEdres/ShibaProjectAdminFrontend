@@ -12,7 +12,7 @@ interface FileWithPreview extends File {
     preview: string;
 }
 
-const AddNewObjectsHebrew = {
+const AddNewObjectHebrew = {
     AddNewObjects: "הוספת אובייקט",
     Name: "שם : ",
     Description: "תיאור : ",
@@ -24,29 +24,25 @@ const AddNewObjectsHebrew = {
 
 const AddObjectLocation: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileWithPreview[]>([]);
-    const handleDelete = (index: number) => {
-        const updatedFiles = selectedFiles.filter((_, idx) => idx !== index);
-        setSelectedFiles(updatedFiles);
-    };
     return (
         <div className='main-container-add-task'>
             <div className='add-task-header'>
                 <div className='sector-name'>פיזוטרפיה</div>
             </div>
             <div className='add-task-container' dir="rtl">
-                <div className='add-task-title'>{AddNewObjectsHebrew.AddNewObjects}</div>
+                <div className='add-task-title'>{AddNewObjectHebrew.AddNewObjects}</div>
                 <div className='input-group'>
-                    <label className='input-label'>{AddNewObjectsHebrew.Name}</label>
+                    <label className='input-label'>{AddNewObjectHebrew.Name}</label>
                     <input type='text' className='task-input' />
                 </div>
                 <div className='input-group'>
-                    <label className='input-label'>{AddNewObjectsHebrew.Description}</label>
+                    <label className='input-label'>{AddNewObjectHebrew.Description}</label>
                     <textarea className='task-textarea'></textarea>
                 </div>
 
                 <div className='options-container'>
                     <div className="option-section">
-                        <label htmlFor="file-upload" className="input-label">{AddNewObjectsHebrew.UploadImages}</label>
+                        <label htmlFor="file-upload" className="input-label">{AddNewObjectHebrew.UploadImages}</label>
                         <label htmlFor="file-upload" className="file-upload-label">
                             <img src={UploadFileIcon} alt="Upload File" className="file-upload-icon" />
                         </label>
@@ -71,7 +67,7 @@ const AddObjectLocation: React.FC = () => {
                         />
                     </div>
                     <div className='task-media-list'>
-                        <div className="image-count">{AddNewObjectsHebrew.ImagesNumber}{selectedFiles.length}</div>
+                        <div className="image-count">{AddNewObjectHebrew.ImagesNumber}{selectedFiles.length}</div>
                         {selectedFiles.length > 0 && (
                             <Swiper {...SwiperConfig}>
                                 {selectedFiles.map((file, index) => (
@@ -81,14 +77,14 @@ const AddObjectLocation: React.FC = () => {
                                             const updatedFiles = selectedFiles.filter((_, idx) => idx !== index);
                                             setSelectedFiles(updatedFiles);
                                         }}>
-                                            {AddNewObjectsHebrew.Delete_Image}</button>
+                                            {AddNewObjectHebrew.Delete_Image}</button>
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
                         )}
                     </div>
                 </div>
-                <button className='save-task-button'>{AddNewObjectsHebrew.Save}</button>
+                <button className='save-task-button'>{AddNewObjectHebrew.Save}</button>
             </div>
         </div>
     );
