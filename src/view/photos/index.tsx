@@ -19,6 +19,9 @@ import PlusIcon from "../photos/Icons/+.png";
 import ColorPicker from "../photos/Icons/ColorPicker.png";
 import LeftArrowIcon from "../photos/Icons/Left.png";
 import UploadFileIcon from "../photos/Icons/UploadFile.png"
+import DownloadIcon from "../photos/Icons/Download.jpeg";
+import EditIconBlack from "../photos/Icons/blackEdit.png";
+import DeleteIconBlack from "../photos/Icons/blackDelete.png";
 export {
-    UploadFileIcon, LeftArrowIcon, ColorPicker, PlusIcon, EditIcon, DeleteIcon, StaticsIcon, WhiteLogo, LogOutIcon, TaskIcon, LocationIcon, ApplicationsIcon, ViewPasswordIcon, HospitalIcon, LogoWithoutTitle, ShibaFullLogo, SearchIcon, UserIcon, HeroPhoto, DoctorUserIcon, PasswordIcon
+    EditIconBlack, DeleteIconBlack, UploadFileIcon, LeftArrowIcon, ColorPicker, PlusIcon, EditIcon, DeleteIcon, StaticsIcon, WhiteLogo, LogOutIcon, TaskIcon, LocationIcon, ApplicationsIcon, ViewPasswordIcon, HospitalIcon, LogoWithoutTitle, ShibaFullLogo, SearchIcon, UserIcon, HeroPhoto, DoctorUserIcon, PasswordIcon, DownloadIcon
 }

@@ -4,6 +4,7 @@ import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import "../Hero/Hero.scss";
 import { taskAPI } from "../../../../redux/services/TaskApi";
 import { locationAPI } from "../../../../redux/services/LocationApi";
+import { objectAPI } from "../../../../redux/services/ObjectLocationApi";
 
 const Hero = () => {
   return (
@@ -30,7 +31,8 @@ const Hero = () => {
                 <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
               </div>
               <Link to="/Sectors">
-                <button className="login-button" onClick={() => (taskAPI.getAllTasks(), locationAPI.getAllLocations())}>התחבר</button>
+                <button className="login-button" onClick={() => (taskAPI.getAllTasks(), locationAPI.getAllLocations(),
+                  objectAPI.getAllObjetsOfLocation(2))}>התחבר</button>
               </Link>
             </div>
           </div>

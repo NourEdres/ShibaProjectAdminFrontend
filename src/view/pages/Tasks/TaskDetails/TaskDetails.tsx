@@ -10,6 +10,13 @@ import "swiper/css/scrollbar";
 import { MediaTask } from '../../../../redux/models/Interfaces';
 import { SwiperConfig } from '../../../components';
 import { LeftArrowIcon } from '../../../photos';
+import PDFViewer from '../../../components/Common/PDFViewer/PDFViewer';
+import AudioPlayer from 'react-h5-audio-player';
+// import AudioPlayer from '../../../components/Common/Audio/AudioPlayer';
+import 'react-h5-audio-player/lib/styles.css';
+import ReactPlayer from 'react-player';
+
+
 const TaskDetailsHebrew = {
     Description: "תיאור : ",
     FreeText: "טקסט חופשי :",
@@ -60,12 +67,33 @@ const TaskDetails: React.FC = () => {
                         <Swiper {...SwiperConfig("horizontal")}>
                             {task.mediaList.map((media: MediaTask, index: number) => (
                                 <SwiperSlide key={media.mediaTaskID} className='swiper-slide'>
-                                    <img className='img-media'
-                                        src={
-                                            media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')
-                                        }
-                                        alt={media.fileName}
-                                    />
+                                    {media.mediaType.includes('application/pdf') ? (
+                                        <PDFViewer fileUrl={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')} />
+                                    ) : media.mediaType.includes('audio') ? (
+                                        // <AudioPlayer src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                        //     mediaName={media.fileName} />
+
+                                        <div dir='ltr'>
+                                            <AudioPlayer
+                                                autoPlay={false}
+                                                src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                                onPlay={e => console.log("Playing audio", e)}
+                                            />
+                                        </div>
+                                    ) : media.mediaType.includes('video') ? (
+                                        <ReactPlayer
+                                            url={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                            controls
+                                            className="react-player"
+                                            width='100%'
+                                            height='100%'
+                                        />
+                                    ) : (
+                                        <img className='img-media'
+                                            src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                            alt={media.fileName}
+                                        />
+                                    )}
                                 </SwiperSlide>
                             ))}
                         </Swiper>

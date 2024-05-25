@@ -12,9 +12,10 @@ interface HomePageProps {
     Component: React.ElementType;
     addButton: string;
     addButtonPath: string;
+    setCardOnClick?: boolean;
 }
 
-const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addButtonPath }) => {
+const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addButtonPath, setCardOnClick = true }) => {
     const dispatch = useDispatch();
     // { console.log("objects: ") }
     // { console.log("objects: ", objects) }
@@ -23,20 +24,27 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addB
             <div className="content">
                 <div className="homePage-grid">
                     {objects.map((ob: any, index: number) => (
-                        <Fade key={index}>
-                            <Link
-                                to={`/${page}Details/${encodeURIComponent(ob.name)}`}
 
-                                // to={`/TaskDetails/${encodeURIComponent(ob.name)}`}
-                                className="link"
-                                onClick={() => {
-                                    dispatch(setCard(ob));
-                                    dispatch(setPage(page));
-                                }}
-                            >
-                                {/* {console.log("objects ", Component)}; */}
-                                <Component object={ob} />
-                            </Link>
+                        <Fade key={index}>
+                            {setCardOnClick ? (
+                                <Link
+                                    to={`/${page}Details/${encodeURIComponent(ob.name)}`}
+
+                                    // to={`/TaskDetails/${encodeURIComponent(ob.name)}`}
+                                    className="link"
+                                    onClick={() => {
+                                        dispatch(setCard(ob));
+                                        dispatch(setPage(page));
+                                        // if(card typeof sector ) dispatch(setSectorColor(ob.color))
+                                    }}
+                                >
+                                    {/* {console.log("objects ", Component)}; */}
+                                    <Component object={ob} />
+                                </Link>) : (<div>
+                                    <Component object={ob} />
+                                </div>)
+                            }
+
                         </Fade>
                     ))}
                 </div>

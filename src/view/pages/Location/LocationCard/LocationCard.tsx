@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import './LocationCard.scss';
-import { Location } from '../../../../redux/models/Types';
-import { EditIcon, DeleteIcon } from '../../../photos';
+import { Location } from '../../../../redux/models/Interfaces';
+import { DeleteIconBlack, EditIconBlack } from '../../../photos';
 
 interface LocationCardProps {
     object: Location;
@@ -19,20 +19,20 @@ const LocationCard: FC<LocationCardProps> = ({ object }) => {
             <div className='card-header'>
                 <div className='buttons'>
                     <button className="edit-button">
-                        <img className='edit-icon' src={EditIcon} />
+                        <img className='edit-icon' src={EditIconBlack} />
                     </button>
                     <button className="delete-button">
-                        <img className='delete-icon' src={DeleteIcon} />
+                        <img className='delete-icon' src={DeleteIconBlack} />
                     </button>
                 </div>
-                <div className='title'>{object.name}</div>
+                <div className='title' style={{ color: 'black' }}>{object.name}</div>
             </div>
             <div className='Location-card-content'>
                 <div className='sections'>
-                    <div className='section-title'>
+                    <div className='section-title' style={{ color: 'black' }}>
                         {LocationSectionTitles.LocationName + object.name}
                     </div>
-                    <div className='section-title'>
+                    <div className='section-title' style={{ color: 'black' }}>
                         {LocationSectionTitles.LocationDescription + object.description}
                     </div>
                     <div className='section-title'>

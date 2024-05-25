@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import './AddTask.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
+import { QuestionTask, Task } from '../../../../redux/models/Interfaces';
+import { taskAPI } from '../../../../redux/services/TaskApi';
+import { useNavigate } from 'react-router-dom';
+
+interface FileWithPreview extends File {
+    preview: string;
+}
 
 const AddNewTaskHebrew = {
     CreateNewTask: "הוספת משימה חדשה",
@@ -19,18 +26,111 @@ const AddNewTaskHebrew = {
     DeleteAnswer: "מחיקת תשובה",
     Answer: "תשובה",
     HideNotes: "מחיקת הטקסט",
-    AddAnswer: "הוספת תשובה"
+    AddAnswer: "הוספת תשובה",
+    Delete_Media: "מחיקה",
 };
 
 function AddTask() {
+    const navigate = useNavigate();
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     const [answers, setAnswers] = useState<string[]>([]);
     const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    // const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [additionalNotes, setAdditionalNotes] = useState<string>('');
     const [showMedia, setShowMedia] = useState<boolean>(false);
     const [showQuestion, setShowQuestion] = useState<boolean>(false);
     const [showNotes, setShowNotes] = useState<boolean>(false);
-    console.log("in add task");
+    const [mediaFiles, setMediaFiles] = useState<FileWithPreview[]>([]);
+    const [files, setFiles] = useState<File[]>([]);
+
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFiles = event.target.files;
+        if (selectedFiles) {
+            const filesWithPreview = Array.from(selectedFiles).map(file => {
+                const fileWithPreview: FileWithPreview = {
+                    ...file,
+                    preview: URL.createObjectURL(file)
+                };
+                return fileWithPreview;
+            });
+            setMediaFiles(prevFiles => [...prevFiles, ...filesWithPreview]);
+            setFiles(prevFiles => [...prevFiles, ...Array.from(selectedFiles)]);
+        }
+    };
+
+
+    const validateAndSave = () => {
+        if (!name.trim()) {
+            alert("A task must have a name.");
+            return;
+        }
+        if (!showQuestion && mediaFiles.length === 0 && !additionalNotes.trim()) {
+            alert("A task must have at least one element (question, media, or notes).");
+            return;
+        }
+
+        const task: Task = {
+            taskID: 0,
+            name,
+            description,
+            taskFreeTexts: additionalNotes ? [additionalNotes] : [],
+        };
+
+        const questionTask: QuestionTask | undefined = showQuestion ? {
+            questionTaskID: 0,
+            question: answers.join('; '),
+            answers,
+            correctAnswer: correctAnswer ?? 0,
+            taskID: 0,
+        } : undefined;
+
+        const formData = new FormData();
+        formData.append('task', new Blob([JSON.stringify(task)], { type: 'application/json' }));
+        if (questionTask) {
+            formData.append('question', new Blob([JSON.stringify(questionTask)], { type: 'application/json' }));
+        }
+
+        files.forEach((file, index) => {
+            console.log(`Appending file ${index}:`, file);
+            formData.append('media', file);
+        });
+
+        taskAPI.createTask(formData)
+            .then(response => {
+                console.log("Task created successfully", response);
+                navigate('/Tasks');
+            })
+            .catch(error => {
+                console.error("Failed to create task", error);
+                alert("Failed to save task.");
+            });
+    };
+
+    // const handleSave = async () => {
+    //     const task: Task = {
+    //         taskID: 0,  
+    //         name: string,
+    //         description: description,
+    //         taskFreeTexts: [],  
+    //     };
+
+    //     const questionTask: QuestionTask | undefined = showQuestion ? {
+    //         questionTaskID: 0,  
+    //         question: question,
+    //         answers: answers,
+    //         correctAnswer: correctAnswer ?? 0,
+    //     } : undefined;
+
+    //     try {
+    //         const createdTask = await taskAPI.createTask(task, questionTask, mediaFiles);
+    //         console.log("Task created successfully:", createdTask);
+    //         // Optionally, clear the form or redirect the user
+    //     } catch (error) {
+    //         console.error("Failed to create task:", error);
+    //     }
+    // };
 
     return (
         <div className='main-container-add-task'>
@@ -42,11 +142,11 @@ function AddTask() {
                 <div className='add-task-title'>{AddNewTaskHebrew.CreateNewTask}</div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewTaskHebrew.Name}</label>
-                    <input type='text' className='task-input' />
+                    <input type='text' className='task-input' value={name} onChange={e => setName(e.target.value)} />
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewTaskHebrew.Description}</label>
-                    <textarea className='task-textarea'></textarea>
+                    <textarea className='task-textarea' value={description} onChange={e => setDescription(e.target.value)}></textarea>
                 </div>
 
                 <div className='options-container'>
@@ -54,23 +154,32 @@ function AddTask() {
                         {showMedia && (
                             <div className='input-group'>
                                 <label className='input-label'>{AddNewTaskHebrew.AddMedia}</label>
+                                <input
+                                    type="file"
+                                    multiple
+                                    accept="image/*, video/*, application/pdf, audio/*"
+                                    id="file-upload"
+                                    className="file-input"
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none' }}
+                                />
                                 <label htmlFor="file-upload" className="file-upload-label">
                                     <img src={UploadFileIcon} alt="Upload File" className="file-upload-icon" />
                                 </label>
-                                <input
-                                    type="file"
-                                    id="file-upload"
-                                    className="file-input"
-                                    onChange={(e) => {
-                                        if (e.target.files && e.target.files[0]) {
-                                            setSelectedFile(e.target.files[0]);
-                                            console.log("selectedFile:", e.target.files[0]);
-                                        }
-                                    }}
-                                    style={{ display: 'none' }}
-                                />
-
-                                <button type="button" className='delete-option-button' onClick={() => setShowMedia(false)}>{AddNewTaskHebrew.HideMedia}</button>
+                                {mediaFiles.map((file, index) => (
+                                    <div key={index}>
+                                        <img src={file.preview} alt={`Uploaded ${index}`} style={{ width: 100, height: 100 }} />
+                                        <button className='delete-image-btn' onClick={() => {
+                                            setMediaFiles(files => files.filter((_, i) => i !== index));
+                                            URL.revokeObjectURL(file.preview);
+                                        }}>
+                                            {AddNewTaskHebrew.Delete_Media}
+                                        </button>
+                                    </div>
+                                ))}
+                                <button type="button" className='delete-option-button' onClick={() => setShowMedia(false)}>
+                                    {AddNewTaskHebrew.HideMedia}
+                                </button>
                             </div>
                         )}
 
@@ -121,7 +230,7 @@ function AddTask() {
                     </div>
                 </div>
 
-                <button className='save-task-button'>{AddNewTaskHebrew.Save}</button>
+                <button className='save-task-button' onClick={validateAndSave}>{AddNewTaskHebrew.Save}</button>
             </div>
 
         </div >

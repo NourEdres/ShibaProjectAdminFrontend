@@ -173,6 +173,24 @@
             }
           }
         }
+        .delete-image-btn {
+          margin-top: 10px;
+          padding: 0.5rem 1rem;
+          background-color: $primary-pink-logo-color;
+          border-color: transparent;
+          @include font_style;
+          color: $secondary-white-color;
+          border: none; 
+          cursor: pointer;
+          text-align: center;
+          transition: background-color 0.3s ease;
+        
+    
+          &:hover {
+            color: white;
+            background-color: darken($primary-pink-logo-color, 10%); 
+          }
+        }
       }
     }
   }

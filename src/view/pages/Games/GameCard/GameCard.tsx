@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import './GameCard.scss'
-import { Game } from '../../../../redux/models/Types';
+import { Game } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos';
 
 interface GameCardProps {
@@ -12,7 +12,7 @@ const sectionTitles = {
 };
 const GameCard: FC<GameCardProps> = ({ game }) => {
     return (
-        <div className='game-card' style={{ backgroundColor: game.color }}>
+        <div className='game-card' >
             <div className='card-header'>
                 <div className='buttons'>
                     <button className="edit-button">
@@ -22,15 +22,15 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
                         <img className='delete-icon' src={DeleteIcon} />
                     </button>
                 </div>
-                <div className='title'>{game.name}</div>
+                <div className='title'>{game.gameName}</div>
             </div>
             <div className='game-card-content'>
                 <div className='sections'>
                     <div className='section-title'>
-                        {sectionTitles.userName + game.userName}
+                        {sectionTitles.userName + game.gameName}
                     </div>
                     <div className='section-title'>
-                        {sectionTitles.gamesNumber + game.gamesNumber}
+                        {sectionTitles.gamesNumber + game.gameID}
                     </div>
                 </div>
             </div>

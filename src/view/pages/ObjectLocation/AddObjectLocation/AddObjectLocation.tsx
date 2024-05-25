@@ -7,6 +7,7 @@ import "swiper/css/scrollbar";
 import { UploadFileIcon } from '../../../photos';
 import { SwiperConfig } from '../../../components';
 import './AddObjectLocation.scss'
+import { useNavigate } from 'react-router-dom';
 
 interface FileWithPreview extends File {
     preview: string;
@@ -22,8 +23,29 @@ const AddNewObjectHebrew = {
     Save: "שמירה"
 };
 
+
 const AddObjectLocation: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<FileWithPreview[]>([]);
+    const [objectName, setObjectName] = useState('');
+    const [objectDescription, setObjectDescription] = useState('');
+    const navigate = useNavigate();
+
+    const handleSaveObject = () => {
+        const newObject = {
+            objectID: Date.now(),
+            name: objectName,
+            description: objectDescription,
+            objectImages: selectedFiles.map(file => ({
+                id: Date.now(),
+                name: file.name,
+                imagePath: file.preview,
+                object: {}
+            }))
+        };
+
+        navigate('/ObjectsPage2', { state: { newObject } });
+    };
+
     return (
         <div className='main-container-add-task'>
             <div className='add-task-header'>
@@ -84,7 +106,7 @@ const AddObjectLocation: React.FC = () => {
                         )}
                     </div>
                 </div>
-                <button className='save-task-button'>{AddNewObjectHebrew.Save}</button>
+                <button onClick={handleSaveObject} className='save-task-button'>{AddNewObjectHebrew.Save}</button>
             </div>
         </div>
     );

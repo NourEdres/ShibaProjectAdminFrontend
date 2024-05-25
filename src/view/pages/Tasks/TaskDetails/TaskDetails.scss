@@ -127,6 +127,11 @@
             transform: scale(1.1);
           }
         }
+        .react-player {
+          max-width: 100%;
+          overflow: hidden; 
+        }
+        
       }
     }
   }

@@ -9,6 +9,12 @@ import LocationDetails from '../pages/Location/LocationDetails/LocationDetails';
 import EditTask from '../pages/Tasks/EditTask/EditTask';
 import AddObjectLocation from '../pages/ObjectLocation/AddObjectLocation/AddObjectLocation';
 import ObjectDetails from '../pages/ObjectLocation/ObjectDetails/ObjectDetails';
+import ObjectsPage from '../pages/ObjectLocation/ObjectsPage';
+import AddGame from '../pages/Games/AddGame/AddGame';
+import AddUnit from '../pages/Games/AddUnit/AddUnit';
+import ChoosableTaskPage from '../pages/Games/AddUnit/ChoosableTask/ChooseTask';
+import UnitsPage from '../pages/Games/UnitPage/UnitsPage';
+import ObjectsPage2 from '../pages/ObjectLocation/ObjectsPage2';
 
 function Layout() {
   return (
@@ -55,7 +61,8 @@ const router = createBrowserRouter([
       }, {
         path: '/AddLocation',
         element: <AddLocation />
-      }, {
+      },
+      {
         path: '/TaskDetails/:task',
         element: <TaskDetails />
       },
@@ -63,21 +70,53 @@ const router = createBrowserRouter([
         path: '/LocationDetails/:location',
         element: <LocationDetails />
       },
-      // {
-      //   path: '/AddLocation/:location',
-      //   element: <AddObjectLocation />
-      // },
+      {
+        path: '/AddLocation/:location',
+        element: <AddObjectLocation />
+      },
       {
         path: '/AddObjectLocation',
         element: <AddObjectLocation />
       },
+      {
+        path: '/ObjectDetails/:objectID',
+        element: <ObjectDetails />
+      },
+
+      {
+        path: '/ObjectLocation',
+        element: <ObjectsPage />
+      },
+      {
+        path: '/AddGame',
+        element: <AddGame />
+      },
+      {
+        path: '/AddUnit',
+        element: <AddUnit />
+      },
+      {
+        path: '/ChoosableTaskPage',
+        element: <ChoosableTaskPage />
+      },
+      {
+        path: '/UnitsPage',
+        element: <UnitsPage />
+      },
+      {
+        path: '/ObjectsPage/:locationID',
+        element: <ObjectsPage />
+      },
+      {
+        path: '/ObjectsPage2',
+        element: <ObjectsPage2 />
+      }
+
+
     ]
 
-  },
-  {
-    path: '/ObjectDetails',
-    element: <ObjectDetails />
   }
+
 ]);
 
 export default router;

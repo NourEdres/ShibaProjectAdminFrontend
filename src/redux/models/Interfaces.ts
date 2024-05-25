@@ -3,7 +3,7 @@ export interface Task {
   name: string;
   description: string;
   taskFreeTexts?: string[];
-  questionTask?: QuestionTask; // This is optional because a task might not have a question task associated with it
+  questionTask?: QuestionTask; 
   mediaList?: MediaTask[];
 }
 export interface QuestionTask {
@@ -58,4 +58,45 @@ export interface ObjectImage {
 }
 
 
+export interface Game {
+  gameID: number;
+  adminID: number;
+  gameName: string;
+  description: string;
+  QRCodePath: string;
+  gameImage: GameImage;
+  units: Unit[];
+}
+
+export interface GameImage {
+  gameImgID: number;
+  name: string;
+  type: string;
+  imagePath: string;
+}
+
+export interface Unit {
+  unitID: number;
+  name: string;
+  description?: string;
+  hint: string;
+  objectID: number;
+  taskID: number;
+  locationID: number;
+}
+
+export interface Admin {
+  adminID: number;
+  username: string;
+  password: string;
+  color: string;
+  sector: string;
+  role: UserRole;
+  gamesList: Game[];
+  tasksList: Task[];
+}
+
+export enum UserRole {
+  MainAdmin, SectorAdmin
+}
 
