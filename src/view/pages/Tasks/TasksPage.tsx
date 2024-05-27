@@ -3,18 +3,19 @@ import TaskCard from "./TaskCard/TaskCard";
 import "./TasksPage.scss";
 import { Task } from "../../../redux/models/Interfaces";
 import HomePage from "../../components/Common/HomePage/HomePage";
+import { taskAPI } from "../../../redux/services/TaskApi";
+import { useDispatch } from "react-redux";
+import { setTasks } from "../../../redux/slices/saveAllData";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { taskAPI } from "../../../redux/services/TaskApi";
 
 const TasksPage: FC = () => {
-    const page = useSelector((state: RootState) => state.globalStates.page);
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const dispatch = useDispatch();
+    const tasks = useSelector((state: RootState) => state.AllData.Tasks);
 
     useEffect(() => {
         const fetchTasks = async () => {
-            const fetchedTasks = await taskAPI.getAllTasks();
-            setTasks(fetchedTasks);
+            dispatch(setTasks(await taskAPI.getAllTasks()))
         };
         fetchTasks()
 

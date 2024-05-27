@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import GlobalStatesReducer from "./slices/GlobalStates";
+import AllDataReducer from "./slices/saveAllData";
 
 const store = configureStore({
   reducer: {
     globalStates: GlobalStatesReducer,
+    AllData: AllDataReducer,
   },
 });
 

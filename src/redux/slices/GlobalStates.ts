@@ -1,15 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Location } from "../models/Interfaces";
 
 interface GlobalStates {
   selectedCard: any;
   page: string;
   sectorColor: string;
+  location: Location | null;
+  // location: Location | null;
 }
 
 const initialState: GlobalStates = {
   selectedCard: {},
   page: "Sectors",
-  sectorColor: "red"
+  sectorColor: "red",
+  location: null,
+  // unit: null,
 };
 
 const globalStatesSlice = createSlice({

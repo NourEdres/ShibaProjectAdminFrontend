@@ -1,4 +1,4 @@
-import { createBrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage, NewSectorPage, Base, SectorDetails, SectorsPage, LocationPage, TasksPage } from '../pages';
 import { Outlet } from "react-router-dom";
 import GamesPage from '../pages/Games/GamesPage';
@@ -14,7 +14,6 @@ import AddGame from '../pages/Games/AddGame/AddGame';
 import AddUnit from '../pages/Games/AddUnit/AddUnit';
 import ChoosableTaskPage from '../pages/Games/AddUnit/ChoosableTask/ChooseTask';
 import UnitsPage from '../pages/Games/UnitPage/UnitsPage';
-import ObjectsPage2 from '../pages/ObjectLocation/ObjectsPage2';
 
 function Layout() {
   return (
@@ -84,10 +83,6 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/ObjectLocation',
-        element: <ObjectsPage />
-      },
-      {
         path: '/AddGame',
         element: <AddGame />
       },
@@ -106,12 +101,7 @@ const router = createBrowserRouter([
       {
         path: '/ObjectsPage/:locationID',
         element: <ObjectsPage />
-      },
-      {
-        path: '/ObjectsPage2',
-        element: <ObjectsPage2 />
       }
-
 
     ]
 

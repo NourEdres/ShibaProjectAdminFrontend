@@ -8,6 +8,10 @@ import { UploadFileIcon } from '../../../photos';
 import { SwiperConfig } from '../../../components';
 import './AddObjectLocation.scss'
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/store';
+import { useDispatch } from 'react-redux';
+import { setCard } from '../../../../redux/slices/GlobalStates';
 
 interface FileWithPreview extends File {
     preview: string;
@@ -25,6 +29,9 @@ const AddNewObjectHebrew = {
 
 
 const AddObjectLocation: React.FC = () => {
+    const location = useSelector((state: RootState) => state.globalStates.selectedCard);
+    const dispatch = useDispatch();
+
     const [selectedFiles, setSelectedFiles] = useState<FileWithPreview[]>([]);
     const [objectName, setObjectName] = useState('');
     const [objectDescription, setObjectDescription] = useState('');
@@ -42,8 +49,11 @@ const AddObjectLocation: React.FC = () => {
                 object: {}
             }))
         };
-
-        navigate('/ObjectsPage2', { state: { newObject } });
+        {
+            /* API add object(loctoin.id,object)*/
+            // dispatch(setCard(await API Get Room By Id (location id)))
+        }
+        navigate('/ObjectsPage', { state: { newObject } });
     };
 
     return (

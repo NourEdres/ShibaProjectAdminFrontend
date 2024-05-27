@@ -1,23 +1,22 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import LocationCard from "./LocationCard/LocationCard";
 import "./LocationPage.scss";
 import HomePage from "../../components/Common/HomePage/HomePage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { locationAPI } from "../../../redux/services/LocationApi";
+import { useDispatch } from "react-redux";
+import { setLocations } from "../../../redux/slices/saveAllData";
 // import { Locations } from "../../../data/Locations";
 
 const LocationsPage: FC = () => {
     const page = useSelector((state: RootState) => state.globalStates.page);
-    const [locations, setLocations] = useState<Location[]>([]);
+    const dispatch = useDispatch();
+    const locations = useSelector((state: RootState) => state.AllData.locations);
 
     useEffect(() => {
-        console.log("locations in fetch ");
         const fetchLocations = async () => {
-            console.log("locations in fetch2 ");
-            const fetchedLocations = await locationAPI.getAllLocations();
-            console.log("fetch ", fetchLocations);
-            setLocations(fetchedLocations);
+            dispatch(setLocations(await locationAPI.getAllLocations()));
         };
         fetchLocations()
 

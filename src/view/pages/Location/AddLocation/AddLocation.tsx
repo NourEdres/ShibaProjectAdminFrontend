@@ -50,11 +50,11 @@ const AddLocation = () => {
                     />
                 </div>
                 <div className='location-buttons'>
-                    <Link to='/ObjectsPage2'>
-                        <button type="button" className='add-objects-button'>{AddLocationHebrew.AddObjects}</button>
+                    <Link to='/ObjectsPage'>
+
+                        <button className='save-location-button' onClick={() => { }}>{AddLocationHebrew.Save}</button>
                     </Link>
                 </div>
-                <button className='save-location-button'>{AddLocationHebrew.Save}</button>
             </div>
         </div >
     );

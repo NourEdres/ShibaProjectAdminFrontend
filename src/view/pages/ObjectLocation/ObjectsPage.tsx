@@ -11,21 +11,13 @@ import './ObjectsPage.scss';
 
 
 const ObjectsPage: FC = () => {
-    const page = useSelector((state: RootState) => state.globalStates.page);
-    const [objects, setObjects] = useState<ObjectLocation[]>([]);
-    const { locationID } = useParams();
+    const location = useSelector((state: RootState) => state.globalStates.selectedCard);
 
-    useEffect(() => {
-        const locObjects = async () => {
-            const locObjects = await objectAPI.getAllObjetsOfLocation(locationID);
-            setObjects(locObjects);
-        };
-        locObjects();
-    }, [locationID]);
+    const page = useSelector((state: RootState) => state.globalStates.page);
     return (
         <div>
-            {page == "Location" && <HomePage objects={objects}
-                {...objects.map(obj => (
+            {page == "Location" && <HomePage objects={location.objectsList}
+                {...location.objectsList.map((obj: ObjectLocation) => (
                     <ObjectCard key={obj.objectID} object={obj} />
                 ))}
                 page="Object" Component={ObjectsCard} addButton="הוספת אובייקט חדש" addButtonPath="AddObjectLocation" />}

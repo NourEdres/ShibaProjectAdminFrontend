@@ -52,15 +52,33 @@ const LocationDetails: React.FC = () => {
                             <img className='download-icon' src={DownloadIcon}></img>
                         </button>
                     </div>
-
+                    {/* {location.objectsList.length == 0 ? (
+                        return
+                    "No Object .."
+                    <button className='view-objects' onClick={() => { navigate(`/addObject}`); }}>
+                        הוסף אןבייקטים
+                    </button>
+                    ):(
                     <button className='view-objects' onClick={() => { navigate(`/ObjectsPage/${location.locationID}`); }}>
                         הצג אובייקטים של החדר
                     </button>
+                    )
+                    } */}
+
                 </div>
             </div>
         </div>
     );
 };
+// export interface Location {
+//     locationID: number;
+//     name: string;
+//     description?: string;
+//     floor: number;
+//     qrcode: string;
+//     locationImage?: LocationImage;
+//     objectsList?: ObjectLocation[];
+// }
 
 export default LocationDetails;
 
