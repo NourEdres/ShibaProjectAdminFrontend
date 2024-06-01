@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { ShibaFullLogo, SearchIcon } from "../../../photos";
+import React from "react";
+import { ShibaFullLogo } from "../../../photos";
 import "./Navbar.scss";
 import { Link } from "react-router-dom";
 const Navbar: React.FC = () => {
-  const [isDesktop, setIsDesktop] = useState(false);
+  // const [isDesktop, setIsDesktop] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth > 768);
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setIsDesktop(window.innerWidth > 768);
+  //   };
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   handleResize();
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
-  const togglePopup = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
-    setter((prevState) => !prevState);
-  };
+  // const togglePopup = (
+  //   setter: React.Dispatch<React.SetStateAction<boolean>>
+  // ) => {
+  //   setter((prevState) => !prevState);
+  // };
 
-  const [activeLink, setActiveLink] = useState("");
+  // const [activeLink, setActiveLink] = useState("");
 
-  const handleLinkClick = (linkName: string) => {
-    setActiveLink(linkName);
-  };
-  const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
-  const closePopups = () => {
-    setIsSearchPopupOpen(false);
-  };
+  // const handleLinkClick = (linkName: string) => {
+  //   setActiveLink(linkName);
+  // };
+  // const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
+  // const closePopups = () => {
+  //   setIsSearchPopupOpen(false);
+  // };
   return (
     <header className="navbar-container">
       <div className="navbar-left">

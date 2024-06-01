@@ -1,7 +1,6 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import TaskCard from "./TaskCard/TaskCard";
 import "./TasksPage.scss";
-import { Task } from "../../../redux/models/Interfaces";
 import HomePage from "../../components/Common/HomePage/HomePage";
 import { taskAPI } from "../../../redux/services/TaskApi";
 import { useDispatch } from "react-redux";

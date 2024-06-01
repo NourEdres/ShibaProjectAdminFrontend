@@ -10,8 +10,8 @@ interface HomePageProps {
     objects: any[];
     page: string;
     Component: React.ElementType;
-    addButton: string;
-    addButtonPath: string;
+    addButton?: string;
+    addButtonPath?: string;
     setCardOnClick?: boolean;
 }
 
@@ -49,11 +49,11 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addB
                     ))}
                 </div>
             </div>
-            <div className="add-new">
+            {(addButton !== undefined) && (<div className="add-new">
                 <Link to={`/${addButtonPath}`} className="link">
                     <button className="add-button">{addButton}</button>
                 </Link>
-            </div>
+            </div>)}
         </div>
     );
 };

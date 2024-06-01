@@ -1,8 +1,7 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ObjectLocation } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos'
-import { useNavigate } from 'react-router-dom';
-;
+    ;
 
 interface ObjectCardProps {
     object: ObjectLocation;
@@ -13,7 +12,6 @@ const ObjectHeb = {
 };
 
 const ObjectCard: FC<ObjectCardProps> = ({ object }) => {
-    const navigate = useNavigate();
     return (
         <div className='object-card' dir='rtl'>
             <div className='card-header'>

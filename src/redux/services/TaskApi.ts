@@ -1,4 +1,4 @@
-import { QuestionTask, Task } from "../models/Interfaces";
+import {Task } from "../models/Interfaces";
 import { genericAPI } from "./GenericAPI";
 
 class TaskAPI {
@@ -79,6 +79,18 @@ class TaskAPI {
   //   const response = await genericAPI.postFormData<Task>(`${TaskAPI.endpoint}/update/${taskId}`, formData);
   //   return response.data;
   // }
+
+  async updateTask(taskId: number, formData: FormData): Promise<Task> {
+    try {
+        const response = await genericAPI.putFormData<Task>(`${TaskAPI.endpoint}/update/${taskId}`, formData);
+        console.log(response.statusText);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating task:', error);
+        throw error;
+    }
+}
+
 
 }
 

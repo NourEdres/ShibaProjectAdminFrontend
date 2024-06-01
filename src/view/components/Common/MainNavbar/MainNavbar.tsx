@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { StaticsIcon, SearchIcon } from "../../../photos"
+import { FC } from 'react';
+import { StaticsIcon } from "../../../photos"
 import './MainNavbar.scss'
 
 interface MainNavbarProps {

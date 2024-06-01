@@ -65,7 +65,7 @@ const TaskDetails: React.FC = () => {
                     <div className='task-media-list'>
                         <div className='section-title'>{TaskDetailsHebrew.Media}</div>
                         <Swiper {...SwiperConfig("horizontal")}>
-                            {task.mediaList.map((media: MediaTask, index: number) => (
+                            {task.mediaList.map((media: MediaTask) => (
                                 <SwiperSlide key={media.mediaTaskID} className='swiper-slide'>
                                     {media.mediaType.includes('application/pdf') ? (
                                         <PDFViewer fileUrl={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')} />

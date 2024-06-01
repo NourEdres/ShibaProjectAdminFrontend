@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { HospitalIcon, ApplicationsIcon, LocationIcon, TaskIcon, LogOutIcon, WhiteLogo } from '../../../photos';
 import './AdminMenu.scss';
 import { buttonsName } from '../../../../redux/models/Types';

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import './TaskCard.scss'
 import { Task } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos';

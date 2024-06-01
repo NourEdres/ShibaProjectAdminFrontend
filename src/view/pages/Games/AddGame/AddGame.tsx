@@ -1,6 +1,8 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import './AddGame.scss'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Unit } from '../../../../redux/models/Interfaces';
+import { useLocation } from 'react-router-dom';
 
 const AddNewGameHeb = {
     CreateNewGame: "הוספת משחק חדש ",
@@ -11,7 +13,31 @@ const AddNewGameHeb = {
 };
 
 function AddGame() {
+    const [gameName, setGameName] = useState(localStorage.getItem('gameName') || '');
+    const [gameDesc, setGameDesc] = useState(localStorage.getItem('gameDesc') || '');
+    const [gameUnits, setGameUnits] = useState<Unit[]>([]);
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    useEffect(() => {
+        const units = location.state?.units || [];
+        setGameUnits(units);
+
+        const storedGameName = localStorage.getItem('gameName');
+        const storedGameDesc = localStorage.getItem('gameDesc');
+        if (storedGameName) setGameName(storedGameName);
+        if (storedGameDesc) setGameDesc(storedGameDesc);
+    }, [location.state?.units]);
+
+    useEffect(() => {
+        localStorage.setItem('gameName', gameName);
+        localStorage.setItem('gameDesc', gameDesc);
+    }, [gameName, gameDesc]);
+
+
+    const handleSave = async () => {
+        console.log("game units " + gameUnits);
+    }
     return (
         <div className='main-container-add-game'>
             <div className='add-game-header'>
@@ -21,21 +47,19 @@ function AddGame() {
                 <div className='add-game-title'>{AddNewGameHeb.CreateNewGame}</div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewGameHeb.Name}</label>
-                    <input type='text' className='game-input' />
+                    <input type='text' className='game-input' value={gameName} onChange={e => setGameName(e.target.value)} />
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewGameHeb.Description}</label>
-                    <textarea className='game-textarea'></textarea>
+                    <textarea className='game-textarea' value={gameDesc} onChange={e => setGameDesc(e.target.value)}></textarea>
                 </div>
                 <div className='input-group'>
-                    <Link to='/UnitsPage'>
-                        <button className='add-buttons'>{AddNewGameHeb.AddUnits}</button>
-                    </Link>
+                    <button className='add-buttons' onClick={() => { navigate('/UnitsPage') }}>{AddNewGameHeb.AddUnits}</button>
                 </div>
-                <button className='save-button'>{AddNewGameHeb.Save}</button>
+                <button className='save-button' onClick={handleSave}>{AddNewGameHeb.Save}</button>
 
             </div>
-        </div>
+        </div >
     )
 }
 

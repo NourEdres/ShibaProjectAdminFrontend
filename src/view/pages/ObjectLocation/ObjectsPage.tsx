@@ -1,19 +1,28 @@
-import React, { FC, useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import HomePage from "../../components/Common/HomePage/HomePage";
-import { objectAPI } from '../../../redux/services/ObjectLocationApi';
 import ObjectsCard from './ObjectsCard/ObjectsCard';
 import { ObjectLocation } from '../../../redux/models/Interfaces';
-import { useParams } from 'react-router-dom';
 import ObjectCard from './ObjectCard/ObjectCard';
 import './ObjectsPage.scss';
+import { setLocations } from '../../../redux/slices/saveAllData';
+import { locationAPI } from '../../../redux/services/LocationApi';
 
 
 const ObjectsPage: FC = () => {
     const location = useSelector((state: RootState) => state.globalStates.selectedCard);
-
+    const dispatch = useDispatch();
     const page = useSelector((state: RootState) => state.globalStates.page);
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            dispatch(setLocations(await locationAPI.getAllLocations()));
+        };
+        fetchLocations()
+
+    }, []);
+
     return (
         <div>
             {page == "Location" && <HomePage objects={location.objectsList}
@@ -25,4 +34,4 @@ const ObjectsPage: FC = () => {
     );
 };
 
-export default ObjectsPage
+export default ObjectsPage;

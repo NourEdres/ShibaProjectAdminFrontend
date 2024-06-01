@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { MainNavbar, AdminMenu } from "../..";
 import './Base.scss';
 import { useSelector } from "react-redux";

@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 const LocationDetails: React.FC = () => {
     const location = useSelector((state: RootState) => state.globalStates.selectedCard);
     const navigate = useNavigate();
-    console.log("Location: ", location)
 
     return (
         <div className='location-container' dir='rtl' style={{ background: "#E9C46A" }}>
@@ -36,8 +35,8 @@ const LocationDetails: React.FC = () => {
                     </div>
                     <div className='location-qr-section'>
                         <div className='location-qr'>
-                            {/* <img src={location.qrcode.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
-                        alt='QR Code' className='qr-code-image' /> */}
+                            <img src={location.qrcode.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                alt='QR Code' className='qr-code-image' />
                         </div>
                         <button className='download-qr-btn' onClick={() => {
                             const fileName = location.qrcode.substring(location.qrcode.lastIndexOf('/') + 1);
@@ -52,18 +51,17 @@ const LocationDetails: React.FC = () => {
                             <img className='download-icon' src={DownloadIcon}></img>
                         </button>
                     </div>
-                    {/* {location.objectsList.length == 0 ? (
-                        return
-                    "No Object .."
-                    <button className='view-objects' onClick={() => { navigate(`/addObject}`); }}>
+                    {location.objectsList.length == 0 ? (
+                        <div> {"No Objects for this location .."}</div>
+                    ) : (
+                        <button className='view-objects' onClick={() => { navigate(`/ObjectsPage/${location.locationID}`); }}>
+                            הצג אובייקטים של החדר
+                        </button>
+                    )}
+
+                    <button className='view-objects' onClick={() => { navigate(`/AddObjectLocation`); }}>
                         הוסף אןבייקטים
                     </button>
-                    ):(
-                    <button className='view-objects' onClick={() => { navigate(`/ObjectsPage/${location.locationID}`); }}>
-                        הצג אובייקטים של החדר
-                    </button>
-                    )
-                    } */}
 
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import './LocationCard.scss';
 import { Location } from '../../../../redux/models/Interfaces';
 import { DeleteIconBlack, EditIconBlack } from '../../../photos';

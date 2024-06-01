@@ -1,8 +1,5 @@
-import React, { FC } from "react";
-import { Fade } from "react-awesome-reveal";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setCard, setPage } from "../../../../redux/slices/GlobalStates";
+import { FC } from "react";
+
 // import { Sector } from "../../../../redux/models/Interfaces";
 import "./HomePage.scss";
 interface InputProps {
@@ -10,7 +7,7 @@ interface InputProps {
     input: string;
     setInput: (input: string) => void;
 }
-const Input: FC<InputProps> = ({ input, setInput, inputPlaceHolder }) => {
+const Input: FC<InputProps> = ({ }) => {
     return (
         <div className="input-container">
 

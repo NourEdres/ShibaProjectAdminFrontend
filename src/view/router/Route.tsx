@@ -14,6 +14,9 @@ import AddGame from '../pages/Games/AddGame/AddGame';
 import AddUnit from '../pages/Games/AddUnit/AddUnit';
 import ChoosableTaskPage from '../pages/Games/AddUnit/ChoosableTask/ChooseTask';
 import UnitsPage from '../pages/Games/UnitPage/UnitsPage';
+import ChoosableLocationPage from '../pages/Games/AddUnit/ChoosableObject/ChooseLocationPage';
+import ChoosableObjectsPage from '../pages/Games/AddUnit/ChoosableObject/ChooseObjectsPage';
+import EditUnit from '../pages/Games/EditUnit/EditUnit';
 
 function Layout() {
   return (
@@ -91,12 +94,36 @@ const router = createBrowserRouter([
         element: <AddUnit />
       },
       {
-        path: '/ChoosableTaskPage',
-        element: <ChoosableTaskPage />
+        path: '/ChooseTask-edit',
+        element: <ChoosableTaskPage fromParent="EditUnit" />
+      },
+      {
+        path: '/ChooseTask-add',
+        element: <ChoosableTaskPage fromParent="AddUnit" />
+      },
+      {
+        path: '/ChooseLocation-edit',
+        element: <ChoosableLocationPage fromParent="EditUnit" />
+      },
+      {
+        path: '/ChooseLocation-add',
+        element: <ChoosableLocationPage fromParent="AddUnit" />
+      },
+      {
+        path: '/ChooseObject-edit/:locationID',
+        element: <ChoosableObjectsPage fromParent="EditUnit" />
+      },
+      {
+        path: '/ChooseObject-add/:locationID',
+        element: <ChoosableObjectsPage fromParent="AddUnit" />
       },
       {
         path: '/UnitsPage',
         element: <UnitsPage />
+      },
+      {
+        path: '/EditUnit',
+        element: <EditUnit />
       },
       {
         path: '/ObjectsPage/:locationID',

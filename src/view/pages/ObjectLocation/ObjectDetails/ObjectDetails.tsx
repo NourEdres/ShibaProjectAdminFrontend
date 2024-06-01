@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,8 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import './ObjectDetails.scss'
-import { ObjectLocation, ObjectImage } from '../../../../redux/models/Interfaces';
-import { useNavigate } from 'react-router-dom';
+import { ObjectImage } from '../../../../redux/models/Interfaces';
 
 
 const ObjectDetailsHebrew = {

@@ -4,8 +4,13 @@ import ChoosableTaskCard from "./ChooseTaskCard";
 import HomePage from "../../../../components/Common/HomePage/HomePage";
 import { Task } from "../../../../../redux/models/Interfaces";
 
-const ChoosableTasksPage: FC = () => {
+interface ChoosableTasksPageProps {
+    fromParent: string;
+}
+
+const ChoosableTasksPage: FC<ChoosableTasksPageProps> = ({ fromParent }) => {
     const [tasks, setTasks] = useState<Task[]>([]);
+    console.log("parent is " + fromParent);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -15,8 +20,17 @@ const ChoosableTasksPage: FC = () => {
         fetchTasks();
     }, []);
 
+    const navigationPath = fromParent === "EditUnit" ? "/EditUnit" : "/AddUnit";
+
     return (
-        <HomePage objects={tasks} page="ChooseTask" Component={ChoosableTaskCard} addButton="הוספת משימה חדשה" addButtonPath="addTask" setCardOnClick={false} />
+        <HomePage objects={tasks}
+            page="ChooseTask"
+            Component={(props) => (
+                <ChoosableTaskCard {...props} navigationPath={navigationPath} />
+            )}
+            addButton="הוספת משימה חדשה"
+            addButtonPath="addTask"
+            setCardOnClick={false} />
     );
 };
 

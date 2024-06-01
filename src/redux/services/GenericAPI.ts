@@ -113,6 +113,22 @@ class GenericAPI {
     return axiosInstance.put<T>(url, data, { ...options, headers });
   };
 
+  putFormData = async <T>(
+    url: string,
+    formData: FormData,
+    headers?: AxiosRequestConfig['headers'],
+    options: AxiosRequestConfig = {}
+  ): Promise<AxiosResponse<T>> => {
+    // const config = {
+    //     ...options,
+    //     headers: {
+    //         ...headers,
+    //         'Content-Type': 'multipart/form-data',
+    //     },
+    // };
+    return axiosInstance.put<T>(url, formData, { ...options, headers });
+  };
+
   delete = async <T>(
     url: string,
     headers?: AxiosRequestConfig['headers'],

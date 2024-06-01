@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { ColorPicker, DoctorUserIcon, HospitalIcon, PasswordIcon, ViewPasswordIcon, LeftArrowIcon } from '../../../photos';
+import { ColorPicker, DoctorUserIcon, HospitalIcon, PasswordIcon, LeftArrowIcon } from '../../../photos';
 import { RootState } from '../../../../redux/store';
 import { useSelector } from 'react-redux';
 import { SketchPicker } from "react-color";

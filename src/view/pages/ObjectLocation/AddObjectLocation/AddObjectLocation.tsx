@@ -12,6 +12,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import { useDispatch } from 'react-redux';
 import { setCard } from '../../../../redux/slices/GlobalStates';
+import { ObjectLocation } from '../../../../redux/models/Interfaces';
+import { objectAPI } from '../../../../redux/services/ObjectLocationApi';
+import { Location } from '../../../../redux/models/Interfaces';
 
 interface FileWithPreview extends File {
     preview: string;
@@ -29,31 +32,68 @@ const AddNewObjectHebrew = {
 
 
 const AddObjectLocation: React.FC = () => {
-    const location = useSelector((state: RootState) => state.globalStates.selectedCard);
+    const location = useSelector((state: RootState) => state.globalStates.selectedCard) as Location;
     const dispatch = useDispatch();
 
     const [selectedFiles, setSelectedFiles] = useState<FileWithPreview[]>([]);
     const [objectName, setObjectName] = useState('');
     const [objectDescription, setObjectDescription] = useState('');
+    const [pics, setPics] = useState<File[]>([]);
+
     const navigate = useNavigate();
 
-    const handleSaveObject = () => {
-        const newObject = {
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFiles = event.target.files;
+        if (selectedFiles) {
+            const filesWithPreview = Array.from(selectedFiles).map(file => {
+                const fileWithPreview: FileWithPreview = {
+                    ...file,
+                    preview: URL.createObjectURL(file)
+                };
+                return fileWithPreview;
+            });
+            setSelectedFiles(prevFiles => [...prevFiles, ...filesWithPreview]);
+            setPics(prevFiles => [...prevFiles, ...Array.from(selectedFiles)]);
+        }
+    };
+
+    const handleSaveObject = async () => {
+        if (!objectName.trim()) {
+            alert("An object must have a name.");
+        }
+        const newObject: ObjectLocation = {
             objectID: Date.now(),
             name: objectName,
             description: objectDescription,
-            objectImages: selectedFiles.map(file => ({
-                id: Date.now(),
-                name: file.name,
-                imagePath: file.preview,
-                object: {}
-            }))
+            // objectImages: []
         };
+
+        const formData = new FormData();
+        formData.append('locationObject', new Blob([JSON.stringify(newObject)], { type: 'application/json' }));
+        if (pics.length > 0) {
+            console.log("media " + pics)
+            pics.forEach((pic) => {
+                formData.append('images', pic);
+            });
+        }
+
+        try {
+            await objectAPI.createObject(location.locationID, formData);
+            alert('Object created successfully');
+            dispatch(setCard(location));
+            navigate(`/ObjectsPage/${location.locationID}`);
+
+        } catch (error) {
+            console.error('Failed to save object:', error);
+            alert("Failed to save object.");
+        }
+
+
         {
             /* API add object(loctoin.id,object)*/
             // dispatch(setCard(await API Get Room By Id (location id)))
         }
-        navigate('/ObjectsPage', { state: { newObject } });
+        // navigate('/ObjectsPage', { state: { newObject } });
     };
 
     return (
@@ -65,11 +105,11 @@ const AddObjectLocation: React.FC = () => {
                 <div className='add-task-title'>{AddNewObjectHebrew.AddNewObjects}</div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewObjectHebrew.Name}</label>
-                    <input type='text' className='task-input' />
+                    <input type='text' className='task-input' value={objectName} onChange={e => setObjectName(e.target.value)} />
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddNewObjectHebrew.Description}</label>
-                    <textarea className='task-textarea'></textarea>
+                    <textarea className='task-textarea' value={objectDescription} onChange={e => setObjectDescription(e.target.value)} ></textarea>
                 </div>
 
                 <div className='options-container'>
@@ -85,17 +125,7 @@ const AddObjectLocation: React.FC = () => {
                             id="file-upload"
                             className="file-input"
                             style={{ display: 'none' }}
-                            onChange={(e) => {
-                                if (e.target.files) {
-                                    const filesArray: FileWithPreview[] = Array.from(e.target.files).map(file => ({
-                                        ...file,
-                                        preview: URL.createObjectURL(file)
-                                    }));
-                                    setSelectedFiles(prevFiles => [...prevFiles, ...filesArray]);
-                                    console.log("selectedFile:  ", selectedFiles);
-
-                                }
-                            }}
+                            onChange={handleFileChange}
                         />
                     </div>
                     <div className='task-media-list'>
@@ -108,6 +138,7 @@ const AddObjectLocation: React.FC = () => {
                                         <button className='delete-image-btn' onClick={() => {
                                             const updatedFiles = selectedFiles.filter((_, idx) => idx !== index);
                                             setSelectedFiles(updatedFiles);
+                                            setPics(updatedFiles); // recheck
                                         }}>
                                             {AddNewObjectHebrew.Delete_Image}</button>
                                     </SwiperSlide>

@@ -19,7 +19,6 @@ const options = {
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
     const [numPages, setNumPages] = useState<number | null>(null);
-    const [pageNumber, setPageNumber] = useState(1);
     const [containerWidth, setContainerWidth] = useState<number>();
     const containerRef = useRef<HTMLDivElement>(null);
     const maxWidth = 800;
@@ -44,7 +43,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
                 Page {pageNumber} of {numPages}
             </p> */}
             <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess} options={options}>
-                {Array.from(new Array(numPages), (el, index) => (
+                {Array.from(new Array(numPages), (_, index) => (
                     <Page
                         key={`page_${index + 1}`}
                         pageNumber={index + 1}

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import './SectorCard.scss';
 import { Sector } from '../../../../redux/models/Types';
 import { EditIcon, DeleteIcon } from '../../../photos';

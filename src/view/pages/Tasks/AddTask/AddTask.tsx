@@ -34,6 +34,7 @@ function AddTask() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [question, setQuestion] = useState<string>('');
     const [answers, setAnswers] = useState<string[]>([]);
     const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
     // const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -60,13 +61,24 @@ function AddTask() {
         }
     };
 
+    function validateQuestion(): boolean {
+        if ((!question.trim()) || answers.length < 1) {
+            return false;
+        }
+        if (correctAnswer === null) {
+            alert("You should mark an answer as correct");
+            return false;
+        }
+        return true;
 
-    const validateAndSave = () => {
+    }
+    const validateAndSave = async () => {
         if (!name.trim()) {
             alert("A task must have a name.");
             return;
         }
-        if (!showQuestion && mediaFiles.length === 0 && !additionalNotes.trim()) {
+        if (!validateQuestion() && mediaFiles.length === 0 && !additionalNotes.trim()) {
+            console.log(validateQuestion());
             alert("A task must have at least one element (question, media, or notes).");
             return;
         }
@@ -80,8 +92,8 @@ function AddTask() {
 
         const questionTask: QuestionTask | undefined = showQuestion ? {
             questionTaskID: 0,
-            question: answers.join('; '),
-            answers,
+            question: question,
+            answers: answers,
             correctAnswer: correctAnswer ?? 0,
             taskID: 0,
         } : undefined;
@@ -107,30 +119,6 @@ function AddTask() {
                 alert("Failed to save task.");
             });
     };
-
-    // const handleSave = async () => {
-    //     const task: Task = {
-    //         taskID: 0,  
-    //         name: string,
-    //         description: description,
-    //         taskFreeTexts: [],  
-    //     };
-
-    //     const questionTask: QuestionTask | undefined = showQuestion ? {
-    //         questionTaskID: 0,  
-    //         question: question,
-    //         answers: answers,
-    //         correctAnswer: correctAnswer ?? 0,
-    //     } : undefined;
-
-    //     try {
-    //         const createdTask = await taskAPI.createTask(task, questionTask, mediaFiles);
-    //         console.log("Task created successfully:", createdTask);
-    //         // Optionally, clear the form or redirect the user
-    //     } catch (error) {
-    //         console.error("Failed to create task:", error);
-    //     }
-    // };
 
     return (
         <div className='main-container-add-task'>
@@ -172,6 +160,8 @@ function AddTask() {
                                         <button className='delete-image-btn' onClick={() => {
                                             setMediaFiles(files => files.filter((_, i) => i !== index));
                                             URL.revokeObjectURL(file.preview);
+                                            setFiles(files => files.filter((_, i) => i !== index));
+
                                         }}>
                                             {AddNewTaskHebrew.Delete_Media}
                                         </button>
@@ -187,7 +177,9 @@ function AddTask() {
                         {showQuestion && (
                             <div className='input-group'>
                                 <label className='input-label'>{AddNewTaskHebrew.Q}</label>
-                                <input type='text' className='task-input' placeholder='הוספת שאלה' />
+                                <input type='text' className='task-input' placeholder='הוספת שאלה' onChange={(e) => {
+                                    setQuestion(e.target.value);
+                                }} />
                                 {answers.map((answer, index) => (
                                     <div key={index} className="answer-container">
                                         <input type="text" className='task-input' value={answer} onChange={(e) => {

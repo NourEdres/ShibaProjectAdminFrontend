@@ -46,8 +46,8 @@ export interface ObjectLocation {
   objectID: number;
   name: string;
   description?: string;
-  location: Location;
-  objectImages: ObjectImage[];
+  // location: Location;
+  // objectImages: ObjectImage[];
 }
 
 export interface ObjectImage {
@@ -77,6 +77,7 @@ export interface GameImage {
 
 export interface Unit {
   unitID: number;
+  unitOrder: number;
   name: string;
   description?: string;
   hint: string;

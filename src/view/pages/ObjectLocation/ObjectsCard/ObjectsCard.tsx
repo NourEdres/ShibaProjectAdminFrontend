@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ObjectLocation } from '../../../../redux/models/Interfaces';
 import { EditIcon, DeleteIcon } from '../../../photos';
 

@@ -5,16 +5,16 @@ import './ChooseTaskCard.scss';
 
 interface ChoosableTaskCardProps {
     object: Task;
+    navigationPath: string;
 }
 
-const ChoosableTaskCard: FC<ChoosableTaskCardProps> = ({ object }) => {
+const ChoosableTaskCard: FC<ChoosableTaskCardProps> = ({ object, navigationPath }) => {
     const navigate = useNavigate();
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
-        console.log("Navigating to /AddUnit with state:", object);
-        navigate('/AddUnit', { state: { selectedTask: object } });
-        console.log("Navigation command issued");
+        console.log("Navigating to" + navigationPath + "with state:", object);
+        navigate(navigationPath, { state: { selectedTask: object } });
     };
 
 

@@ -11,6 +11,19 @@ class ObjectLocationAPI{
         return response.data;
     }
 
+    async createObject(locationId: number, formData: FormData): Promise<any[]>{
+        console.log("in create location object " + locationId);
+        try{
+            
+            const response = await genericAPI.postFormData<any>(`${ObjectLocationAPI.endpoint}/create/${locationId}`, formData);
+            return response.data;
+        }
+        catch (error) {
+            console.error('Error creating object:', error);
+            throw error;
+        }
+    }
+
 }
 
 export const objectAPI = new ObjectLocationAPI();
