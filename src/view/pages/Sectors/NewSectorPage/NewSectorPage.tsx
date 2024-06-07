@@ -3,7 +3,6 @@ import NewSector from './NewSector/NewSector'
 const NewSectorPage = () => {
     return (
         <div>
-            <Navbar />
             <NewSector />
         </div>
 

@@ -25,9 +25,13 @@ const saveAllData = createSlice({
     setTasks(state, action: PayloadAction<Task[]>) {
       state.Tasks = action.payload;
     },
+    setGames(state, action: PayloadAction<Game[]>) {
+      console.log("games in save data " + JSON.stringify(state.Games))
+      state.Games = action.payload;
+    },
   },
 });
 
-export const { setLocations, setTasks } = saveAllData.actions;
+export const { setLocations, setTasks, setGames } = saveAllData.actions;
 
 export default saveAllData.reducer;

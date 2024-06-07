@@ -17,10 +17,6 @@ import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import ReactPlayer from 'react-player';
 
-interface FileWithPreview extends File {
-    preview: string;
-}
-
 const AddNewTaskHebrew = {
     CreateNewTask: 'עריכת משימה ',
     Name: 'שם : ',
@@ -59,66 +55,28 @@ function EditTask() {
     const [showNotes, setShowNotes] = useState<boolean>(!!task.taskFreeTexts?.length);
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
     const [existingMediaTasks, setExistingMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
-    const [existingMediaPreviews, setExistingMediaPreviews] = useState<FileWithPreview[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const urlToFile = async (url: string, filename: string, mimeType: string): Promise<File> => {
-        const response = await fetch(url);
-        const data = await response.blob();
-        return new File([data], filename, { type: mimeType });
-    };
-
-    useEffect(() => {
-        const fetchExistingMediaFiles = async () => {
-            const toFiles = await Promise.all(
-                (task.mediaList || []).map(async (media) => {
-                    const file = await urlToFile(media.mediaPath, media.fileName, media.mediaType);
-                    return {
-                        ...file,
-                        preview: URL.createObjectURL(file),
-                    } as File;
-                })
-            );
-            const filesWithPreview = await Promise.all(
-                (task.mediaList || []).map(async (media) => {
-                    const file = await urlToFile(media.mediaPath, media.fileName, media.mediaType);
-                    return {
-                        ...file,
-                        preview: URL.createObjectURL(file),
-                    } as FileWithPreview;
-                })
-            );
-            setMediaFiles(toFiles);
-            setExistingMediaPreviews(filesWithPreview);
-        };
-
-        if (task) {
-            setAnswers(task.questionTask ? task.questionTask.answers : []);
-            setCorrectAnswer(task.questionTask ? task.questionTask.correctAnswer : null);
-            setAdditionalNotes(task.taskFreeTexts?.[0] || '');
-            setExistingMediaTasks(task.mediaList || []);
-            fetchExistingMediaFiles();
-        }
-    }, [task]);
-
-
-
-
-
+    console.log("task is frm edit " + JSON.stringify(task));
 
     const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const newFiles = Array.from(event.target.files);
-            const filesWithPreview = newFiles.map(file => ({
-                ...file,
-                preview: URL.createObjectURL(file),
-            } as FileWithPreview));
             setMediaFiles(prevFiles => [...prevFiles, ...newFiles]);
-            setExistingMediaPreviews(prevPreviews => [...prevPreviews, ...filesWithPreview]);
+            const newMediaTasks = newFiles.map((file,) => ({
+                mediaTaskID: Math.random(),
+                fileName: file.name,
+                mediaPath: URL.createObjectURL(file),
+                mediaType: file.type,
+                taskID: task.taskID
+            }));
+            setExistingMediaTasks(prevTasks => [...prevTasks, ...newMediaTasks]);
         }
     };
 
+    useEffect(() => {
+        console.log("len of mesi" + mediaFiles.length)
+    }, [mediaFiles]);
 
     const handleSubmit = async () => {
         if (!taskName.trim()) {
@@ -179,7 +137,6 @@ function EditTask() {
         }
     };
 
-
     return (
         <div className='main-container-edit-task'>
             <div className='edit-task-header'>
@@ -215,31 +172,30 @@ function EditTask() {
                                 <label htmlFor='file-upload' className='file-upload-label'>
                                     <img src={UploadFileIcon} alt='Upload File' className='file-upload-icon' />
                                 </label>
-                                {existingMediaPreviews.length > 0 ? (
+                                {existingMediaTasks.length > 0 ? (
                                     <Swiper {...SwiperConfig('horizontal')}>
-                                        {existingMediaPreviews.map((media, index) => (
+                                        {existingMediaTasks.map((media, index) => (
                                             <SwiperSlide key={index} className='swiper-slide'>
-                                                {media.type?.includes('application/pdf') ? (
-                                                    <PDFViewer fileUrl={media.preview} />
-                                                ) : media.type?.includes('audio') ? (
+                                                {media.mediaType?.includes('application/pdf') ? (
+                                                    <PDFViewer fileUrl={media.mediaPath} />
+                                                ) : media.mediaType?.includes('audio') ? (
                                                     <div dir='ltr'>
-                                                        <AudioPlayer autoPlay={false} src={media.preview} onPlay={e => console.log('Playing audio', e)} />
+                                                        <AudioPlayer autoPlay={false} src={media.mediaPath} onPlay={e => console.log('Playing audio', e)} />
                                                     </div>
-                                                ) : media.type?.includes('video') ? (
-                                                    <ReactPlayer url={media.preview} controls className='react-player' width='100%' height='100%' />
+                                                ) : media.mediaType?.includes('video') ? (
+                                                    <ReactPlayer url={media.mediaPath} controls className='react-player' width='100%' height='100%' />
                                                 ) : (
-                                                    <img className='img-media' src={media.preview} alt={`Uploaded ${index}`} />
+                                                    <>
+                                                        <img className='img-media' src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                                            alt={`Uploaded ${index}`} />
+                                                        {console.log("media path", media.mediaPath)}
+
+                                                    </>
                                                 )}
                                                 <button
                                                     className='delete-image-btn'
                                                     onClick={() => {
-                                                        setExistingMediaPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
-                                                        if (index < existingMediaTasks.length) {
-                                                            setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-                                                        } else {
-                                                            setMediaFiles(prevFiles => prevFiles.filter((_, i) => i !== (index - existingMediaTasks.length)));
-                                                            URL.revokeObjectURL(media.preview);
-                                                        }
+                                                        setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
                                                     }}
                                                 >
                                                     {AddNewTaskHebrew.Delete_Media}
@@ -255,6 +211,7 @@ function EditTask() {
                                 </button>
                             </div>
                         )}
+
 
                         {showQuestion && (
                             <div className='input-group'>

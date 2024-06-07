@@ -1,0 +1,74 @@
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 3vw;
+    gap: 2vw;
+    height: 50vw;
+    .section-title {
+        @include font-style;
+        font-size: 1.7vw;
+        font-weight: 450;
+        color: $primary-blue-logo-color;
+      }
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .sector-name {
+          @include font_style;
+          font-size: xx-large;
+          font-weight: 450;
+          width: 60%;
+          align-items: flex-end;
+          justify-self: flex-end;
+          color: $secondary-white-color;
+        }
+    
+        .arrow-icon {
+          display: flex;
+          height: 5vw;
+          width: 50%;
+          align-self: flex-start;
+          margin-top: -0.7vw;
+          cursor: pointer;
+          width: 5vw;
+          transition: transform 0.3s ease;
+    
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+      .game-details {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        height: 100%;
+        gap: 1vw;
+        padding: 2vw;
+        background-color: rgba($secondary-white-color, 0.8);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: scroll;
+        .game-title {
+            @include font-style;
+            font-size: 2vw;
+            margin-bottom: 1vw;
+            font-weight: 450;
+            text-align: center;
+            color: $primary-blue-logo-color;
+          }
+        .task-desc {
+            margin-bottom: 1vw;
+            padding: 1vw;
+            // background-color: $secondary-white-color;
+            // border: 0.1vw solid $secondary-grey-color;
+            border-radius: 0.5vw;
+          }
+      }
+
+}

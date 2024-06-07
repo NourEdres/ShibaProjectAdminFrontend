@@ -11,7 +11,7 @@ interface GlobalStates {
 
 const initialState: GlobalStates = {
   selectedCard: {},
-  page: "Sectors",
+  page: '',
   sectorColor: "red",
   location: null,
   // unit: null,
@@ -36,3 +36,5 @@ const globalStatesSlice = createSlice({
 export const { setCard, setPage, setSectorColor } = globalStatesSlice.actions;
 
 export default globalStatesSlice.reducer;
+
+

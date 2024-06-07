@@ -25,7 +25,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                         className={`menu-button ${activeButton === buttonsName.Sectors ? "active" : ""}`}
                         onClick={() => {
                             setActiveButton(buttonsName.Sectors);
-                            dispatch(setPage("Sectors"));
+                            dispatch(setPage(buttonsName.Sectors));
                         }
                         }
                     >
@@ -38,7 +38,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                         className={`menu-button ${activeButton === buttonsName.Games ? "active" : ""}`}
                         onClick={() => {
                             setActiveButton(buttonsName.Games)
-                            dispatch(setPage("Games"));
+                            dispatch(setPage(buttonsName.Games));
                         }}
                     >
                         <div className='button-txt'>{buttonsName.Games}</div>
@@ -49,8 +49,8 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                     <button
                         className={`menu-button ${activeButton === buttonsName.Locations ? "active" : ""}`}
                         onClick={() => {
-                            dispatch(setPage("Locations"));
                             setActiveButton(buttonsName.Locations);
+                            dispatch(setPage(buttonsName.Locations));
 
                         }}
                     >
@@ -61,7 +61,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                 <Link className="menu-button" to="/Tasks" >
                     <button
                         className={`menu-button ${activeButton === buttonsName.Tasks ? "active" : ""}`}
-                        onClick={() => { setActiveButton(buttonsName.Tasks); setPage("Tasks") }}
+                        onClick={() => { setActiveButton(buttonsName.Tasks); dispatch(setPage(buttonsName.Tasks)) }}
                     >
                         <div className='button-txt'>{buttonsName.Tasks}</div>
                         <img className="navbar-icon" src={TaskIcon} alt="menu-icon" />
@@ -70,7 +70,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                 <Link className="menu-button" to="/" >
                     <button
                         className={`menu-button ${activeButton === buttonsName.Logout ? "active" : ""}`}
-                        onClick={() => { setActiveButton(buttonsName.Logout); setPage("Sectors") }}
+                        onClick={() => { setActiveButton(buttonsName.Logout); dispatch(setPage(buttonsName.Logout)) }}
                     >
                         <div className='button-txt'>{buttonsName.Logout}</div>
                         <img className="navbar-icon" src={LogOutIcon} alt="menu-icon" />

@@ -1,11 +1,32 @@
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { useNavigate } from "react-router-dom";
 import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import "../Hero/Hero.scss";
-import { taskAPI } from "../../../../redux/services/TaskApi";
-import { locationAPI } from "../../../../redux/services/LocationApi";
-import { objectAPI } from "../../../../redux/services/ObjectLocationApi";
+import { useState } from "react";
+import { loginAPI } from "../../../../redux/services/LoginApi";
+
 
 const Hero = () => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
+
+  // const handleLogin = async () => {
+  //   if (!username.trim() || !password.trim()) {
+  //     alert("provide username and password");
+  //   } else {
+  //     try {
+  //       await loginAPI.login(username, password);
+  //       navigate('/Sectors');
+  //     } catch (error: any) {
+  //       alert("Login failed: " + error.message);
+  //     }
+  //   }
+  // };
+
+  const handleLogin = async () => {
+    navigate('/Sectors');
+  };
+
   return (
     <div className="hero-container">
       <div className="hero-container-part-one">
@@ -18,6 +39,8 @@ const Hero = () => {
                 <input
                   className="admin-user-name-input"
                   placeholder="שם משתמש"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
                 />
                 <img className="navbar-icon" src={DoctorUserIcon} alt="admin-icon" />
               </div>
@@ -26,13 +49,12 @@ const Hero = () => {
                   className="admin-code-input"
                   type="password"
                   placeholder=" קוד"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                 />
                 <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
               </div>
-              <Link to="/Sectors">
-                <button className="login-button" onClick={() => (taskAPI.getAllTasks(), locationAPI.getAllLocations(),
-                  objectAPI.getAllObjetsOfLocation(2))}>התחבר</button>
-              </Link>
+              <button className="login-button" onClick={handleLogin}>התחבר</button>
             </div>
           </div>
         </div>

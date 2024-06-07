@@ -24,7 +24,7 @@ const LocationsPage: FC = () => {
 
     return (
         <>
-            {page == "Locations" && <HomePage objects={locations} page="Location" Component={LocationCard} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
+            {<HomePage objects={locations} page="Location" Component={LocationCard} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
         </>
     );
 };

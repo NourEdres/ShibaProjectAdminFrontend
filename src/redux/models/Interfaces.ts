@@ -64,8 +64,15 @@ export interface Game {
   gameName: string;
   description: string;
   QRCodePath: string;
-  gameImage: GameImage;
-  units: Unit[];
+  gameImage?: GameImage;
+  units?: Unit[];
+}
+
+export interface GameTBC {
+  gameName: string;
+  description: string;
+  gameImage?: GameImage;
+  units?: Unit[];
 }
 
 export interface GameImage {
