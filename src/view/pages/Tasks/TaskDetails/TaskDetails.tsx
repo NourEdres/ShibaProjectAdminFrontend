@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { MediaTask } from '../../../../redux/models/Interfaces';
+import { MediaTask, Task } from '../../../../redux/models/Interfaces';
 import { SwiperConfig } from '../../../components';
 import { LeftArrowIcon } from '../../../photos';
 import PDFViewer from '../../../components/Common/PDFViewer/PDFViewer';
@@ -25,10 +25,10 @@ const TaskDetailsHebrew = {
     answers: "תשובות :"
 };
 const TaskDetails: React.FC = () => {
-    const task = useSelector((state: RootState) => state.globalStates.selectedCard);
+    const task: Task = useSelector((state: RootState) => state.globalStates.selectedCard);
 
     return (
-        <div className='task-container' dir='rtl' style={{ background: "#E9C46A" }}>
+        <div className='task-container' dir='rtl' style={{ background: task.admin?.color }}>
             <div className='add-task-header'>
                 <div className='sector-name'>פיזוטרפיה</div>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
@@ -39,7 +39,7 @@ const TaskDetails: React.FC = () => {
                     < div className='section-title'>{TaskDetailsHebrew.Description}</div> &&
                     <div className='task-desc'>{task.description}</div>}
                 <div className='task-content'>
-                    {task.taskFreeTexts.length > 0 &&
+                    {task.taskFreeTexts &&
                         <div className='task-free-text'>
                             < div className='section-title'>{TaskDetailsHebrew.FreeText}</div>
                             {task.taskFreeTexts.map((text: string, index: number) => <div className='text-free' key={index}>{text}</div>)}
@@ -54,7 +54,7 @@ const TaskDetails: React.FC = () => {
                                 < div className='section-title'>{TaskDetailsHebrew.answers}</div>
                                 <div className='answers'>
                                     {task.questionTask.answers.map((answer: string, index: number) => (
-                                        <div key={index} className={index === task.questionTask.correctAnswer ? 'correct-answer' : ''}>
+                                        <div key={index} className={index === task?.questionTask?.correctAnswer ? 'correct-answer' : ''}>
                                             {answer}
                                         </div>
                                     ))}
@@ -65,7 +65,7 @@ const TaskDetails: React.FC = () => {
                     <div className='task-media-list'>
                         <div className='section-title'>{TaskDetailsHebrew.Media}</div>
                         <Swiper {...SwiperConfig("horizontal")}>
-                            {task.mediaList.map((media: MediaTask) => (
+                            {task.mediaList && task.mediaList.map((media: MediaTask) => (
                                 <SwiperSlide key={media.mediaTaskID} className='swiper-slide'>
                                     {media.mediaType.includes('application/pdf') ? (
                                         <PDFViewer fileUrl={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')} />

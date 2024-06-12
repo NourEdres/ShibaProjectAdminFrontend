@@ -12,10 +12,11 @@ interface BaseProps {
 }
 
 function Base({ children }: BaseProps) {
-    const object = useSelector((state: RootState) => state.globalStates.selectedCard);
+    // const object = useSelector((state: RootState) => state.globalStates.selectedCard);
     const page = useSelector((state: RootState) => state.globalStates.page);
     console.log("pageee " + page)
     const [menuActiveButton, setMenuActiveButton] = useState(page);
+    const admin = useSelector((state: RootState) => state.globalStates.sector);
     const dispatch = useDispatch();
 
     // { console.log(object.color) }
@@ -33,7 +34,7 @@ function Base({ children }: BaseProps) {
                     <div className="main-navbar">
                         <MainNavbar activeButton={menuActiveButton} />
                     </div>
-                    <div className="content" style={{ backgroundColor: object != undefined ? object.color : "#D9D9D9" }}>
+                    <div className="content" style={{ backgroundColor: admin?.color != undefined ? admin.color : "#D9D9D9" }}>
                         {children}
                     </div>
                 </div>

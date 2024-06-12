@@ -12,7 +12,7 @@ interface GameCardProps {
 
 const GameCard: FC<GameCardProps> = ({ object }) => {
     const dispatch = useDispatch();
-    console.log("object is ", typeof (object));
+    console.log("object in game card ", JSON.stringify(object));
 
     return (
         <div className='game-card'>

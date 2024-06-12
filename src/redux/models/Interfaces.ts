@@ -5,6 +5,7 @@ export interface Task {
   taskFreeTexts?: string[];
   questionTask?: QuestionTask; 
   mediaList?: MediaTask[];
+  admin?: Admin
 }
 export interface QuestionTask {
   questionTaskID: number;
@@ -63,7 +64,7 @@ export interface Game {
   adminID: number;
   gameName: string;
   description: string;
-  QRCodePath: string;
+  qrcodePath: string;
   gameImage?: GameImage;
   units?: Unit[];
 }
@@ -102,6 +103,13 @@ export interface Admin {
   role: UserRole;
   gamesList: Game[];
   tasksList: Task[];
+}
+
+export interface AdminTBC {
+  username: string;
+  password: string;
+  color: string;
+  sector: string;
 }
 
 export enum UserRole {

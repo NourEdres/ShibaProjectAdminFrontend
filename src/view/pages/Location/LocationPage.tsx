@@ -10,7 +10,7 @@ import { setLocations } from "../../../redux/slices/saveAllData";
 // import { Locations } from "../../../data/Locations";
 
 const LocationsPage: FC = () => {
-    const page = useSelector((state: RootState) => state.globalStates.page);
+    // const page = useSelector((state: RootState) => state.globalStates.page);
     const dispatch = useDispatch();
     const locations = useSelector((state: RootState) => state.AllData.locations);
 

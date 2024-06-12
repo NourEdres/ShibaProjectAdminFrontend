@@ -17,6 +17,8 @@ import ChoosableLocationPage from '../pages/Games/AddUnit/ChoosableObject/Choose
 import ChoosableObjectsPage from '../pages/Games/AddUnit/ChoosableObject/ChooseObjectsPage';
 import EditUnit from '../pages/Games/EditUnit/EditUnit';
 import GameDetails from '../pages/Games/GameDetails/GameDetails';
+import UnitsPageView from '../pages/Games/UnitsPage-View/UnitsPageView';
+import UnitDetailsView from '../pages/Games/UnitDetailsView/UnitDetailsView';
 
 function Layout() {
   return (
@@ -132,6 +134,14 @@ const router = createBrowserRouter([
       {
         path: '/GameDetails/:game',
         element: <GameDetails />
+      },
+      {
+        path: '/UnitsPageView',
+        element: <UnitsPageView />
+      },
+      {
+        path: '/UnitDetailsView',
+        element: <UnitDetailsView />
       },
 
     ]

@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Location } from "../models/Interfaces";
+import { Admin, Location } from "../models/Interfaces";
 
 interface GlobalStates {
   selectedCard: any;
   page: string;
   sectorColor: string;
   location: Location | null;
+  sector: Admin | null;
   // location: Location | null;
 }
 
@@ -14,6 +15,7 @@ const initialState: GlobalStates = {
   page: '',
   sectorColor: "red",
   location: null,
+  sector: null,
   // unit: null,
 };
 
@@ -30,10 +32,13 @@ const globalStatesSlice = createSlice({
     setSectorColor(state, action: PayloadAction<string>) {
       state.sectorColor = action.payload;
     },
+    setSector(state, action: PayloadAction<Admin>){
+      state.sector = action.payload;
+    }
   },
 });
 
-export const { setCard, setPage, setSectorColor } = globalStatesSlice.actions;
+export const { setCard, setPage, setSectorColor, setSector } = globalStatesSlice.actions;
 
 export default globalStatesSlice.reducer;
 
