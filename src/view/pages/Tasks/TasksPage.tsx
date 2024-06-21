@@ -8,13 +8,18 @@ import { setTasks } from "../../../redux/slices/saveAllData";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import ConfirmationDialog from '../../components/Common/ConfirmationDialog/ConfirmationDialog';
-import { Task } from '../../../redux/models/Interfaces';
+import { Admin, Task, UserRole } from '../../../redux/models/Interfaces';
+import { setCard } from '../../../redux/slices/GlobalStates';
+import { useNavigate } from "react-router-dom";
 
 const TasksPage: FC = () => {
     const dispatch = useDispatch();
     const tasks = useSelector((state: RootState) => state.AllData.Tasks);
     const [showConfirm, setShowConfirm] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+    const adminStr = localStorage.getItem('admin');
+    const currAdmin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -23,7 +28,16 @@ const TasksPage: FC = () => {
         fetchTasks();
     }, [dispatch]);
 
-    const handleDelete = async () => {
+    const handleDelete = (task: Task) => {
+        if (currAdmin.adminID !== task.adminIDAPI && currAdmin.role !== UserRole.MainAdmin) {
+            alert("אי אפשר למחוק משימה שלא שייכת למחלקה שלך");
+        } else {
+            setTaskToDelete(task);
+            setShowConfirm(true);
+        }
+    };
+
+    const handleDeleteConfirm = async () => {
         if (taskToDelete) {
             try {
                 await taskAPI.deleteTask(taskToDelete.taskID);
@@ -36,19 +50,33 @@ const TasksPage: FC = () => {
             }
         }
     };
+
+    const handleEdit = (task: Task) => {
+        if (currAdmin.adminID !== task.adminIDAPI && currAdmin.role !== UserRole.MainAdmin) {
+            alert("אי אפשר לערוך משימה שלא שייכת למחלקה שלך");
+        } else {
+            dispatch(setCard(task));
+            navigate('/EditTask');
+        }
+    };
+
     return (
         <>
-            <HomePage objects={tasks} page="Task" Component={(props) => (
-                <TaskCard {...props}
-                    onShowConfirm={(task) => {
-                        setTaskToDelete(task);
-                        setShowConfirm(true);
-                    }}
-                />
-            )} addButton="הוספת משימה חדשה" addButtonPath="addTask" />
+            <HomePage
+                objects={tasks}
+                page="Task"
+                Component={(props) => (
+                    <TaskCard {...props}
+                        onShowConfirm={handleDelete}
+                        onEditTask={handleEdit}
+                    />
+                )}
+                addButton="הוספת משימה חדשה"
+                addButtonPath="addTask"
+            />
             {showConfirm && (
                 <ConfirmationDialog
-                    onConfirm={handleDelete}
+                    onConfirm={handleDeleteConfirm}
                     onCancel={() => setShowConfirm(false)}
                     message={`Are you sure you want to delete the task "${taskToDelete?.name}"?`}
                 />

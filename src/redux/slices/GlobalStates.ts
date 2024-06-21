@@ -8,6 +8,7 @@ interface GlobalStates {
   location: Location | null;
   sector: Admin | null;
   // location: Location | null;
+  loggedInAdmin: Admin | null;
 }
 
 const initialState: GlobalStates = {
@@ -16,6 +17,7 @@ const initialState: GlobalStates = {
   sectorColor: "red",
   location: null,
   sector: null,
+  loggedInAdmin: null,
   // unit: null,
 };
 
@@ -34,11 +36,14 @@ const globalStatesSlice = createSlice({
     },
     setSector(state, action: PayloadAction<Admin>){
       state.sector = action.payload;
+    },
+    setLoggedInAdmin(state, action: PayloadAction<Admin>){
+      state.loggedInAdmin = action.payload;
     }
   },
 });
 
-export const { setCard, setPage, setSectorColor, setSector } = globalStatesSlice.actions;
+export const { setCard, setPage, setSectorColor, setSector, setLoggedInAdmin } = globalStatesSlice.actions;
 
 export default globalStatesSlice.reducer;
 

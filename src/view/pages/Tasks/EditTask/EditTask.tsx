@@ -3,19 +3,10 @@ import './EditTask.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
 import { MediaTask, Task } from '../../../../redux/models/Interfaces';
 import { useNavigate } from 'react-router-dom';
 import { taskAPI } from '../../../../redux/services/TaskApi';
-import { SwiperConfig } from '../../../components';
-import PDFViewer from '../../../components/Common/PDFViewer/PDFViewer';
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
-import ReactPlayer from 'react-player';
+import MediaViewer from '../../../components/Common/MediaViewer/MediaViewer';
 
 const AddNewTaskHebrew = {
     CreateNewTask: 'עריכת משימה ',
@@ -39,13 +30,15 @@ const AddNewTaskHebrew = {
     Media: 'מדיה :',
     answers: 'תשובות :',
     Delete_Media: 'מחיקת תוכן',
-    NoMedia: 'אין מדיה למשימה הזאת'
+    NoMedia: 'אין מדיה למשימה הזאת',
+    Sectors: "בחירת מחלקה",
+    WithMsg: "הצגת הודעת הצלחה ",
 };
 
 function EditTask() {
     const task = useSelector((state: RootState) => state.globalStates.selectedCard) as Task;
     const [taskName, setTaskName] = useState<string>(task.name);
-    const [description, setDescription] = useState<string>(task.description);
+    const [description, setDescription] = useState<string>(task?.description || '');
     const [question, setQuestion] = useState<string>(task.questionTask?.question || '');
     const [answers, setAnswers] = useState<string[]>(task.questionTask ? task.questionTask.answers : []);
     const [correctAnswer, setCorrectAnswer] = useState<number | null>(task.questionTask ? task.questionTask.correctAnswer : null);
@@ -55,15 +48,26 @@ function EditTask() {
     const [showNotes, setShowNotes] = useState<boolean>(!!task.taskFreeTexts?.length);
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
     const [existingMediaTasks, setExistingMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
+    const [keptMediaTasks, setKeptMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log("task is frm edit " + JSON.stringify(task));
+    const sectors = useSelector((state: RootState) => state.AllData.Sectors);
+    const [selectedSector, setSelectedSector] = useState<number | null>(task.adminIDAPI || null);
+    const [, setSelectedSectorName] = useState<string>('');
+    const [withMsg, setWithMsg] = useState<boolean>(task.withMsg);
+
+    useEffect(() => {
+        if (selectedSector !== null) {
+            const sector = sectors.find(sector => sector.adminID === selectedSector)?.sector;
+            setSelectedSectorName(sector || '');
+        }
+    }, [selectedSector, sectors]);
 
     const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const newFiles = Array.from(event.target.files);
             setMediaFiles(prevFiles => [...prevFiles, ...newFiles]);
-            const newMediaTasks = newFiles.map((file,) => ({
+            const newMediaTasks = newFiles.map((file) => ({
                 mediaTaskID: Math.random(),
                 fileName: file.name,
                 mediaPath: URL.createObjectURL(file),
@@ -74,16 +78,19 @@ function EditTask() {
         }
     };
 
-    useEffect(() => {
-        console.log("len of mesi" + mediaFiles.length)
-    }, [mediaFiles]);
+    const handleDeleteMedia = (index: number) => {
+        const mediaToDelete = existingMediaTasks[index];
+        setKeptMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+        setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+        URL.revokeObjectURL(mediaToDelete.mediaPath);
+    };
 
     const handleSubmit = async () => {
         if (!taskName.trim()) {
             alert('A task must have a name.');
             return;
         }
-        if (!showQuestion && mediaFiles.length === 0 && existingMediaTasks.length === 0 && !additionalNotes.trim()) {
+        if (!showQuestion && mediaFiles.length === 0 && keptMediaTasks.length === 0 && !additionalNotes.trim()) {
             alert('A task must have at least one element (question, media, or notes).');
             return;
         }
@@ -97,13 +104,15 @@ function EditTask() {
                         taskID: task.taskID,
                         name: taskName,
                         description,
-                        taskFreeTexts: additionalNotes ? [additionalNotes] : []
+                        taskFreeTexts: additionalNotes ? [additionalNotes] : [],
+                        withMsg,
                     })
                 ],
                 { type: 'application/json' }
             )
         );
 
+        formData.append('admin', sectors.find(sector => sector.adminID === selectedSector)?.sector || '');
         if (showQuestion && task.questionTask) {
             formData.append(
                 'question',
@@ -124,6 +133,12 @@ function EditTask() {
 
         mediaFiles.forEach((file) => {
             formData.append('media', file);
+        });
+
+        keptMediaTasks.forEach((mediaTask) => {
+            if (!mediaTask.mediaPath.startsWith('blob:')) {
+                formData.append('keptMedia', JSON.stringify(mediaTask));
+            }
         });
 
         try {
@@ -172,46 +187,16 @@ function EditTask() {
                                 <label htmlFor='file-upload' className='file-upload-label'>
                                     <img src={UploadFileIcon} alt='Upload File' className='file-upload-icon' />
                                 </label>
-                                {existingMediaTasks.length > 0 ? (
-                                    <Swiper {...SwiperConfig('horizontal')}>
-                                        {existingMediaTasks.map((media, index) => (
-                                            <SwiperSlide key={index} className='swiper-slide'>
-                                                {media.mediaType?.includes('application/pdf') ? (
-                                                    <PDFViewer fileUrl={media.mediaPath} />
-                                                ) : media.mediaType?.includes('audio') ? (
-                                                    <div dir='ltr'>
-                                                        <AudioPlayer autoPlay={false} src={media.mediaPath} onPlay={e => console.log('Playing audio', e)} />
-                                                    </div>
-                                                ) : media.mediaType?.includes('video') ? (
-                                                    <ReactPlayer url={media.mediaPath} controls className='react-player' width='100%' height='100%' />
-                                                ) : (
-                                                    <>
-                                                        <img className='img-media' src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
-                                                            alt={`Uploaded ${index}`} />
-                                                        {console.log("media path", media.mediaPath)}
-
-                                                    </>
-                                                )}
-                                                <button
-                                                    className='delete-image-btn'
-                                                    onClick={() => {
-                                                        setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-                                                    }}
-                                                >
-                                                    {AddNewTaskHebrew.Delete_Media}
-                                                </button>
-                                            </SwiperSlide>
-                                        ))}
-                                    </Swiper>
-                                ) : (
-                                    <div>{AddNewTaskHebrew.NoMedia}</div>
-                                )}
+                                <MediaViewer
+                                    mediaList={existingMediaTasks}
+                                    onDelete={handleDeleteMedia}
+                                    deletable={true}
+                                />
                                 <button type='button' className='delete-option-button' onClick={() => setShowMedia(false)}>
                                     {AddNewTaskHebrew.HideMedia}
                                 </button>
                             </div>
                         )}
-
 
                         {showQuestion && (
                             <div className='input-group'>
@@ -279,6 +264,22 @@ function EditTask() {
                             <button type='button' className='option-button' onClick={() => setShowNotes(true)}>
                                 {AddNewTaskHebrew.ToggleNotes}
                             </button>
+                        </div>
+                        <div className='input-group'>
+                            <label className='input-label'>{AddNewTaskHebrew.Sectors}</label>
+                            <select value={selectedSector ?? ''} onChange={(e) => setSelectedSector(Number(e.target.value))} className='task-input'>
+                                <option value='' disabled hidden>{AddNewTaskHebrew.Sectors}</option>
+                                {sectors.map((sector, index) => (
+                                    <option key={index} value={sector.adminID}>{sector.sector}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className='input-group'>
+                            <label className='input-label'>
+                                <input type="checkbox" checked={withMsg} onChange={(e) => setWithMsg(e.target.checked)} />
+                                {AddNewTaskHebrew.WithMsg}
+                            </label>
                         </div>
                     </div>
                 </div>

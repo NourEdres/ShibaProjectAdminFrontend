@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddTask.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
-import { QuestionTask, Task } from '../../../../redux/models/Interfaces';
+import { Admin, QuestionTask, TaskTBC, UserRole } from '../../../../redux/models/Interfaces';
 import { taskAPI } from '../../../../redux/services/TaskApi';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
+import MediaViewer from '../../../components/Common/MediaViewer/MediaViewer';
 
 const AddNewTaskHebrew = {
     CreateNewTask: "הוספת משימה חדשה",
@@ -24,6 +27,8 @@ const AddNewTaskHebrew = {
     HideNotes: "מחיקת הטקסט",
     AddAnswer: "הוספת תשובה",
     Delete_Media: "מחיקה",
+    WithMsg: "הצגת הודעת הצלחה ",
+    Sectors: "בחירת מחלקה",
 };
 
 function AddTask() {
@@ -39,6 +44,19 @@ function AddTask() {
     const [showNotes, setShowNotes] = useState<boolean>(false);
     const [mediaFiles, setMediaFiles] = useState<{ file: File, preview: string }[]>([]);
     const [files, setFiles] = useState<File[]>([]);
+    const sectors = useSelector((state: RootState) => state.AllData.Sectors);
+    const [withMsg, setWithMsg] = useState<boolean>(true);
+    const adminStr = localStorage.getItem('admin');
+    const admin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
+    const [selectedSector, setSelectedSector] = useState<number | null>(admin.role === UserRole.SectorAdmin ? admin.adminID : null);
+
+    useEffect(() => {
+        console.log("admin role is ", UserRole.SectorAdmin, "       qwde  ", admin.role);
+        if (admin.role === UserRole.SectorAdmin) {
+            setSelectedSector(admin.adminID);
+            console.log("selected sector is ", selectedSector);
+        }
+    }, [admin]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files;
@@ -53,6 +71,12 @@ function AddTask() {
             setMediaFiles(prevFiles => [...prevFiles, ...filesWithPreview]);
             setFiles(prevFiles => [...prevFiles, ...Array.from(selectedFiles)]);
         }
+    };
+
+    const handleDeleteMedia = (index: number) => {
+        setMediaFiles(files => files.filter((_, i) => i !== index));
+        URL.revokeObjectURL(mediaFiles[index].preview);
+        setFiles(files => files.filter((_, i) => i !== index));
     };
 
     function validateQuestion(): boolean {
@@ -75,12 +99,16 @@ function AddTask() {
             alert("A task must have at least one element (question, media, or notes).");
             return;
         }
+        if (selectedSector === null) {
+            alert("A task must have a sector.");
+            return;
+        }
 
-        const task: Task = {
-            taskID: 0,
+        const task: TaskTBC = {
             name,
             description,
             taskFreeTexts: additionalNotes ? [additionalNotes] : [],
+            withMsg
         };
 
         const questionTask: QuestionTask | undefined = showQuestion ? {
@@ -96,6 +124,9 @@ function AddTask() {
         if (questionTask) {
             formData.append('question', new Blob([JSON.stringify(questionTask)], { type: 'application/json' }));
         }
+
+        const selectedSectorName = sectors.find(sector => sector.adminID === selectedSector)?.sector || '';
+        formData.append('admin', selectedSectorName);
 
         files.forEach((file) => {
             formData.append('media', file);
@@ -145,18 +176,16 @@ function AddTask() {
                                 <label htmlFor="file-upload" className="file-upload-label">
                                     <img src={UploadFileIcon} alt="Upload File" className="file-upload-icon" />
                                 </label>
-                                {mediaFiles.map((fileObj, index) => (
-                                    <div key={index}>
-                                        <img src={fileObj.preview} alt={`Uploaded ${index}`} style={{ width: 100, height: 100 }} />
-                                        <button className='delete-image-btn' onClick={() => {
-                                            setMediaFiles(files => files.filter((_, i) => i !== index));
-                                            URL.revokeObjectURL(fileObj.preview);
-                                            setFiles(files => files.filter((_, i) => i !== index));
-                                        }}>
-                                            {AddNewTaskHebrew.Delete_Media}
-                                        </button>
-                                    </div>
-                                ))}
+                                <MediaViewer mediaList={mediaFiles.map(file => ({
+                                    mediaTaskID: Math.random(),
+                                    fileName: file.file.name,
+                                    mediaPath: file.preview,
+                                    mediaType: file.file.type,
+                                    taskID: 0,
+                                }))}
+                                    onDelete={handleDeleteMedia}
+                                    deletable={true}
+                                />
                                 <button type="button" className='delete-option-button' onClick={() => setShowMedia(false)}>
                                     {AddNewTaskHebrew.HideMedia}
                                 </button>
@@ -204,6 +233,26 @@ function AddTask() {
                             <button type="button" className='option-button' onClick={() => setShowMedia(true)}>{AddNewTaskHebrew.ToggleMedia}</button>
                             <button type="button" className='option-button' onClick={() => setShowQuestion(true)}>{AddNewTaskHebrew.ToggleQuestion}</button>
                             <button type="button" className='option-button' onClick={() => setShowNotes(true)}>{AddNewTaskHebrew.AdditionalNotes}</button>
+                        </div>
+                        <div className='input-group'>
+                            <label className='input-label'>{AddNewTaskHebrew.Sectors}</label>
+                            <select
+                                value={selectedSector ?? ''}
+                                onChange={(e) => setSelectedSector(Number(e.target.value))}
+                                className='task-input'
+                                disabled={admin.role === UserRole.SectorAdmin}
+                            >
+                                <option value='' disabled hidden>{AddNewTaskHebrew.Sectors}</option>
+                                {sectors.map((sector, index) => (
+                                    <option key={index} value={sector.adminID}>{sector.sector}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='input-group'>
+                            <label className='input-label'>
+                                <input type="checkbox" checked={withMsg} onChange={(e) => setWithMsg(e.target.checked)} />
+                                {AddNewTaskHebrew.WithMsg}
+                            </label>
                         </div>
                     </div>
                 </div>

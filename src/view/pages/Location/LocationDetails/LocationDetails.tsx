@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import { DownloadIcon, LeftArrowIcon } from '../../../photos';
 import { useNavigate } from 'react-router-dom';
-import { setCard } from '../../../../redux/slices/GlobalStates';
 import { useDispatch } from 'react-redux';
 import { setObjects } from '../../../../redux/slices/saveAllData';
 

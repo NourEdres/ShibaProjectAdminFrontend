@@ -77,13 +77,11 @@ class GenericAPI {
     return axiosInstance.delete<T>(url, { ...options, headers });
   };
 
-  login = async (username: string, password: string): Promise<void> => {
-    const response = await axiosInstance.post<{ token: string }>("/login", {
-      username,
-      password,
-    });
-    authToken = response.data.token;
-    localStorage.setItem('authToken', authToken);
+  login = async <T>(
+    username: string,
+    password: string
+  ): Promise<AxiosResponse<T>> => {
+    return axiosInstance.post<T>("/login", { username, password });
   };
 
 }

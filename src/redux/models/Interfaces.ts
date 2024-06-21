@@ -1,12 +1,23 @@
 export interface Task {
   taskID: number;
   name: string;
-  description: string;
+  description?: string;
   taskFreeTexts?: string[];
   questionTask?: QuestionTask; 
   mediaList?: MediaTask[];
-  admin?: Admin
+  adminIDAPI: number;
+  withMsg: boolean;
 }
+
+export interface TaskTBC {
+  name: string;
+  description?: string;
+  taskFreeTexts?: string[];
+  questionTask?: QuestionTask; 
+  mediaList?: MediaTask[];
+  withMsg: boolean;
+}
+
 export interface QuestionTask {
   questionTaskID: number;
   question: string;
@@ -95,10 +106,9 @@ export interface Unit {
 }
 
 export interface Admin {
+  color: string;
   adminID: number;
   username: string;
-  password: string;
-  color: string;
   sector: string;
   role: UserRole;
   gamesList: Game[];
@@ -108,7 +118,7 @@ export interface Admin {
 export interface AdminTBC {
   username: string;
   password: string;
-  color: string;
+  // color: string;
   sector: string;
 }
 

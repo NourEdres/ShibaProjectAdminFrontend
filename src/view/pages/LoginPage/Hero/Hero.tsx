@@ -3,29 +3,40 @@ import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import "../Hero/Hero.scss";
 import { useState } from "react";
 import { loginAPI } from "../../../../redux/services/LoginApi";
+import { useDispatch } from "react-redux";
+import { Admin } from "../../../../redux/models/Interfaces";
+import { setLoggedInAdmin, setPage } from "../../../../redux/slices/GlobalStates";
+import { buttonsName } from "../../../../redux/models/Types";
 
 
 const Hero = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
-
-  // const handleLogin = async () => {
-  //   if (!username.trim() || !password.trim()) {
-  //     alert("provide username and password");
-  //   } else {
-  //     try {
-  //       await loginAPI.login(username, password);
-  //       navigate('/Sectors');
-  //     } catch (error: any) {
-  //       alert("Login failed: " + error.message);
-  //     }
-  //   }
-  // };
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
-    navigate('/Sectors');
+    if (!username.trim() || !password.trim()) {
+      alert("Provide username and password");
+    } else {
+      try {
+        const admin: Admin = await loginAPI.login(username, password);
+        console.log("admin is " + admin);
+        dispatch(setLoggedInAdmin(admin));
+
+        dispatch(setPage(buttonsName.Games));
+        localStorage.setItem('page', buttonsName.Games);
+        navigate('/Games');
+      } catch (error: any) {
+        alert("Login failed: " + error.message);
+      }
+    }
   };
+
+
+  // const handleLogin = async () => {
+  //   navigate('/Sectors');
+  // };
 
   return (
     <div className="hero-container">
