@@ -15,9 +15,12 @@ const AddNewTaskHebrew = {
     AddMedia: 'הוספת מדיה : ',
     Q: 'שאלה : ',
     AdditionalNotes: 'הוספת טקסט',
-    ToggleMedia: 'הוספת מדיה',
-    ToggleQuestion: 'הוספת שאלה',
-    ToggleNotes: 'הוספת טקסט',
+    ToggleOnMedia: 'הצג מדיה',
+    ToggleOnQuestion: 'הצג שאלה',
+    ToggleOnNotes: 'הצג טקסט',
+    ToggleOffMedia: 'הסתר מדיה',
+    ToggleOffQuestion: 'הסתר שאלה',
+    ToggleOffNotes: 'הסתר טקסט',
     Save: 'שמירה',
     HideQuestion: 'מחיקת שאלה',
     UploadFile: 'הורדת קובץ',
@@ -49,6 +52,9 @@ function EditTask() {
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
     const [existingMediaTasks, setExistingMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
     const [keptMediaTasks, setKeptMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
+    const [newMediaTasks, setNewMediaTasks] = useState<MediaTask[]>([]);
+    const [deletedMediaIds, setDeletedMediaIds] = useState<number[]>([]);
+    const [deletedQuestionId, setDeletedQuestionId] = useState<number | null>(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const sectors = useSelector((state: RootState) => state.AllData.Sectors);
@@ -75,14 +81,24 @@ function EditTask() {
                 taskID: task.taskID
             }));
             setExistingMediaTasks(prevTasks => [...prevTasks, ...newMediaTasks]);
+            setNewMediaTasks(prevTasks => [...prevTasks, ...newMediaTasks]);
         }
     };
 
     const handleDeleteMedia = (index: number) => {
-        const mediaToDelete = existingMediaTasks[index];
+        const mediaTaskId = existingMediaTasks[index].mediaTaskID;
         setKeptMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
         setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-        URL.revokeObjectURL(mediaToDelete.mediaPath);
+        setNewMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+        setDeletedMediaIds(prevIds => [...prevIds, mediaTaskId]);
+        URL.revokeObjectURL(existingMediaTasks[index].mediaPath);
+    };
+
+    const handleDeleteQuestion = () => {
+        if (task.questionTask) {
+            setDeletedQuestionId(task.questionTask.questionTaskID);
+            setShowQuestion(false);
+        }
     };
 
     const handleSubmit = async () => {
@@ -114,32 +130,31 @@ function EditTask() {
 
         formData.append('admin', sectors.find(sector => sector.adminID === selectedSector)?.sector || '');
         if (showQuestion && task.questionTask) {
+            const questionTask = {
+                questionTaskID: task.questionTask.questionTaskID,
+                question,
+                answers,
+                correctAnswer,
+                taskID: task.taskID
+            };
             formData.append(
                 'question',
                 new Blob(
-                    [
-                        JSON.stringify({
-                            questionTaskID: task.questionTask.questionTaskID,
-                            question,
-                            answers,
-                            correctAnswer,
-                            taskID: task.taskID
-                        })
-                    ],
+                    [JSON.stringify(questionTask)],
                     { type: 'application/json' }
                 )
             );
+        }
+
+        if (deletedQuestionId !== null) {
+            formData.append('tbdQuestion', new Blob([JSON.stringify(deletedQuestionId)], { type: 'application/json' }));
         }
 
         mediaFiles.forEach((file) => {
             formData.append('media', file);
         });
 
-        keptMediaTasks.forEach((mediaTask) => {
-            if (!mediaTask.mediaPath.startsWith('blob:')) {
-                formData.append('keptMedia', JSON.stringify(mediaTask));
-            }
-        });
+        formData.append('toBeDeleted', new Blob([JSON.stringify(deletedMediaIds)], { type: 'application/json' }));
 
         try {
             const updatedTask = await taskAPI.updateTask(task.taskID, formData);
@@ -187,8 +202,7 @@ function EditTask() {
                                 <label htmlFor='file-upload' className='file-upload-label'>
                                     <img src={UploadFileIcon} alt='Upload File' className='file-upload-icon' />
                                 </label>
-                                <MediaViewer
-                                    mediaList={existingMediaTasks}
+                                <MediaViewer mediaList={[...keptMediaTasks, ...newMediaTasks]}
                                     onDelete={handleDeleteMedia}
                                     deletable={true}
                                 />
@@ -238,7 +252,7 @@ function EditTask() {
                                         {AddNewTaskHebrew.AddAnswer}
                                     </button>
                                 )}
-                                <button type='button' className='delete-option-button' onClick={() => setShowQuestion(false)}>
+                                <button type='button' className='delete-option-button' onClick={handleDeleteQuestion}>
                                     {AddNewTaskHebrew.HideQuestion}
                                 </button>
                             </div>
@@ -255,15 +269,18 @@ function EditTask() {
                         )}
 
                         <div className='edit-buttons'>
-                            <button type='button' className='option-button' onClick={() => setShowMedia(true)}>
-                                {AddNewTaskHebrew.ToggleMedia}
+                            <button type='button' className='option-button' onClick={() => setShowMedia(!showMedia)}>
+                                {showMedia ? AddNewTaskHebrew.ToggleOffMedia : AddNewTaskHebrew.ToggleOnMedia}
                             </button>
-                            <button type='button' className='option-button' onClick={() => setShowQuestion(true)}>
-                                {AddNewTaskHebrew.ToggleQuestion}
+
+                            <button type='button' className='option-button' onClick={() => setShowQuestion(!showQuestion)}>
+                                {showQuestion ? AddNewTaskHebrew.ToggleOffQuestion : AddNewTaskHebrew.ToggleOnQuestion}
                             </button>
-                            <button type='button' className='option-button' onClick={() => setShowNotes(true)}>
-                                {AddNewTaskHebrew.ToggleNotes}
+
+                            <button type='button' className='option-button' onClick={() => setShowNotes(!showNotes)}>
+                                {showNotes ? AddNewTaskHebrew.ToggleOffNotes : AddNewTaskHebrew.ToggleOnNotes}
                             </button>
+
                         </div>
                         <div className='input-group'>
                             <label className='input-label'>{AddNewTaskHebrew.Sectors}</label>

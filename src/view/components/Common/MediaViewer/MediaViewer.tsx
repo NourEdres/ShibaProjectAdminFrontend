@@ -18,24 +18,26 @@ interface MediaViewerProps {
 }
 
 const MediaViewer: React.FC<MediaViewerProps> = ({ mediaList, onDelete, deletable = false }) => {
+    const adjustPath = (path: string) => path.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..');
+
     return (
         <div className='task-media-list'>
             <Swiper {...SwiperConfig("horizontal")}>
                 {mediaList.map((media, index) => (
                     <SwiperSlide key={media.mediaTaskID} className='swiper-slide'>
                         {media.mediaType.includes('application/pdf') ? (
-                            <PDFViewer fileUrl={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')} />
+                            <PDFViewer fileUrl={adjustPath(media.mediaPath)} />
                         ) : media.mediaType.includes('audio') ? (
                             <div dir='ltr'>
                                 <AudioPlayer
                                     autoPlay={false}
-                                    src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                    src={adjustPath(media.mediaPath)}
                                     onPlay={e => console.log("Playing audio", e)}
                                 />
                             </div>
                         ) : media.mediaType.includes('video') ? (
                             <ReactPlayer
-                                url={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                url={adjustPath(media.mediaPath)}
                                 controls
                                 className="react-player"
                                 width='100%'
@@ -43,7 +45,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({ mediaList, onDelete, deletabl
                             />
                         ) : (
                             <img className='img-media'
-                                src={media.mediaPath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                src={adjustPath(media.mediaPath)}
                                 alt={media.fileName}
                             />
                         )}

@@ -15,9 +15,12 @@ const AddNewTaskHebrew = {
     AddMedia: "הוספת מדיה : ",
     Q: "שאלה : ",
     AdditionalNotes: "הוספת טקסט",
-    ToggleMedia: "הוספת מדיה",
-    ToggleQuestion: "הוספת שאלה",
-    ToggleNotes: "הוספת טקסט",
+    ToggleOnMedia: 'הצג מדיה',
+    ToggleOnQuestion: 'הצג שאלה',
+    ToggleOnNotes: 'הצג טקסט',
+    ToggleOffMedia: 'הסתר מדיה',
+    ToggleOffQuestion: 'הסתר שאלה',
+    ToggleOffNotes: 'הסתר טקסט',
     Save: "שמירה",
     HideQuestion: "מחיקת שאלה",
     UploadFile: "הורדת קובץ",
@@ -230,10 +233,17 @@ function AddTask() {
                             </div>
                         )}
                         <div className='add-buttons'>
-                            <button type="button" className='option-button' onClick={() => setShowMedia(true)}>{AddNewTaskHebrew.ToggleMedia}</button>
-                            <button type="button" className='option-button' onClick={() => setShowQuestion(true)}>{AddNewTaskHebrew.ToggleQuestion}</button>
-                            <button type="button" className='option-button' onClick={() => setShowNotes(true)}>{AddNewTaskHebrew.AdditionalNotes}</button>
+                            <button type="button" className='option-button' onClick={() => setShowMedia(!showMedia)}>
+                                {showMedia ? AddNewTaskHebrew.ToggleOffMedia : AddNewTaskHebrew.ToggleOnMedia}
+                            </button>
+                            <button type="button" className='option-button' onClick={() => setShowQuestion(!showQuestion)}>
+                                {showQuestion ? AddNewTaskHebrew.ToggleOffQuestion : AddNewTaskHebrew.ToggleOnQuestion}
+                            </button>
+                            <button type="button" className='option-button' onClick={() => setShowNotes(!showNotes)}>
+                                {showNotes ? AddNewTaskHebrew.ToggleOffNotes : AddNewTaskHebrew.ToggleOnNotes}
+                            </button>
                         </div>
+
                         <div className='input-group'>
                             <label className='input-label'>{AddNewTaskHebrew.Sectors}</label>
                             <select
