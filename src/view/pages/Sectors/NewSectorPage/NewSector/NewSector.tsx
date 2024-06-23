@@ -23,7 +23,7 @@ const NewSector = () => {
   };
 
   const handleSubmit = async () => {
-    const newAdmin: AdminTBC = { username, password, color, sector };
+    const newAdmin: AdminTBC = { username, password, sector };
     try {
       await adminAPI.createSectorAdmin(newAdmin);
       alert("Sector admin created successfully");

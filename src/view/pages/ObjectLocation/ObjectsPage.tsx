@@ -1,18 +1,14 @@
-import { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { FC } from 'react';
+import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import HomePage from "../../components/Common/HomePage/HomePage";
 import ObjectsCard from './ObjectsCard/ObjectsCard';
-import { ObjectLocation } from '../../../redux/models/Interfaces';
-import ObjectCard from './ObjectCard/ObjectCard';
 import './ObjectsPage.scss';
-import { setLocations, setObjects } from '../../../redux/slices/saveAllData';
-import { locationAPI } from '../../../redux/services/LocationApi';
 
 
 const ObjectsPage: FC = () => {
-    const location = useSelector((state: RootState) => state.globalStates.selectedCard);
-    const dispatch = useDispatch();
+    // const location = useSelector((state: RootState) => state.globalStates.selectedCard);
+    // const dispatch = useDispatch();
     const objects = useSelector((state: RootState) => state.AllData.Objects);
 
 
