@@ -1,22 +1,17 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-// const URL = "http://localhost:8080";
-const URL = "https://platform-server-usf1.onrender.com"
+const URL = "http://localhost:8080";
+// const URL = "https://platform-server-usf1.onrender.com"
 
 const axiosInstance = axios.create({
   baseURL: URL,
   withCredentials: true,
 });
 
-// let authToken: string | null = null;
-
-// axiosInstance.interceptors.request.use(config => {
-//   if (authToken) {
-//     config.headers.Authorization = `Bearer ${authToken}`;
-//   }
-//   return config;
-// });
-
+const loginInstance = axios.create({
+  baseURL: URL,
+  withCredentials: true,
+});
 
 
 class GenericAPI {
@@ -28,6 +23,10 @@ class GenericAPI {
   } else {
     delete axiosInstance.defaults.headers.common['Authorization'];
   }
+}
+
+clearAuthToken() {
+  delete axiosInstance.defaults.headers.common['Authorization'];
 }
   get = async <T>(
     url: string,
@@ -93,7 +92,7 @@ class GenericAPI {
     username: string,
     password: string
   ): Promise<AxiosResponse<T>> => {
-    return axiosInstance.post<T>("/login", { username, password });
+    return loginInstance.post<T>("/login", { username, password });
   };
 
 }

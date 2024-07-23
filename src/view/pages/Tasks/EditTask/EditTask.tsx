@@ -50,7 +50,7 @@ function EditTask() {
     const [showQuestion, setShowQuestion] = useState<boolean>(!!task.questionTask);
     const [showNotes, setShowNotes] = useState<boolean>(!!task.taskFreeTexts?.length);
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-    const [existingMediaTasks, setExistingMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
+    const [, setExistingMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
     const [keptMediaTasks, setKeptMediaTasks] = useState<MediaTask[]>(task.mediaList || []);
     const [newMediaTasks, setNewMediaTasks] = useState<MediaTask[]>([]);
     const [deletedMediaIds, setDeletedMediaIds] = useState<number[]>([]);
@@ -69,6 +69,10 @@ function EditTask() {
         }
     }, [selectedSector, sectors]);
 
+    useEffect(() => {
+        setShowQuestion(!!task.questionTask);
+    }, [task]);
+
     const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const newFiles = Array.from(event.target.files);
@@ -78,6 +82,7 @@ function EditTask() {
                 fileName: file.name,
                 mediaPath: URL.createObjectURL(file),
                 mediaType: file.type,
+                mediaUrl: URL.createObjectURL(file),
                 taskID: task.taskID
             }));
             setExistingMediaTasks(prevTasks => [...prevTasks, ...newMediaTasks]);
@@ -86,19 +91,30 @@ function EditTask() {
     };
 
     const handleDeleteMedia = (index: number) => {
-        const mediaTaskId = existingMediaTasks[index].mediaTaskID;
-        setKeptMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-        setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-        setNewMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
-        setDeletedMediaIds(prevIds => [...prevIds, mediaTaskId]);
-        URL.revokeObjectURL(existingMediaTasks[index].mediaPath);
-    };
+        const mediaToDelete = [...keptMediaTasks, ...newMediaTasks][index];
 
+        if ('mediaTaskID' in mediaToDelete && typeof mediaToDelete.mediaTaskID === 'number') {
+            setDeletedMediaIds(prevIds => [...prevIds, mediaToDelete.mediaTaskID]);
+            setKeptMediaTasks(prevTasks => prevTasks.filter(task => task.mediaTaskID !== mediaToDelete.mediaTaskID));
+        } else {
+            setNewMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== (index - keptMediaTasks.length)));
+            setMediaFiles(prevFiles => prevFiles.filter((_, i) => i !== (index - keptMediaTasks.length)));
+        }
+
+        setExistingMediaTasks(prevTasks => prevTasks.filter((_, i) => i !== index));
+
+        if (mediaToDelete.mediaPath && mediaToDelete.mediaPath.startsWith('blob:')) {
+            URL.revokeObjectURL(mediaToDelete.mediaPath);
+        }
+    };
     const handleDeleteQuestion = () => {
         if (task.questionTask) {
             setDeletedQuestionId(task.questionTask.questionTaskID);
-            setShowQuestion(false);
         }
+        setShowQuestion(false);
+        setQuestion('');
+        setAnswers([]);
+        setCorrectAnswer(null);
     };
 
     const handleSubmit = async () => {
@@ -129,9 +145,10 @@ function EditTask() {
         );
 
         formData.append('admin', sectors.find(sector => sector.adminID === selectedSector)?.sector || '');
-        if (showQuestion && task.questionTask) {
+
+        if (showQuestion) {
             const questionTask = {
-                questionTaskID: task.questionTask.questionTaskID,
+                questionTaskID: task.questionTask?.questionTaskID || 0,
                 question,
                 answers,
                 correctAnswer,
@@ -144,6 +161,8 @@ function EditTask() {
                     { type: 'application/json' }
                 )
             );
+        } else if (task.questionTask) {
+            setDeletedQuestionId(task.questionTask.questionTaskID);
         }
 
         if (deletedQuestionId !== null) {
@@ -216,12 +235,12 @@ function EditTask() {
                             <div className='input-group'>
                                 <label className='input-label'>{AddNewTaskHebrew.Q}</label>
                                 <input type='text' className='task-input' placeholder='הוספת שאלה' value={question} onChange={e => setQuestion(e.target.value)} />
-                                {answers.map((answer, index) => (
+                                {[0, 1, 2, 3].map((index) => (
                                     <div key={index} className='answer-container'>
                                         <input
                                             type='text'
                                             className='task-input'
-                                            value={answer}
+                                            value={answers[index] || ''}
                                             onChange={e => {
                                                 const newAnswers = [...answers];
                                                 newAnswers[index] = e.target.value;
@@ -229,29 +248,14 @@ function EditTask() {
                                             }}
                                             placeholder={`${AddNewTaskHebrew.Answer} ${index + 1}`}
                                         />
-                                        <input type='radio' name='correctAnswer' checked={correctAnswer === index} onChange={() => setCorrectAnswer(index)} />
-                                        <button
-                                            type='button'
-                                            className='delete-answer-button'
-                                            onClick={() => {
-                                                const newAnswers = answers.filter((_, i) => i !== index);
-                                                setAnswers(newAnswers);
-                                                if (correctAnswer === index) {
-                                                    setCorrectAnswer(null);
-                                                } else if (correctAnswer !== null && index < correctAnswer) {
-                                                    setCorrectAnswer(correctAnswer - 1);
-                                                }
-                                            }}
-                                        >
-                                            {AddNewTaskHebrew.DeleteAnswer}
-                                        </button>
+                                        <input
+                                            type='radio'
+                                            name='correctAnswer'
+                                            checked={correctAnswer === index}
+                                            onChange={() => setCorrectAnswer(index)}
+                                        />
                                     </div>
                                 ))}
-                                {answers.length < 4 && (
-                                    <button type='button' className='edit-answer-button' onClick={() => setAnswers([...answers, ''])}>
-                                        {AddNewTaskHebrew.AddAnswer}
-                                    </button>
-                                )}
                                 <button type='button' className='delete-option-button' onClick={handleDeleteQuestion}>
                                     {AddNewTaskHebrew.HideQuestion}
                                 </button>

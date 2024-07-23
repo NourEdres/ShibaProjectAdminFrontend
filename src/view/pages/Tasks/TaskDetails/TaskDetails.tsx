@@ -31,11 +31,13 @@ const TaskDetails: React.FC = () => {
             <div className='task-details'>
                 <div className='task-title'>{task.name}</div>
                 {task.description && (
-                    <div className='section-title'>{TaskDetailsHebrew.Description}</div>
+                    <>
+                        <div className='section-title'>{TaskDetailsHebrew.Description}</div>
+                        <div className='task-desc'>{task.description}</div>
+                    </>
                 )}
-                <div className='task-desc'>{task.description}</div>
                 <div className='task-content'>
-                    {task.taskFreeTexts && (
+                    {task.taskFreeTexts && task.taskFreeTexts.length > 0 && (
                         <div className='task-free-text'>
                             <div className='section-title'>{TaskDetailsHebrew.FreeText}</div>
                             {task.taskFreeTexts.map((text: string, index: number) => (
@@ -43,8 +45,8 @@ const TaskDetails: React.FC = () => {
                             ))}
                         </div>
                     )}
-                    <div className='task-ques'>
-                        {task.questionTask && (
+                    {task.questionTask && (
+                        <div className='task-ques'>
                             <div className='question-section'>
                                 <div className='q-head'>
                                     <div className='section-title'>{TaskDetailsHebrew.Q}</div>
@@ -53,30 +55,24 @@ const TaskDetails: React.FC = () => {
                                 <div className='section-title'>{TaskDetailsHebrew.answers}</div>
                                 <div className='answers'>
                                     {task.questionTask.answers.map((answer: string, index: number) => (
-                                        <div key={index} className={index === task?.questionTask?.correctAnswer ? 'correct-answer' : ''}>
+                                        <div key={index} className={index === task.questionTask?.correctAnswer ? 'correct-answer' : ''}>
                                             {answer}
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                        )}
-                    </div>
-                    {task.mediaList && task.mediaList.length !== 0 && (
+                        </div>
+                    )}
+                    {task.mediaList && task.mediaList.length > 0 && (
                         <div className='task-media-list'>
                             <div className='section-title'>{TaskDetailsHebrew.Media}</div>
-                            <MediaViewer mediaList={task.mediaList || []} />
+                            <MediaViewer mediaList={task.mediaList} />
                         </div>
                     )}
                 </div>
-                {task.withMsg ? (
-                    <div className='section-title'>
-                        {TaskDetailsHebrew.withMsg}
-                    </div>
-                ) : (
-                    <div className='section-title'>
-                        {TaskDetailsHebrew.noMsg}
-                    </div>
-                )}
+                <div className='section-title'>
+                    {task.withMsg ? TaskDetailsHebrew.withMsg : TaskDetailsHebrew.noMsg}
+                </div>
             </div>
         </div>
     );

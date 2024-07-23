@@ -41,23 +41,22 @@ const TasksPage: FC = () => {
         if (taskToDelete) {
             try {
                 const response = await taskAPI.deleteTask(taskToDelete.taskID);
-                if (response.status == 200) {
+                console.log("response data is ", response.data);
 
+                if (response.status === 200) {
                     alert("Task was deleted successfully");
                     setShowConfirm(false);
                     const updatedTasks = await taskAPI.getAllTasks();
                     dispatch(setTasks(updatedTasks));
                 }
-                else {
-                    const errorMessage = response.statusText;
-                    if (errorMessage.includes("Task is part of an existing game")) {
-                        alert("המשימה היא חלק ממשחק קיים, נא לעדכן משחק ואז למחוק המשימה");
-                    } else {
-                        alert(`Failed to delete task: ${errorMessage}`);
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to delete task:', error);
+            } catch (error: any) {
+                console.error('Error deleting task in tasks page:' + error);
+                // alert(`Failed to delete task. Please try again. ${error}`);
+                // if (error.response && error.response.data && error.response.data.message) {
+                //     alert(`Failed to delete task: ${error.response.data.message}`);
+                // } else {
+                //     alert(`Failed to delete task. Please try again. ${error}`);
+                // }
             }
         }
     };

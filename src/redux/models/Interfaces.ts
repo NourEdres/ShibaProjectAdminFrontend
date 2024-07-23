@@ -30,9 +30,14 @@ export interface MediaTask {
   fileName: string;
   mediaPath: string;
   mediaType: string;
-  // fileSize?: number; 
-  // uploadedDate?: Date; 
-  taskID: number; 
+  mediaUrl: string;
+}
+
+export interface MediaTaskTBC {
+  fileName: string;
+  mediaPath: string;
+  mediaType: string;
+  file: File;
 }
 
 

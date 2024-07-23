@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { locationAPI } from '../../../../redux/services/LocationApi';
 import { Location } from '../../../../redux/models/Interfaces';
 
-
 const AddLocationHebrew = {
     AddNewRoom: "הוספת מקום חדש",
     Name: "שם : ",
@@ -16,38 +15,27 @@ const AddLocationHebrew = {
     Save: "שמירה"
 };
 
-interface FileWithPreview extends File {
-    preview: string;
-}
-
 const AddLocation = () => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [floor, setFloor] = useState<number | undefined>(undefined);
-    const [mediaFile, setMediaFile] = useState<FileWithPreview | null>(null);
-    const [_, setMediaFileApi] = useState<File | null>(null);
-
+    const [mediaFile, setMediaFile] = useState<File | null>(null);
+    const [mediaPreview, setMediaPreview] = useState<string | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files;
         if (selectedFiles && selectedFiles.length > 0) {
             const file = selectedFiles[0];
-            const fileWithPreview: FileWithPreview = {
-                ...file,
-                preview: URL.createObjectURL(file)
-            };
-            if (mediaFile) {
-                URL.revokeObjectURL(mediaFile.preview);
-            }
-            setMediaFile(fileWithPreview);
-            setMediaFileApi(file);
+            setMediaFile(file);
+
+            const previewUrl = URL.createObjectURL(file);
+            setMediaPreview(previewUrl);
         }
     };
 
-
     const handleSave = () => {
-        if (!name.trim() || !floor) {
+        if (!name.trim() || floor === undefined) {
             alert("Name and floor are required.");
             return;
         }
@@ -63,13 +51,19 @@ const AddLocation = () => {
         if (mediaFile) {
             formData.append('image', mediaFile);
         }
+
+        // Log the FormData contents
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         locationAPI.createLocation(formData)
             .then(response => {
-                console.log("Location created successfully", response);
+                console.log("Full response:", response);
                 navigate('/Locations');
             })
             .catch(error => {
-                console.error("Failed to create location", error);
+                console.error("Detailed error:", error.response || error);
                 alert("Failed to save location.");
             });
     };
@@ -92,8 +86,15 @@ const AddLocation = () => {
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{AddLocationHebrew.Floor}</label>
-                    <input type='number' className='location-input' value={floor} onChange={e => setFloor(Number(e.target.value))} />
-                </div>
+                    <input
+                        type='number'
+                        className='location-input'
+                        value={floor === undefined ? '' : floor}
+                        onChange={e => {
+                            const value = e.target.value;
+                            setFloor(value === '' ? undefined : Number(value));
+                        }}
+                    />                </div>
 
                 <div className='input-group file-upload-group'>
                     <label className='input-label'>{AddLocationHebrew.UploadFiles}</label>
@@ -105,15 +106,15 @@ const AddLocation = () => {
                         id="file-upload"
                         className="file-input"
                         onChange={handleFileChange}
-                        multiple
                         style={{ display: 'none' }}
                     />
-                    {mediaFile && (
+                    {mediaPreview && (
                         <div>
-                            <img src={mediaFile.preview} alt="Uploaded" style={{ width: 100, height: 100 }} />
+                            <img src={mediaPreview} alt="Uploaded" style={{ width: 100, height: 100 }} />
                             <button className='delete-image-btn' onClick={() => {
-                                URL.revokeObjectURL(mediaFile.preview);
+                                URL.revokeObjectURL(mediaPreview);
                                 setMediaFile(null);
+                                setMediaPreview(null);
                             }}>
                                 מחיקה
                             </button>
@@ -124,7 +125,7 @@ const AddLocation = () => {
                     <button className='save-location-button' onClick={handleSave}>{AddLocationHebrew.Save}</button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 
