@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-const URL = "http://localhost:8080";
-// const URL = "https://sheba-service-gcp-tm3zus3bzq-uc.a.run.app"
+// const URL = "http://localhost:8080";
+const URL = "https://sheba-service-gcp-tm3zus3bzq-uc.a.run.app"
 
 const axiosInstance = axios.create({
   baseURL: URL,

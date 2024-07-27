@@ -18,13 +18,21 @@ const GameDetails: React.FC = () => {
     const navigate = useNavigate();
 
     const downloadQRCode = () => {
-        const fileName = game.qrcodePath.substring(game.qrcodePath.lastIndexOf('/') + 1);
-        const link = document.createElement('a');
-        link.href = game.qrcodePath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..');
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (game.qrcodePath) {
+            fetch(game.qrcodePath)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `QR_${game.gameName}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(link);
+                })
+                .catch(error => console.error('Error downloading QR code:', error));
+        }
     };
     console.log("qr path is  " + game.qrcodePath)
 
@@ -51,7 +59,7 @@ const GameDetails: React.FC = () => {
                 {game.qrcodePath && (
                     <div className='qr-section'>
                         <div className='game-qr'>
-                            <img src={game.qrcodePath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                            <img src={game.qrcodePath}
                                 alt='QR Code' className='qr-code-image' />
                         </div>
                         <button className='download-qr-btn' onClick={downloadQRCode}>
@@ -66,3 +74,4 @@ const GameDetails: React.FC = () => {
 }
 
 export default GameDetails;
+
