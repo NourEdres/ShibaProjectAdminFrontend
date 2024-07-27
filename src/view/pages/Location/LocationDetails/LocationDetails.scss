@@ -1,5 +1,6 @@
 @import "../../../themes/mixins";
 @import "../../../themes/variables";
+
 .location-container {
   display: flex;
   align-items: center;
@@ -8,10 +9,12 @@
   padding: 3vw;
   gap: 2vw;
   height: 50vw;
+
   .add-location-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
+
     .sector-name {
       @include font_style;
       font-size: xx-large;
@@ -21,21 +24,22 @@
       justify-self: flex-end;
       color: $secondary-white-color;
     }
+
     .arrow-icon {
       display: flex;
       height: 5vw;
-      width: 50%;
+      width: 5vw;
       align-self: flex-start;
       margin-top: -0.7vw;
       cursor: pointer;
-      width: 5vw;
       transition: transform 0.3s ease;
       &:hover {
-        transform: scale(1.1); /* Example hover effect */
+        transform: scale(1.1);
       }
     }
   }
 }
+
 .location-details {
   display: flex;
   flex-direction: column;
@@ -45,12 +49,14 @@
   padding: 2vw;
   background-color: rgba($secondary-white-color, 0.8);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: scroll;
+  overflow: auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
   }
+
   .location-title {
     @include font-style;
     font-size: 2vw;
@@ -59,6 +65,27 @@
     text-align: center;
     color: $primary-blue-logo-color;
   }
+
+  .location-image-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;  
+  
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+
+      &:hover {
+        transform: scale(1.05);
+      }
   .location-content {
     display: flex;
     flex-direction: column;
@@ -67,91 +94,96 @@
     font-size: 1.5vw;
     gap: 2vw;
     width: 100%;
+
     .location-floor-title,
     .description-title {
       font-weight: 450;
       margin-bottom: 1vw;
     }
+
     .location-floor {
       display: flex;
     }
+
     .location-description {
       background: $secondary-white-color;
       padding: 2vw;
       width: 30vw;
-      overflow: scroll;
-      .description {
-      }
+      overflow: auto;
+      border-radius: 5px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
+
   .location-qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2vh;
+
     .location-qr {
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 1vh auto;
+      overflow: hidden;
+      border-radius: 5px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
       .qr-code-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
       }
     }
+
     .download-qr-btn {
+      @include icon-style;
       @include font-style;
+      background-color: $primary-green-logo-color;
       color: $secondary-white-color;
-      font-size: 1.5vw;
+      font-size: 1vw;
+      padding: 0.5vh 1vw;
+      margin-top: 1vh;
       display: flex;
       gap: 1vw;
       align-items: center;
-    }
-  }
-}
-
-.location-qr-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2vh;
-
-  .location-qr {
-    .qr-code-image {
-      width: 100px;
-      height: auto;
+      transition: background-color 0.3s, transform 0.3s;
       border-radius: 5px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.3s ease;
 
       &:hover {
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: darken($primary-green-logo-color, 10%);
+        transform: scale(1.05);
       }
-    }
-  }
 
-  .download-qr-btn {
-    @include icon-style;
-    background-color: $primary-green-logo-color;
-    color: $secondary-white-color;
-    font-size: 1vw;
-    padding: 0.5vh 1vw;
-    margin-top: 1vh;
-    transition: background-color 0.3s, transform 0.3s;
-
-    &:hover {
-      background-color: darken($primary-green-logo-color, 10%);
-      transform: scale(1.05);
-    }
-    .download-icon {
-      width: 1.5vw;
+      .download-icon {
+        width: 1.5vw;
+      }
     }
   }
 }
 
 .view-objects {
   @include icon-style;
+  @include font-style;
   background-color: $primary-green-logo-color;
   color: $secondary-white-color;
-  font-size: 1.2vw;
+  font-size: 1.5vw;
   padding: 1vh 2vw;
   margin-top: 2vh;
-  transition: background-color 0.3s, transform 0.3s;
-  @include font-style;
-  color: $secondary-white-color;
-  font-size: 1.5vw;
+  display: flex;
   gap: 1vw;
   align-items: center;
+  transition: background-color 0.3s, transform 0.3s;
+  border-radius: 5px;
+
   &:hover {
     background-color: darken($primary-green-logo-color, 10%);
     transform: scale(1.05);

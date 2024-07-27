@@ -41,7 +41,7 @@ export interface MediaTaskTBC {
 }
 
 
-export interface Location {
+export interface LocationTBC {
   locationID: number;
   name: string;
   description?: string;
@@ -51,11 +51,24 @@ export interface Location {
   objectsList?: ObjectLocation[];
 }
 
+export interface Location {
+  locationID: number;
+  name: string;
+  description?: string;
+  floor: number;
+  QRCode: string;
+  qrcodePublicUrl: string;
+  locationImagePublicUrl: string;
+  locationImage?: LocationImage; 
+  objectsList?: ObjectLocation[];
+}
+
 export interface LocationImage {
   locationImgID: number;
   name: string;
   type: string;
-  imagePath: string;
+  gcsObjectName: string;
+  publicUrl: string;
 }
 
 

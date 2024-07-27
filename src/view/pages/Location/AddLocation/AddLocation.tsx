@@ -3,7 +3,7 @@ import './AddLocation.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
 import { useNavigate } from 'react-router-dom';
 import { locationAPI } from '../../../../redux/services/LocationApi';
-import { Location } from '../../../../redux/models/Interfaces';
+import { LocationTBC } from '../../../../redux/models/Interfaces';
 
 const AddLocationHebrew = {
     AddNewRoom: "הוספת מקום חדש",
@@ -39,7 +39,7 @@ const AddLocation = () => {
             alert("Name and floor are required.");
             return;
         }
-        const location: Location = {
+        const location: LocationTBC = {
             locationID: 0,
             name,
             description,
