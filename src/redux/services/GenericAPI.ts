@@ -1,17 +1,43 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import router from "../../view/router/Route";
 
-// const URL = "http://localhost:8080";
-const URL = "https://sheba-service-gcp-tm3zus3bzq-uc.a.run.app"
+const URL = "http://localhost:8080";
+// const URL = "https://sheba-service-gcp-tm3zus3bzq-uc.a.run.app"
 
-const axiosInstance = axios.create({
-  baseURL: URL,
-  withCredentials: true,
-});
+const createAxiosInstance = (): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: URL,
+    withCredentials: true,
+  });
 
-const loginInstance = axios.create({
-  baseURL: URL,
-  withCredentials: true,
-});
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      if (error.response && error.response.status === 401) {
+        if (error.response.data && error.response.data.error === "Token has expired") {
+          alert("Token has expired. Redirecting to login...");
+          localStorage.clear();
+          router.navigate("/");
+          console.log("Token has expired. Redirecting to login...");
+          // You might want to use a more sophisticated method to handle this,
+          // such as using a global state management solution or a custom event system
+          // window.dispatchEvent(new CustomEvent('tokenExpired'));
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  return instance;
+};
+
+const axiosInstance = createAxiosInstance();
+const loginInstance = createAxiosInstance();
+
+// const loginInstance = axios.create({
+//   baseURL: URL,
+//   withCredentials: true,
+// });
 
 
 class GenericAPI {
