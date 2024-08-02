@@ -19,9 +19,6 @@ const createAxiosInstance = (): AxiosInstance => {
           localStorage.clear();
           router.navigate("/");
           console.log("Token has expired. Redirecting to login...");
-          // You might want to use a more sophisticated method to handle this,
-          // such as using a global state management solution or a custom event system
-          // window.dispatchEvent(new CustomEvent('tokenExpired'));
         }
       }
       return Promise.reject(error);

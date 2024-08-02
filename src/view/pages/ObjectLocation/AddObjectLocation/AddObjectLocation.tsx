@@ -83,9 +83,8 @@ const AddObjectLocation: React.FC = () => {
             dispatch(setCard(location));
             navigate(`/ObjectsPage/${location.locationID}`);
 
-        } catch (error) {
-            console.error('Failed to save object:', error);
-            alert("Failed to save object.");
+        } catch (error: any) {
+            alert(error);
         }
 
 

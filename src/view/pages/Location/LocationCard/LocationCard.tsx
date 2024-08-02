@@ -5,6 +5,8 @@ import { DeleteIconBlack, EditIconBlack } from '../../../photos';
 
 interface LocationCardProps {
     object: Location;
+    onShowConfirm: (location: Location) => void;
+    onEditTask: (location: Location) => void;
 }
 const LocationSectionTitles = {
     LocationName: " שם החדר : ",
@@ -12,7 +14,7 @@ const LocationSectionTitles = {
     objectsNumber: " מספר האובייקטים : ",
 };
 
-const LocationCard: FC<LocationCardProps> = ({ object }) => {
+const LocationCard: FC<LocationCardProps> = ({ object, onShowConfirm }) => {
     { console.log("LocationCard - objects ", object.objectsList); }
     return (
         <div className='Location-card' dir="rtl" style={{ backgroundColor: 'white' }}>
@@ -21,7 +23,11 @@ const LocationCard: FC<LocationCardProps> = ({ object }) => {
                     <button className="edit-button">
                         <img className='edit-icon' src={EditIconBlack} />
                     </button>
-                    <button className="delete-button">
+                    <button className="delete-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onShowConfirm(object);
+                        }}>
                         <img className='delete-icon' src={DeleteIconBlack} />
                     </button>
                 </div>
