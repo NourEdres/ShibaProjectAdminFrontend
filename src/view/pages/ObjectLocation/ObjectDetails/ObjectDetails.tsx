@@ -44,7 +44,7 @@ const ObjectDetails: React.FC = () => {
                                 {objectImages.map((img: ObjectImage) => (
                                     <SwiperSlide key={img.id} className='swiper-slide'>
                                         <img className='img-media'
-                                            src={img.imagePath.replace("/Users/malakyehia/admin_system/ShibaProjectAdminFrontend", '../../..')}
+                                            src={img.imageUrl}
                                             alt={img.name}
                                         />
                                     </SwiperSlide>

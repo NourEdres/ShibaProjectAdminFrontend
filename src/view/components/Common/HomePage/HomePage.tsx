@@ -23,7 +23,7 @@ const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addB
                 <div className="homePage-grid">
                     {objects.map((ob, index) => {
                         const name = page === "Game" ? ob.gameName : (page === "Sector" ? ob.username : ob.name);
-                        console.log("ob name  is " + (ob));
+                        console.log("ob name  is ", (ob));
 
                         return (
 

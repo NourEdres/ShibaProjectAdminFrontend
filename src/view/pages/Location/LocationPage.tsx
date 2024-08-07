@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 import { setLocations } from "../../../redux/slices/saveAllData";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import { Location } from "../../../redux/models/Interfaces";
-// import { Locations } from "../../../data/Locations";
+import { buttonsName } from "../../../redux/models/Types";
+import { setPage } from "../../../redux/slices/GlobalStates";
 
 const LocationsPage: FC = () => {
     // const page = useSelector((state: RootState) => state.globalStates.page);
@@ -22,6 +23,8 @@ const LocationsPage: FC = () => {
     useEffect(() => {
         const fetchLocations = async () => {
             dispatch(setLocations(await locationAPI.getAllLocations()));
+            // dispatch(setPage(buttonsName.Locations))
+
         };
         fetchLocations()
 
@@ -38,17 +41,15 @@ const LocationsPage: FC = () => {
             try {
                 const response = await locationAPI.deleteLocation(locationToDelete.locationID);
                 console.log("response location ", response.data);
-
+                console.log("sttus is " + response.status);
                 if (response.status === 200) {
-                    const message = response.message || "מקום נמחק בהצלחה";
+                    const message = locationToDelete.name + "מקום נמחק בהצלחה ";
                     alert(message);
                     setShowConfirm(false);
-                    const updatedLocations = await locationAPI.getAllLocations();
-                    dispatch(setLocations(updatedLocations));
+                    dispatch(setLocations(locations.filter(obj => obj.locationID !== locationToDelete.locationID)));
                 }
             } catch (error: any) {
                 console.error("Error deleting location: ", error);
-                // const errorMessage = error || "שגיאה במחיקת המקום";
                 alert("שגיאה במחיקת המקום:\n" + error);
             }
         }
@@ -63,7 +64,7 @@ const LocationsPage: FC = () => {
             {<HomePage objects={locations} page="Location" Component={(props) => (
                 <LocationCard {...props}
                     onShowConfirm={handleDelete}
-                    onEditTask={handleEdit} />
+                    onEditLocation={handleEdit} />
             )} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
             {showConfirm && (
                 <ConfirmationDialog

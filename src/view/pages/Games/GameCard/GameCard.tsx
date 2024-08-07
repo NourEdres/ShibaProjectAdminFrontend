@@ -8,9 +8,11 @@ import { Link } from 'react-router-dom';
 
 interface GameCardProps {
     object: Game;
+    onShowConfirm: (game: Game) => void;
+    onEditGame: (game: Game) => void;
 }
 
-const GameCard: FC<GameCardProps> = ({ object }) => {
+const GameCard: FC<GameCardProps> = ({ object, onShowConfirm }) => {
     const dispatch = useDispatch();
     console.log("object in game card ", JSON.stringify(object));
 
@@ -23,7 +25,11 @@ const GameCard: FC<GameCardProps> = ({ object }) => {
                             <img className='edit-icon' src={EditIcon} alt="Edit" />
                         </button>
                     </Link>
-                    <button className="delete-button">
+                    <button className="delete-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onShowConfirm(object);
+                        }}>
                         <img className='delete-icon' src={DeleteIcon} alt="Delete" />
                     </button>
                 </div>

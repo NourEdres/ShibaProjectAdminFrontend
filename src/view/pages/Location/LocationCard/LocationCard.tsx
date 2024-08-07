@@ -6,7 +6,7 @@ import { DeleteIconBlack, EditIconBlack } from '../../../photos';
 interface LocationCardProps {
     object: Location;
     onShowConfirm: (location: Location) => void;
-    onEditTask: (location: Location) => void;
+    onEditLocation: (location: Location) => void;
 }
 const LocationSectionTitles = {
     LocationName: " שם החדר : ",

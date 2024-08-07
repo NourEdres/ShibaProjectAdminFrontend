@@ -85,6 +85,7 @@ export interface ObjectImage {
   name: string;
   imagePath: string;
   object: ObjectLocation;
+  imageUrl: string;
 }
 
 

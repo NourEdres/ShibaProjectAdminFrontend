@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { Game, GameTBC, Unit } from "../models/Interfaces";
 import { genericAPI } from "./GenericAPI";
 
@@ -22,6 +23,20 @@ class GameApi {
     const response = await genericAPI.postFormData(`${GameApi.endpoint}/create`, formData);
     console.log("response from game" + response.data);
     return response;
+  }
+
+  async deleteGame(gameID: number): Promise<AxiosResponse> {
+    try{
+      const response = await genericAPI.delete<void>(`${GameApi.endpoint}/delete/${gameID}`);
+      return response;
+    } catch(error: any) {
+      console.error('Error deleting game (in api):'+ error);
+      if (error.response && error.response.data) {
+        console.error('Error deleting game (in api in if): '+ error.response.data);
+        throw error.response.data;
+      }
+      throw error;
+    }
   }
 }
 

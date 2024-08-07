@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { Location } from "../models/Interfaces";
 import { genericAPI } from "./GenericAPI";
 
@@ -24,11 +25,11 @@ class LocationAPI {
   }
   }
 
-  async deleteLocation(locationId: number): Promise<any> {
+  async deleteLocation(locationId: number): Promise<AxiosResponse> {
     try {
       const response = await genericAPI.delete<void>(`${LocationAPI.endpoint}/delete/${locationId}`);
       console.log("delete response ", response.data);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.error('Error deleting location (in api):'+ error);
       if (error.response && error.response.data) {

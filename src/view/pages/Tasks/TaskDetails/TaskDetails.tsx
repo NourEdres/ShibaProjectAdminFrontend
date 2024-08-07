@@ -21,6 +21,8 @@ const TaskDetails: React.FC = () => {
     const task: Task = useSelector((state: RootState) => state.globalStates.selectedCard);
     const sectors = useSelector((state: RootState) => state.AllData.Sectors);
     const sectorName = sectors.find(sector => sector.adminID === task.adminIDAPI)?.sector;
+    console.log("task is " + task)
+    console.log("task is ", task)
 
     return (
         <div className='task-container' dir='rtl' style={{ background: "" }}>

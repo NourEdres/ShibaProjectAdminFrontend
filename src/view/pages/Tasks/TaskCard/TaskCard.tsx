@@ -17,7 +17,7 @@ const sectionTitles = {
 const TaskCard: FC<TaskCardProps> = ({ object, onShowConfirm, onEditTask }) => {
 
     return (
-        <div className='task-card' style={{ backgroundColor: 'white' }}>
+        <div className='task-card' style={{ backgroundColor: '' }}>
             <div className='card-header'>
                 <div className='buttons'>
                     <button className="edit-button" onClick={(e) => {
