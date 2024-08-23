@@ -24,7 +24,7 @@ import EditIconBlack from "../photos/Icons/blackEdit.png";
 import DeleteIconBlack from "../photos/Icons/blackDelete.png";
 import InfoIcon from "../photos/Icons/icons8-info-64.svg";
 import Model from "../photos/Icons/model.png";
-import CardBG from "../photos/cardBG.jpg";
+import CardBG from "../photos/CardBG.jpg";
 export {
   CardBG,
   EditIconBlack,
