@@ -21,7 +21,7 @@ const SectorCard: FC<SectorCardProps> = ({ object }) => {
       <div className="card-header">
         <div className="title">{object.username}</div>
         <div className="buttons">
-          <Link to="/EditAdmin">
+          <Link to="/EditSector">
             <button
               className="edit-button"
               onClick={() => dispatch(setCard(object))}

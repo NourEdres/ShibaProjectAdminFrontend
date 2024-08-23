@@ -12,7 +12,7 @@
   background-position: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+  height: 100%;
   .link {
     text-decoration: none;
     display: flex;
@@ -50,12 +50,12 @@
       auto-fill,
       minmax(20vw, 1fr)
     ); // Adjust column size
-    column-gap: vw; // Adjust gap between columns
+    column-gap: 1vw; // Adjust gap between columns
     row-gap: 1vw; // Adjust gap between rows
     overflow-y: auto;
     height: 38vw;
     width: 100%;
-    padding: 1vw;
+    padding: 2vw;
   }
 
   .sector-card {
