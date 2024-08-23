@@ -11,9 +11,6 @@ const LocationDetails: React.FC = () => {
     const location = useSelector((state: RootState) => state.globalStates.selectedCard);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    console.log("Location data:", location.locationImagePublicUrl);
-
     if (!location) {
         return <div>Loading...</div>;
     }
@@ -21,7 +18,6 @@ const LocationDetails: React.FC = () => {
     return (
         <div className='location-container' dir='rtl' style={{ background: "#E9C46A" }}>
             <div className='add-location-header'>
-                <div className='sector-name'>פיזוטרפיה</div>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
             </div>
             <div className='location-details'>

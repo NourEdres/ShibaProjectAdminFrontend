@@ -8,6 +8,8 @@ import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 import MediaViewer from '../../../components/Common/MediaViewer/MediaViewer';
 import { CiCircleInfo } from "react-icons/ci";
+import Loader from "../../../components/Common/LoadingSpinner/Loader";
+
 
 const AddNewTaskHebrew = {
     CreateNewTask: "הוספת משימה חדשה",
@@ -53,6 +55,8 @@ function AddTask() {
     const admin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
     const [selectedSector, setSelectedSector] = useState<number | null>(admin.role === UserRole.SectorAdmin ? admin.adminID : null);
     const [visibleInfo, setVisibleInfo] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
 
     useEffect(() => {
         return () => {
@@ -129,7 +133,8 @@ function AddTask() {
             correctAnswer: correctAnswer ?? 0,
             taskID: 0,
         } : undefined;
-
+        setIsLoading(true);
+        setLoadingMessage('שומר משימה ...');
         const formData = new FormData();
         formData.append('task', new Blob([JSON.stringify(task)], { type: 'application/json' }));
         if (questionTask) {
@@ -145,15 +150,25 @@ function AddTask() {
         try {
             const response = await taskAPI.createTask(formData);
             console.log("Task created successfully", response);
-            navigate('/Tasks');
+            setLoadingMessage('המשימה נשמרה בהצלחה!');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+                navigate('/Tasks');
+            }, 1000);
         } catch (error) {
             console.error("Failed to create task", error);
-            alert("Failed to save task.");
+            setLoadingMessage('שגיאה בשמירת המשימה');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+            }, 2000);
         }
     };
 
     return (
         <div className='main-container-add-task'>
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <div className='add-task-header'>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
                 <div className='sector-name'>פיזוטרפיה</div>

@@ -16,14 +16,14 @@ interface HomePageProps {
 
 const HomePage: FC<HomePageProps> = ({ objects, page, Component, addButton, addButtonPath, setCardOnClick = true }) => {
     const dispatch = useDispatch();
-    console.log("home page obj " + objects)
+    // console.log("home page obj " + objects)
     return (
         <div className="home-page" style={{ background: "#D9D9D9" }}>
             <div className="content">
                 <div className="homePage-grid">
                     {objects.map((ob, index) => {
                         const name = page === "Game" ? ob.gameName : (page === "Sector" ? ob.username : ob.name);
-                        console.log("ob name  is ", (ob));
+                        // console.log("ob name  is ", (ob));
 
                         return (
 

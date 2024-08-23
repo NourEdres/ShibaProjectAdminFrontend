@@ -15,6 +15,7 @@ import { setCard } from '../../../../redux/slices/GlobalStates';
 import { ObjectLocation } from '../../../../redux/models/Interfaces';
 import { objectAPI } from '../../../../redux/services/ObjectLocationApi';
 import { Location } from '../../../../redux/models/Interfaces';
+import Loader from '../../../components/Common/LoadingSpinner/Loader';
 
 interface FileWithPreview extends File {
     preview: string;
@@ -39,6 +40,8 @@ const AddObjectLocation: React.FC = () => {
     const [objectName, setObjectName] = useState('');
     const [objectDescription, setObjectDescription] = useState('');
     const [pics, setPics] = useState<File[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
 
     const navigate = useNavigate();
 
@@ -67,7 +70,8 @@ const AddObjectLocation: React.FC = () => {
             description: objectDescription,
             // objectImages: []
         };
-
+        setIsLoading(true);
+        setLoadingMessage('שומר אובייקט ...');
         const formData = new FormData();
         formData.append('locationObject', new Blob([JSON.stringify(newObject)], { type: 'application/json' }));
         if (pics.length > 0) {
@@ -79,24 +83,31 @@ const AddObjectLocation: React.FC = () => {
 
         try {
             await objectAPI.createObject(location.locationID, formData);
-            alert('Object created successfully');
-            dispatch(setCard(location));
-            navigate(`/ObjectsPage/${location.locationID}`);
+            // alert('Object created successfully');
+            // dispatch(setCard(location));
+            // navigate(`/ObjectsPage/${location.locationID}`);
+            setLoadingMessage('אובייקט נשמר בהצלחה!');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+                dispatch(setCard(location));
+                navigate(`/ObjectsPage/${location.locationID}`);
+            }, 1000);
 
         } catch (error: any) {
             alert(error);
+            setLoadingMessage('שגיאה בשמירת אובייקט');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+            }, 2000);
         }
 
-
-        {
-            /* API add object(loctoin.id,object)*/
-            // dispatch(setCard(await API Get Room By Id (location id)))
-        }
-        // navigate('/ObjectsPage', { state: { newObject } });
     };
 
     return (
         <div className='main-container-add-task'>
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <div className='add-task-header'>
                 <div className='sector-name'>פיזוטרפיה</div>
             </div>

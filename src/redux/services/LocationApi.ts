@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { Location } from "../models/Interfaces";
 import { genericAPI } from "./GenericAPI";
 
@@ -25,7 +24,7 @@ class LocationAPI {
   }
   }
 
-  async deleteLocation(locationId: number): Promise<AxiosResponse> {
+  async deleteLocation(locationId: number): Promise<any> {
     try {
       const response = await genericAPI.delete<void>(`${LocationAPI.endpoint}/delete/${locationId}`);
       console.log("delete response ", response.data);

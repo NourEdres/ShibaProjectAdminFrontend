@@ -4,6 +4,7 @@ import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
 import { useNavigate } from 'react-router-dom';
 import { locationAPI } from '../../../../redux/services/LocationApi';
 import { LocationTBC } from '../../../../redux/models/Interfaces';
+import Loader from '../../../components/Common/LoadingSpinner/Loader';
 
 const AddLocationHebrew = {
     AddNewRoom: "הוספת מקום חדש",
@@ -22,6 +23,8 @@ const AddLocation = () => {
     const [floor, setFloor] = useState<number | undefined>(undefined);
     const [mediaFile, setMediaFile] = useState<File | null>(null);
     const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files;
@@ -46,13 +49,14 @@ const AddLocation = () => {
             floor: floor!,
             qrcode: '',
         };
+        setIsLoading(true);
+        setLoadingMessage('שומר מקום ...');
         const formData = new FormData();
         formData.append('location', new Blob([JSON.stringify(location)], { type: 'application/json' }));
         if (mediaFile) {
             formData.append('image', mediaFile);
         }
 
-        // Log the FormData contents
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
@@ -60,16 +64,27 @@ const AddLocation = () => {
         locationAPI.createLocation(formData)
             .then(response => {
                 console.log("Full response:", response);
-                navigate('/Locations');
+                setLoadingMessage('מקום נשמר בהצלחה!');
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setLoadingMessage('');
+                    navigate('/Locations');
+                }, 1000);
             })
             .catch(error => {
                 console.error("Detailed error:", error.response || error);
                 alert("Failed to save location.");
+                setLoadingMessage('שגיאה בשמירת המקום');
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setLoadingMessage('');
+                }, 2000);
             });
     };
 
     return (
         <div className='main-container-add-location'>
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <div className='add-location-header'>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
                 <div className='sector-name'>פיזוטרפיה</div>
@@ -94,7 +109,8 @@ const AddLocation = () => {
                             const value = e.target.value;
                             setFloor(value === '' ? undefined : Number(value));
                         }}
-                    />                </div>
+                    />
+                </div>
 
                 <div className='input-group file-upload-group'>
                     <label className='input-label'>{AddLocationHebrew.UploadFiles}</label>

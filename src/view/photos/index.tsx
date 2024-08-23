@@ -23,11 +23,12 @@ import DownloadIcon from "../photos/Icons/Download.jpeg";
 import EditIconBlack from "../photos/Icons/blackEdit.png";
 import DeleteIconBlack from "../photos/Icons/blackDelete.png";
 import InfoIcon from "../photos/Icons/icons8-info-64.svg";
+import Model from "../photos/Icons/model.png";
 export {
     EditIconBlack, DeleteIconBlack, UploadFileIcon, LeftArrowIcon, ColorPicker,
     PlusIcon, EditIcon, DeleteIcon, StaticsIcon, WhiteLogo, LogOutIcon,
     TaskIcon, LocationIcon, ApplicationsIcon, ViewPasswordIcon,
     HospitalIcon, LogoWithoutTitle, ShibaFullLogo, SearchIcon,
     UserIcon, HeroPhoto, DoctorUserIcon, PasswordIcon, DownloadIcon,
-    InfoIcon
+    InfoIcon, Model
 }

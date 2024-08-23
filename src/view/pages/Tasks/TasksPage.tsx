@@ -9,8 +9,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import ConfirmationDialog from '../../components/Common/ConfirmationDialog/ConfirmationDialog';
 import { Admin, Task, UserRole } from '../../../redux/models/Interfaces';
-import { setCard } from '../../../redux/slices/GlobalStates';
+import { setCard, setPage } from '../../../redux/slices/GlobalStates';
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Common/LoadingSpinner/Loader";
+import { buttonsName } from "../../../redux/models/Types";
 
 const TasksPage: FC = () => {
     const dispatch = useDispatch();
@@ -20,13 +22,18 @@ const TasksPage: FC = () => {
     const adminStr = localStorage.getItem('admin');
     const currAdmin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
+
 
     useEffect(() => {
         const fetchTasks = async () => {
             dispatch(setTasks(await taskAPI.getAllTasks()));
+            dispatch(setPage(buttonsName.Tasks))
         };
         fetchTasks();
-    }, [dispatch]);
+    }, [dispatch, refetchTrigger]);
 
     const handleDelete = (task: Task) => {
         if (currAdmin.adminID !== task.adminIDAPI && currAdmin.role !== UserRole.MainAdmin) {
@@ -34,29 +41,39 @@ const TasksPage: FC = () => {
         } else {
             setTaskToDelete(task);
             setShowConfirm(true);
+
         }
     };
 
     const handleDeleteConfirm = async () => {
+        setShowConfirm(false);
+        setIsLoading(true);
+        setLoadingMessage('מוחק משימה ...');
         if (taskToDelete) {
             try {
                 const response = await taskAPI.deleteTask(taskToDelete.taskID);
                 console.log("response data is ", response.data);
 
                 if (response.status === 200) {
-                    alert("Task was deleted successfully");
-                    setShowConfirm(false);
-                    const updatedTasks = await taskAPI.getAllTasks();
-                    dispatch(setTasks(updatedTasks));
+                    // const updatedTasks = await taskAPI.getAllTasks();
+                    // dispatch(setTasks(updatedTasks));
+                    // alert("Task was deleted successfully");
+                    dispatch(setTasks(tasks.filter(obj => obj.taskID !== taskToDelete.taskID)));
+                    setLoadingMessage('המשימה נמחקה בהצלחה!');
+                    setTimeout(() => {
+                        setRefetchTrigger(prev => prev + 1);
+                        setIsLoading(false);
+                        setLoadingMessage('');
+                    }, 500);
                 }
             } catch (error: any) {
+                dispatch(setTasks(tasks));
+                setLoadingMessage('שגיאה במחיקת המשימה');
                 console.error('Error deleting task in tasks page:' + error);
-                // alert(`Failed to delete task. Please try again. ${error}`);
-                // if (error.response && error.response.data && error.response.data.message) {
-                //     alert(`Failed to delete task: ${error.response.data.message}`);
-                // } else {
-                //     alert(`Failed to delete task. Please try again. ${error}`);
-                // }
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setLoadingMessage('');
+                }, 2000);
             }
         }
     };
@@ -72,6 +89,7 @@ const TasksPage: FC = () => {
 
     return (
         <>
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <HomePage
                 objects={tasks}
                 page="Task"

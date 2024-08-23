@@ -7,6 +7,8 @@ import { MediaTask, Task } from '../../../../redux/models/Interfaces';
 import { useNavigate } from 'react-router-dom';
 import { taskAPI } from '../../../../redux/services/TaskApi';
 import MediaViewer from '../../../components/Common/MediaViewer/MediaViewer';
+import Loader from "../../../components/Common/LoadingSpinner/Loader";
+
 
 const AddNewTaskHebrew = {
     CreateNewTask: 'עריכת משימה ',
@@ -61,6 +63,9 @@ function EditTask() {
     const [selectedSector, setSelectedSector] = useState<number | null>(task.adminIDAPI || null);
     const [, setSelectedSectorName] = useState<string>('');
     const [withMsg, setWithMsg] = useState<boolean>(task.withMsg);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
+
 
     useEffect(() => {
         if (selectedSector !== null) {
@@ -126,7 +131,8 @@ function EditTask() {
             alert('A task must have at least one element (question, media, or notes).');
             return;
         }
-
+        setIsLoading(true);
+        setLoadingMessage('מעדכן משימה...');
         const formData = new FormData();
         formData.append(
             'task',
@@ -180,14 +186,26 @@ function EditTask() {
             dispatch({ type: 'UPDATE_TASK_SUCCESS', payload: updatedTask });
             navigate('/Tasks');
             alert('Task updated successfully!');
+            setLoadingMessage('המשימה נשמרה בהצלחה!');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+                navigate('/Tasks');
+            }, 1000);
         } catch (error) {
             console.error('Failed to update task:', error);
             alert('Failed to update the task.');
+            setLoadingMessage('שגיאה בשמירת המשימה');
+            setTimeout(() => {
+                setIsLoading(false);
+                setLoadingMessage('');
+            }, 2000);
         }
     };
 
     return (
         <div className='main-container-edit-task'>
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <div className='edit-task-header'>
                 <div className='arrow-icon'>
                     <img className='arrow-icon' src={LeftArrowIcon} alt='arrow' />

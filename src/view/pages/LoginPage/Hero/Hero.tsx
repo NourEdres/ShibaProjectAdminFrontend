@@ -1,17 +1,18 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
-import "../Hero/Hero.scss";
-import { useState } from "react";
-import { loginAPI } from "../../../../redux/services/LoginApi";
 import { useDispatch } from "react-redux";
+import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
+import { loginAPI } from "../../../../redux/services/LoginApi";
 import { Admin } from "../../../../redux/models/Interfaces";
 import { setLoggedInAdmin, setPage } from "../../../../redux/slices/GlobalStates";
 import { buttonsName } from "../../../../redux/models/Types";
+import Loader from "../../../components/Common/LoadingSpinner/Loader";
+import "../Hero/Hero.scss";
 
-
-const Hero = () => {
+const Hero: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -19,27 +20,26 @@ const Hero = () => {
     if (!username.trim() || !password.trim()) {
       alert("Provide username and password");
     } else {
+      setIsLoading(true);
       try {
         const admin: Admin = await loginAPI.login(username, password);
         console.log("admin is " + admin);
         dispatch(setLoggedInAdmin(admin));
-
+        //in here call al apis
         dispatch(setPage(buttonsName.Games));
         localStorage.setItem('page', buttonsName.Games);
         navigate('/Games');
       } catch (error: any) {
         alert("Login failed: " + error.message);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
-
-  // const handleLogin = async () => {
-  //   navigate('/Sectors');
-  // };
-
   return (
     <div className="hero-container">
+      <Loader isLoading={isLoading} />
       <div className="hero-container-part-one">
         <div className="hero-content">
           <img className="hero-img" src={HeroPhoto} alt="hero-photo" />
@@ -52,6 +52,7 @@ const Hero = () => {
                   placeholder="שם משתמש"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
+                  disabled={isLoading}
                 />
                 <img className="navbar-icon" src={DoctorUserIcon} alt="admin-icon" />
               </div>
@@ -62,10 +63,17 @@ const Hero = () => {
                   placeholder=" קוד"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
+                  disabled={isLoading}
                 />
                 <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
               </div>
-              <button className="login-button" onClick={handleLogin}>התחבר</button>
+              <button
+                className="login-button"
+                onClick={handleLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? 'מתחבר...' : 'התחבר'}
+              </button>
             </div>
           </div>
         </div>

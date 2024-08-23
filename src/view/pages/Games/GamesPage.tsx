@@ -11,6 +11,7 @@ import { setPage } from "../../../redux/slices/GlobalStates";
 import { buttonsName } from "../../../redux/models/Types";
 import { Admin, Game, UserRole } from "../../../redux/models/Interfaces";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
+import Loader from "../../components/Common/LoadingSpinner/Loader";
 
 const GamesPage: FC = () => {
     const dispatch = useDispatch();
@@ -20,6 +21,9 @@ const GamesPage: FC = () => {
     const [gameToDelete, setGameToDelete] = useState<Game | null>(null);
     const adminStr = localStorage.getItem('admin');
     const currAdmin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
     useEffect(() => {
         const fetchGames = async () => {
             dispatch(setGames(await gameAPI.getAllGames()))
@@ -43,19 +47,33 @@ const GamesPage: FC = () => {
 
     const handleDeleteConfirm = async () => {
         if (gameToDelete) {
+            setShowConfirm(false);
+            setIsLoading(true);
+            setLoadingMessage('מוחק משחק ...');
             try {
                 const response = await gameAPI.deleteGame(gameToDelete.gameID);
                 console.log("response game ", response.data);
                 console.log("sttus is " + response.status);
                 if (response.status === 200) {
-                    const message = gameToDelete.gameName + "משחק נמחק בהצלחה ";
+                    const message = gameToDelete.gameName + " משחק נמחק בהצלחה ";
                     alert(message);
-                    setShowConfirm(false);
                     dispatch(setGames(games.filter(obj => obj.gameID !== gameToDelete.gameID)));
+                    setLoadingMessage('משחק נמחק בהצלחה!');
+                    setTimeout(() => {
+                        setRefetchTrigger(prev => prev + 1);
+                        setIsLoading(false);
+                        setLoadingMessage('');
+                    }, 500);
                 }
             } catch (error: any) {
+                dispatch(setGames(games));
                 console.error("Error deleting game: ", error);
                 alert("שגיאה במחיקת המשחק:\n" + error);
+                setLoadingMessage("שגיאה במחיקת המשחק:\n" + error);
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setLoadingMessage('');
+                }, 2000);
             }
         }
     };
@@ -65,6 +83,7 @@ const GamesPage: FC = () => {
 
     return (
         <div dir="rtl">
+            <Loader isLoading={isLoading} message={loadingMessage} />
             <HomePage objects={games} page="Game" Component={(props) => (
                 <GameCard {...props}
                     onShowConfirm={handleDelete}

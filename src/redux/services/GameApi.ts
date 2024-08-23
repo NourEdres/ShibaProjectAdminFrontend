@@ -7,7 +7,7 @@ class GameApi {
 
   async getAllGames(): Promise<Game[]> {
     const response = await genericAPI.get<Game[]>(`${GameApi.endpoint}/getAll`);
-    console.log("games from api ", response.data);
+    // console.log("games from api ", response.data);
     return response.data;
   }
 

@@ -15,7 +15,7 @@ const LocationSectionTitles = {
 };
 
 const LocationCard: FC<LocationCardProps> = ({ object, onShowConfirm }) => {
-    { console.log("LocationCard - objects ", object.objectsList); }
+    // { console.log("LocationCard - objects ", object.objectsList); }
     return (
         <div className='Location-card' dir="rtl" style={{ backgroundColor: 'white' }}>
             <div className='card-header'>

@@ -17,7 +17,7 @@ const SectorCard: FC<SectorCardProps> = ({ object }) => {
     const dispatch = useDispatch();
     console.log("curr objects  " + (object))
     return (
-        <div className='sector-card' style={{ background: object.color }}>
+        <div className='sector-card' style={{ background: 'black' }}>
             <div className='card-header'>
                 <div className='buttons'>
                     <Link to="/EditAdmin">

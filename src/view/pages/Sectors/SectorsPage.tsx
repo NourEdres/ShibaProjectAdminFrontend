@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setSectors } from "../../../redux/slices/saveAllData";
 import { adminAPI } from "../../../redux/services/AdminApi";
-import { setSector } from "../../../redux/slices/GlobalStates";
+import { setPage, setSector } from "../../../redux/slices/GlobalStates";
+import { buttonsName } from "../../../redux/models/Types";
 
 const SectorsPage: FC = () => {
   // const page = useSelector((state: RootState) => state.globalStates.page);
@@ -20,6 +21,7 @@ const SectorsPage: FC = () => {
     const fetchSectors = async () => {
       dispatch(setSectors(await adminAPI.getAllAdmins()));
       dispatch(setSector(sectors[0]));
+      dispatch(setPage(buttonsName.Sectors))
       console.log("in sector page " + await adminAPI.getAllAdmins())
     };
     fetchSectors();
@@ -27,10 +29,10 @@ const SectorsPage: FC = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <div dir="rtl">
       {/* {console.log("page :", page)} */}
       {<HomePage objects={sectors} page="Sector" Component={SectorCard} addButton="הוספת סקטור חדש" addButtonPath="AddSector" />}
-    </>
+    </div>
   );
 };
 

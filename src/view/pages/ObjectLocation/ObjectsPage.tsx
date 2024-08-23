@@ -11,6 +11,8 @@ import { useParams } from 'react-router-dom';
 import ConfirmationDialog from '../../components/Common/ConfirmationDialog/ConfirmationDialog';
 import { buttonsName } from '../../../redux/models/Types';
 import { setPage } from '../../../redux/slices/GlobalStates';
+import Loader from '../../components/Common/LoadingSpinner/Loader';
+
 
 
 const ObjectsPage: FC = () => {
@@ -20,7 +22,9 @@ const ObjectsPage: FC = () => {
     const objects = useSelector((state: RootState) => state.AllData.Objects);
     const [showConfirm, setShowConfirm] = useState(false);
     const [objectToDelete, setObjectToDelete] = useState<ObjectLocation | null>(null);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
     console.log("location is ", locationID)
 
     useEffect(() => {
@@ -28,12 +32,12 @@ const ObjectsPage: FC = () => {
             if (locationID) {
                 const objectsData = await objectAPI.getAllObjetsOfLocation(Number(locationID));
                 dispatch(setObjects(objectsData));
-                // dispatch(setPage(buttonsName.Locations))
+                dispatch(setPage(buttonsName.Locations))
 
             }
         };
         fetchObjects();
-    }, [locationID, dispatch]);
+    }, [locationID, dispatch, refetchTrigger]);
 
     const handleDelete = (object: ObjectLocation) => {
         setObjectToDelete(object);
@@ -42,19 +46,33 @@ const ObjectsPage: FC = () => {
 
     const handleDeleteConfirm = async () => {
         if (objectToDelete) {
+            setShowConfirm(false);
+            setIsLoading(true);
+            setLoadingMessage('מוחק אובייקט ...');
             try {
                 const response = await objectAPI.deleteObject(objectToDelete.objectID);
                 console.log("response object ", response.data);
                 console.log("sttus is " + response.status);
                 if (response.status === 200) {
-                    const message = objectToDelete.name + "אובייקט נמחק בהצלחה ";
+                    const message = objectToDelete.name + " אובייקט נמחק בהצלחה ";
                     alert(message);
-                    setShowConfirm(false);
                     dispatch(setObjects(objects.filter(obj => obj.objectID !== objectToDelete.objectID)));
+                    setLoadingMessage(message);
+                    setTimeout(() => {
+                        setRefetchTrigger(prev => prev + 1);
+                        setIsLoading(false);
+                        setLoadingMessage('');
+                    }, 500);
                 }
             } catch (error) {
+                dispatch(setObjects(objects));
                 alert("שגיאה במחיקת האובייקט:\n" + error);
                 console.log(error);
+                setLoadingMessage('שגיאה במחיקת האובייקט');
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setLoadingMessage('');
+                }, 2000);
             }
         }
     }
@@ -65,6 +83,7 @@ const ObjectsPage: FC = () => {
 
     return (
         <div dir="rtl">
+            <Loader isLoading={isLoading} message={loadingMessage} />
             {<HomePage objects={objects}
                 page="Object" Component={(props) => (
                     <ObjectsCard {...props}
@@ -85,3 +104,4 @@ const ObjectsPage: FC = () => {
 };
 
 export default ObjectsPage;
+

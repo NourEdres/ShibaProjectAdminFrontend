@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { HospitalIcon, ApplicationsIcon, LocationIcon, TaskIcon, LogOutIcon, WhiteLogo } from '../../../photos';
+import { HospitalIcon, ApplicationsIcon, LocationIcon, TaskIcon, LogOutIcon, WhiteLogo, Model } from '../../../photos';
 import './AdminMenu.scss';
 import { buttonsName } from '../../../../redux/models/Types';
 import { Link } from 'react-router-dom';
@@ -61,6 +61,18 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                         <img className="navbar-icon" src={TaskIcon} alt="menu-icon" />
                     </button>
                 </Link>
+                <div>
+                    <button
+                        className={`menu-button ${activeButton === buttonsName.TrainModel ? "active" : ""}`}
+                        onClick={() => {
+                            localStorage.clear();
+                            // handlePageChange(buttonsName.Logout);
+                        }}
+                    >
+                        <div className='button-txt'>{buttonsName.TrainModel}</div>
+                        <img className="navbar-icon" src={Model} alt="menu-icon" />
+                    </button>
+                </div>
                 <Link className="menu-button" to="/">
                     <button
                         className={`menu-button ${activeButton === buttonsName.Logout ? "active" : ""}`}
@@ -73,6 +85,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                         <img className="navbar-icon" src={LogOutIcon} alt="menu-icon" />
                     </button>
                 </Link>
+
             </div>
         </div>
     );
