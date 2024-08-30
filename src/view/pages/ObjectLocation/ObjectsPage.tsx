@@ -2,15 +2,15 @@ import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import HomePage from "../../components/Common/HomePage/HomePage";
-import ObjectsCard from './ObjectsCard/ObjectsCard';
+import ObjectCard from '../ObjectLocation/ObjectCard/ObjectCard';
 import './ObjectsPage.scss';
 import { setObjects } from '../../../redux/slices/saveAllData';
 import { objectAPI } from '../../../redux/services/ObjectLocationApi';
 import { ObjectLocation } from '../../../redux/models/Interfaces';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmationDialog from '../../components/Common/ConfirmationDialog/ConfirmationDialog';
 import { buttonsName } from '../../../redux/models/Types';
-import { setPage } from '../../../redux/slices/GlobalStates';
+import { setCard, setPage } from '../../../redux/slices/GlobalStates';
 import Loader from '../../components/Common/LoadingSpinner/Loader';
 
 
@@ -25,7 +25,7 @@ const ObjectsPage: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [refetchTrigger, setRefetchTrigger] = useState(0);
-    console.log("location is ", locationID)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchObjects = async () => {
@@ -78,7 +78,14 @@ const ObjectsPage: FC = () => {
     }
 
     const handleEdit = (object: ObjectLocation) => {
-
+        console.log("handleEdit called in ObjectsPage", object);
+        dispatch(setCard(object));
+        if (locationID) {
+            console.log("Navigating to:", `/EditObject/${locationID}`);
+            navigate(`/EditObject/${locationID}`);
+        } else {
+            console.error("LocationID is undefined");
+        }
     }
 
     return (
@@ -86,7 +93,7 @@ const ObjectsPage: FC = () => {
             <Loader isLoading={isLoading} message={loadingMessage} />
             {<HomePage objects={objects}
                 page="Object" Component={(props) => (
-                    <ObjectsCard {...props}
+                    <ObjectCard {...props}
                         onShowConfirm={handleDelete}
                         onEditObject={handleEdit}
                     />

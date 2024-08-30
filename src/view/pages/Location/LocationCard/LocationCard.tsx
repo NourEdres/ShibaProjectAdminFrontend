@@ -14,14 +14,22 @@ const LocationSectionTitles = {
   objectsNumber: " מספר האובייקטים : ",
 };
 
-const LocationCard: FC<LocationCardProps> = ({ object, onShowConfirm }) => {
+const LocationCard: FC<LocationCardProps> = ({ object, onShowConfirm, onEditLocation }) => {
+
+
   // { console.log("LocationCard - objects ", object.objectsList); }
   return (
     <div className="Location-card">
       <div className="card-header">
         <div className="title">{object.name}</div>
         <div className="buttons">
-          <button className="edit-button">
+          <button className="edit-button"
+            onClick={(e) => {
+              console.log("clicked on edit button");
+              e.preventDefault();
+              onEditLocation(object);
+            }}
+          >
             <img className="edit-icon" src={EditIcon} />
           </button>
           <button

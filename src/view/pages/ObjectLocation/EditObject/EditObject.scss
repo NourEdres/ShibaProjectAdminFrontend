@@ -1,0 +1,165 @@
+@import "../../../themes/mixins";
+@import "../../../themes/variables";
+
+.main-container-edit-object {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $secondary-white-color;
+
+    .edit-object-header {
+        display: flex;
+        align-items: center;
+        padding: 2vh 2vw;
+        background-color: $primary-green-logo-color;
+        .arrow-icon {
+            width: 2vw;
+            height: 2vw;
+            cursor: pointer;
+        }
+    }
+
+    .edit-object-container {
+        flex: 1;
+        padding: 3vh 3vw;
+        overflow-y: auto;
+        max-width: 1028px; 
+        margin: 0 auto; 
+        width: 100%;
+        box-sizing: border-box;
+
+        .edit-object-title {
+            @include font_style;
+            color: $secondary-darkgreen-color;
+            font-size: 2.5vh;
+            margin-bottom: 3vh;
+        }
+
+        .input-group {
+            margin-bottom: 3vh;
+            width: 100%;
+
+            .input-label {
+                @include font_style;
+                color: $secondary-darkgreen-color;
+                font-size: 1.8vh;
+                margin-bottom: 1vh;
+                display: block;
+            }
+
+            .object-input, .object-textarea {
+                width: 100%;
+                padding: 1vh 1vw;
+                border: 1px solid $secondary-darkgreen-color;
+                border-radius: 0.5vw;
+                @include font_style;
+                font-size: 1.6vh;
+                box-sizing: border-box;
+            }
+
+            .object-textarea {
+                height: 10vh; // Reduced height
+                resize: vertical;
+                max-height: 20vh; // Set a max-height
+            }
+        }
+
+        .options-container {
+            width: 100%;
+
+            .option-section {
+                display: flex;
+                align-items: center;
+                gap: 1vw;
+                margin-bottom: 2vh;
+
+                .input-label {
+                    margin-bottom: 0;
+                }
+
+                .file-upload-label {
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .file-upload-icon {
+                    width: 2.5vw;
+                    height: 2.5vw;
+                }
+            }
+
+            .object-media-list {
+                width: 100%;
+
+                .image-count {
+                    @include font_style;
+                    color: $secondary-darkgreen-color;
+                    font-size: 1.6vh;
+                    margin-bottom: 1vh;
+                }
+
+                .swiper-container {
+                    width: 100%;
+                }
+
+                .swiper-slide {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 1vh;
+                    box-sizing: border-box;
+
+                    .img-media {
+                        width: 100%;
+                        height: 30vh; // Increased height
+                        object-fit: contain;
+                        border-radius: 0.5vw;
+                        transition: all 0.3s ease-in-out;
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
+                    }
+
+                    .delete-image-btn {
+                        margin-top: 1vh;
+                        padding: 0.5vh 1vw;
+                        background-color: $primary-pink-logo-color;
+                        border: none;
+                        @include font_style;
+                        color: $secondary-white-color;
+                        font-size: 1.4vh;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+
+                        &:hover {
+                            background-color: darken($primary-pink-logo-color, 10%);
+                        }
+                    }
+                }
+            }
+        }
+
+        .save-object-button {
+            margin-top: 3vh;
+            padding: 1.2vh 2.5vw;
+            background-color: $primary-green-logo-color;
+            border: none;
+            border-radius: 0.5vw;
+            @include font_style;
+            color: $secondary-white-color;
+            font-size: 1.8vh;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: fit-content;
+
+            &:hover {
+                background-color: darken($primary-green-logo-color, 10%);
+            }
+        }
+    }
+}

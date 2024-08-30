@@ -13,6 +13,7 @@ import { Outlet } from "react-router-dom";
 import AddTask from "../pages/Tasks/AddTask/AddTask";
 import TaskDetails from "../pages/Tasks/TaskDetails/TaskDetails";
 import AddLocation from "../pages/Location/AddLocation/AddLocation";
+import EditLocation from "../pages/Location/EditLocation/EditLocation";
 import LocationDetails from "../pages/Location/LocationDetails/LocationDetails";
 import EditTask from "../pages/Tasks/EditTask/EditTask";
 import AddObjectLocation from "../pages/ObjectLocation/AddObjectLocation/AddObjectLocation";
@@ -29,6 +30,7 @@ import GameDetails from "../pages/Games/GameDetails/GameDetails";
 import UnitsPageView from "../pages/Games/UnitsPage-View/UnitsPageView";
 import UnitDetailsView from "../pages/Games/UnitDetailsView/UnitDetailsView";
 import EditSector from "../pages/Sectors/EditSector/EditSector";
+import EditObject from "../pages/ObjectLocation/EditObject/EditObject";
 
 function Layout() {
   return (
@@ -63,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/Locations",
         element: <LocationPage />,
+      },
+      {
+        path: "/EditLocation",
+        element: <EditLocation />,
       },
       {
         path: "/Tasks",
@@ -107,6 +113,10 @@ const router = createBrowserRouter([
       {
         path: "/ObjectDetails/:objectID",
         element: <ObjectDetails />,
+      },
+      {
+        path: "/EditObject/:locationID",
+        element: <EditObject />,
       },
 
       {

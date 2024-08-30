@@ -38,6 +38,21 @@ class LocationAPI {
       throw error;
     }
   }
+
+  async updateLocation(locationId: number, formData: FormData): Promise<Location> {
+    try {
+      const response = await genericAPI.putFormData<Location>(`${LocationAPI.endpoint}/update/${locationId}`, formData);
+      console.log("update response ", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error updating location:', error);
+      if (error.response && error.response.data) {
+        console.error('Error updating location (server response):', error.response.data);
+        throw error.response.data;
+      }
+      throw error;
+    }
+  }
 }
 
 export const locationAPI = new LocationAPI();

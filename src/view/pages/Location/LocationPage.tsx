@@ -10,8 +10,9 @@ import { setLocations } from "../../../redux/slices/saveAllData";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import { Location } from "../../../redux/models/Interfaces";
 import { buttonsName } from "../../../redux/models/Types";
-import { setPage } from "../../../redux/slices/GlobalStates";
+import { setCard, setPage } from "../../../redux/slices/GlobalStates";
 import Loader from "../../components/Common/LoadingSpinner/Loader";
+import { useNavigate } from "react-router-dom";
 
 const LocationsPage: FC = () => {
     const page = useSelector((state: RootState) => state.globalStates.page);
@@ -22,6 +23,7 @@ const LocationsPage: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [refetchTrigger, setRefetchTrigger] = useState(0);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -74,7 +76,8 @@ const LocationsPage: FC = () => {
     };
     //tbd
     const handleEdit = (location: Location) => {
-
+        dispatch(setCard(location));
+        navigate("/EditLocation");
     }
     return (
         <div dir="rtl">

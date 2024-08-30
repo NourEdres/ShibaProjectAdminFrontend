@@ -41,6 +41,20 @@ class ObjectLocationAPI{
         }
       }
 
+      async updateObject(objectId: number, formData: FormData): Promise<any> {
+        console.log("in update location object " + objectId);
+        try {
+            const response = await genericAPI.putFormData<ObjectLocation>(`${ObjectLocationAPI.endpoint}/update/${objectId}`, formData);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error updating object:', error);
+            if (error.response && error.response.data) {
+                throw error.response.data;
+            }
+            throw error;
+        }
+    }
+
 }
 
 export const objectAPI = new ObjectLocationAPI();

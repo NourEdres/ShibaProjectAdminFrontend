@@ -1,40 +1,64 @@
-import React, { useState } from 'react';
-import './AddLocation.scss';
+import React, { useState, useEffect } from 'react';
+import './EditLocation.scss';
 import { LeftArrowIcon, UploadFileIcon } from '../../../photos';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/store';
 import { locationAPI } from '../../../../redux/services/LocationApi';
-import { LocationTBC } from '../../../../redux/models/Interfaces';
+import { Location } from '../../../../redux/models/Interfaces';
 import Loader from '../../../components/Common/LoadingSpinner/Loader';
 
-const AddLocationHebrew = {
-    AddNewRoom: "הוספת מקום חדש",
+const EditLocationHebrew = {
+    EditRoom: "עריכת מקום",
     Name: "שם : ",
     Description: "תיאור : ",
     Floor: "קומה : ",
     UploadFiles: "העלאת קבצים : ",
-    AddObjects: "הוספת אובייקטים",
-    Save: "שמירה"
+    Save: "שמירה",
+    DeleteImage: "מחק תמונה"
 };
 
-const AddLocation = () => {
+const EditLocation: React.FC = () => {
     const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const location = useSelector((state: RootState) => state.globalStates.selectedCard) as Location;
+
+    const [name, setName] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [floor, setFloor] = useState<number | undefined>(undefined);
     const [mediaFile, setMediaFile] = useState<File | null>(null);
     const [mediaPreview, setMediaPreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [deleteImage, setDeleteImage] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (location) {
+            setName(location.name || '');
+            setDescription(location.description || '');
+            setFloor(location.floor);
+            if (location.locationImagePublicUrl) {
+                setMediaPreview(location.locationImagePublicUrl);
+            }
+        }
+    }, [location]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files;
         if (selectedFiles && selectedFiles.length > 0) {
             const file = selectedFiles[0];
             setMediaFile(file);
+            setDeleteImage(false);
 
             const previewUrl = URL.createObjectURL(file);
             setMediaPreview(previewUrl);
         }
+    };
+
+    const handleDeleteImage = () => {
+        URL.revokeObjectURL(mediaPreview || '');
+        setMediaFile(null);
+        setMediaPreview(null);
+        setDeleteImage(true);
     };
 
     const handleSave = () => {
@@ -42,25 +66,26 @@ const AddLocation = () => {
             alert("Name and floor are required.");
             return;
         }
-        const location: LocationTBC = {
-            locationID: 0,
+        const updatedLocation: Location = {
+            ...location,
             name,
             description,
             floor: floor!,
-            qrcode: '',
         };
         setIsLoading(true);
-        setLoadingMessage('שומר מקום ...');
+        setLoadingMessage('עדכון מקום ...');
+
         const formData = new FormData();
-        formData.append('location', new Blob([JSON.stringify(location)], { type: 'application/json' }));
+        formData.append('location', new Blob([JSON.stringify(updatedLocation)], { type: 'application/json' }));
         if (mediaFile) {
             formData.append('image', mediaFile);
         }
+        formData.append('deleteImage', deleteImage.toString());
 
-        locationAPI.createLocation(formData)
+        locationAPI.updateLocation(updatedLocation.locationID, formData)
             .then(response => {
                 console.log("Full response:", response);
-                setLoadingMessage('מקום נשמר בהצלחה!');
+                setLoadingMessage('מקום עודכן בהצלחה!');
                 setTimeout(() => {
                     setIsLoading(false);
                     setLoadingMessage('');
@@ -68,9 +93,9 @@ const AddLocation = () => {
                 }, 1000);
             })
             .catch(error => {
-                console.error("Detailed error:", error.response || error);
-                alert("Failed to save location.");
-                setLoadingMessage('שגיאה בשמירת המקום');
+                console.error("Detailed error:", error);
+                alert("Failed to update location.");
+                setLoadingMessage('שגיאה בעדכון המקום');
                 setTimeout(() => {
                     setIsLoading(false);
                     setLoadingMessage('');
@@ -79,24 +104,24 @@ const AddLocation = () => {
     };
 
     return (
-        <div className='main-container-add-location'>
+        <div className='main-container-edit-location'>
             <Loader isLoading={isLoading} message={loadingMessage} />
-            <div className='add-location-header'>
+            <div className='edit-location-header'>
                 <div className='arrow-icon'><img className='arrow-icon' src={LeftArrowIcon} alt="arrow" /></div>
                 <div className='sector-name'>פיזוטרפיה</div>
             </div>
-            <div className='add-location-container' dir="rtl">
-                <div className='add-location-title'>{AddLocationHebrew.AddNewRoom}</div>
+            <div className='edit-location-container' dir="rtl">
+                <div className='edit-location-title'>{EditLocationHebrew.EditRoom}</div>
                 <div className='input-group'>
-                    <label className='input-label'>{AddLocationHebrew.Name}</label>
+                    <label className='input-label'>{EditLocationHebrew.Name}</label>
                     <input type='text' className='location-input' value={name} onChange={e => setName(e.target.value)} />
                 </div>
                 <div className='input-group'>
-                    <label className='input-label'>{AddLocationHebrew.Description}</label>
+                    <label className='input-label'>{EditLocationHebrew.Description}</label>
                     <textarea className='location-textarea' value={description} onChange={e => setDescription(e.target.value)}></textarea>
                 </div>
                 <div className='input-group'>
-                    <label className='input-label'>{AddLocationHebrew.Floor}</label>
+                    <label className='input-label'>{EditLocationHebrew.Floor}</label>
                     <input
                         type='number'
                         className='location-input'
@@ -109,7 +134,7 @@ const AddLocation = () => {
                 </div>
 
                 <div className='input-group file-upload-group'>
-                    <label className='input-label'>{AddLocationHebrew.UploadFiles}</label>
+                    <label className='input-label'>{EditLocationHebrew.UploadFiles}</label>
                     <label htmlFor="file-upload" className="file-upload-label">
                         <img src={UploadFileIcon} alt="Upload File" className="file-upload-icon" />
                     </label>
@@ -123,22 +148,18 @@ const AddLocation = () => {
                     {mediaPreview && (
                         <div>
                             <img src={mediaPreview} alt="Uploaded" style={{ width: 100, height: 100 }} />
-                            <button className='delete-image-btn' onClick={() => {
-                                URL.revokeObjectURL(mediaPreview);
-                                setMediaFile(null);
-                                setMediaPreview(null);
-                            }}>
-                                מחיקה
+                            <button className='delete-image-btn' onClick={handleDeleteImage}>
+                                {EditLocationHebrew.DeleteImage}
                             </button>
                         </div>
                     )}
                 </div>
                 <div className='location-buttons'>
-                    <button className='save-location-button' onClick={handleSave}>{AddLocationHebrew.Save}</button>
+                    <button className='save-location-button' onClick={handleSave}>{EditLocationHebrew.Save}</button>
                 </div>
             </div>
         </div>
     );
 };
 
-export default AddLocation;
+export default EditLocation;

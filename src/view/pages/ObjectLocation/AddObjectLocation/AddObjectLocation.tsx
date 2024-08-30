@@ -82,6 +82,7 @@ const AddObjectLocation: React.FC = () => {
         }
 
         try {
+            console.log("location is ", location.locationID)
             await objectAPI.createObject(location.locationID, formData);
             // alert('Object created successfully');
             // dispatch(setCard(location));
