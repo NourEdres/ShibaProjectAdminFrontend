@@ -10,27 +10,47 @@ import {
 import "./NewSector.scss";
 import { adminAPI } from "../../../../../redux/services/AdminApi";
 import { AdminTBC } from "../../../../../redux/models/Interfaces";
+import Loader from "../../../../components/Common/LoadingSpinner/Loader";
 
 const NewSector = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [sector, setSector] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
+
+  const isFormValid = (): boolean => {
+    return username.trim() !== '' && sector.trim() !== '';
+  };
 
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      alert("שם משתמש ותפקיד לא יכולים להיות ריקים");
+      return;
+    }
+    setIsLoading(true);
+    setLoadingMessage('מוסיף אדמין...');
     const newAdmin: AdminTBC = { username, password, sector };
     try {
       await adminAPI.createSectorAdmin(newAdmin);
-      alert("Sector admin created successfully");
+      alert("אדמין נוצר בהצלחה");
       navigate("/Sectors");
     } catch (error) {
       console.error("Failed to create sector admin:", error);
       alert("Failed to create sector admin");
+      alert("שגיאה בייצור אדמין");
+      setLoadingMessage("שגיאה בייצור אדמין");
+      setTimeout(() => {
+        setIsLoading(false);
+        setLoadingMessage('');
+      }, 2000);
     }
   };
 
   return (
     <div className="new-sector-page">
+      <Loader isLoading={isLoading} message={loadingMessage} />
       <div className="hero-container-part-one">
         <div className="hero-content">
           <img className="hero-img" src={HeroPhoto} alt="hero-photo" />

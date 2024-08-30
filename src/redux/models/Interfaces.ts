@@ -125,19 +125,17 @@ export interface Unit {
 }
 
 export interface Admin {
-  color: string;
   adminID: number;
   username: string;
   sector: string;
   role: UserRole;
-  gamesList: Game[];
-  tasksList: Task[];
+  gamesList?: Game[];
+  tasksList?: Task[];
 }
 
 export interface AdminTBC {
   username: string;
   password: string;
-  // color: string;
   sector: string;
 }
 

@@ -74,7 +74,7 @@ const LocationsPage: FC = () => {
         }
 
     };
-    //tbd
+
     const handleEdit = (location: Location) => {
         dispatch(setCard(location));
         navigate("/EditLocation");

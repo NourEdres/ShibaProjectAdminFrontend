@@ -3,18 +3,17 @@ import { Admin } from "../../../../redux/models/Interfaces";
 import "./SectorCard.scss";
 import { EditIcon, DeleteIcon } from "../../../photos";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setCard } from "../../../../redux/slices/GlobalStates";
 // import { objectAPI } from '../../../../redux/services/AdminApi';
 // import ConfirmationDialog from '../../../components/Common/ConfirmationDialog/ConfirmationDialog';
 
 interface SectorCardProps {
   object: Admin;
+  onShowConfirm: (admin: Admin) => void;
+  onEditAdmin: (admin: Admin) => void;
   // onShowConfirm: (object: Admin) => void;
 }
 
-const SectorCard: FC<SectorCardProps> = ({ object }) => {
-  const dispatch = useDispatch();
+const SectorCard: FC<SectorCardProps> = ({ object, onShowConfirm, onEditAdmin }) => {
   console.log("curr objects  " + object);
   return (
     <div className="sector-card">
@@ -24,7 +23,10 @@ const SectorCard: FC<SectorCardProps> = ({ object }) => {
           <Link to="/EditSector">
             <button
               className="edit-button"
-              onClick={() => dispatch(setCard(object))}
+              onClick={(e) => {
+                e.preventDefault();
+                onEditAdmin(object);
+              }}
             >
               <img className="edit-icon" src={EditIcon} />
             </button>
@@ -33,7 +35,7 @@ const SectorCard: FC<SectorCardProps> = ({ object }) => {
             className="delete-button"
             onClick={(e) => {
               e.preventDefault();
-              // onShowConfirm(object);
+              onShowConfirm(object);
             }}
           >
             <img className="delete-icon" src={DeleteIcon} />

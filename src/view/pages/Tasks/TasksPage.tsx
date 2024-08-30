@@ -22,10 +22,16 @@ const TasksPage: FC = () => {
   const adminStr = localStorage.getItem("admin");
   const currAdmin: Admin = adminStr
     ? {
-        ...JSON.parse(adminStr),
-        role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole],
-      }
+      ...JSON.parse(adminStr),
+      role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole],
+    }
     : null;
+
+  console.log("currAdmin in Tasks:", currAdmin);
+  console.log("currAdmin.role:", currAdmin.role);
+  console.log("typeof currAdmin.role:", typeof currAdmin.role);
+  console.log("UserRole.MainAdmin:", UserRole.MainAdmin);
+  console.log("typeof UserRole.MainAdmin:", typeof UserRole.MainAdmin);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
