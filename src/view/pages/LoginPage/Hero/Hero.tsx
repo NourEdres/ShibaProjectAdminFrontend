@@ -4,14 +4,17 @@ import { useDispatch } from "react-redux";
 import { DoctorUserIcon, HeroPhoto, PasswordIcon } from "../../../photos";
 import { loginAPI } from "../../../../redux/services/LoginApi";
 import { Admin } from "../../../../redux/models/Interfaces";
-import { setLoggedInAdmin, setPage } from "../../../../redux/slices/GlobalStates";
+import {
+  setLoggedInAdmin,
+  setPage,
+} from "../../../../redux/slices/GlobalStates";
 import { buttonsName } from "../../../../redux/models/Types";
 import Loader from "../../../components/Common/LoadingSpinner/Loader";
 import "../Hero/Hero.scss";
 
 const Hero: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,9 +29,9 @@ const Hero: React.FC = () => {
         console.log("admin is " + admin);
         dispatch(setLoggedInAdmin(admin));
         //in here call al apis
-        dispatch(setPage(buttonsName.Games));
-        localStorage.setItem('page', buttonsName.Games);
-        navigate('/Games');
+        dispatch(setPage(buttonsName.Sectors));
+        localStorage.setItem("page", buttonsName.Sectors);
+        navigate("/Sectors");
       } catch (error: any) {
         alert("Login failed: " + error.message);
       } finally {
@@ -51,10 +54,14 @@ const Hero: React.FC = () => {
                   className="admin-user-name-input"
                   placeholder="שם משתמש"
                   value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
                   disabled={isLoading}
                 />
-                <img className="navbar-icon" src={DoctorUserIcon} alt="admin-icon" />
+                <img
+                  className="navbar-icon"
+                  src={DoctorUserIcon}
+                  alt="admin-icon"
+                />
               </div>
               <div className="admin-code">
                 <input
@@ -62,17 +69,21 @@ const Hero: React.FC = () => {
                   type="password"
                   placeholder=" קוד"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                 />
-                <img className="navbar-icon" src={PasswordIcon} alt="admin-icon" />
+                <img
+                  className="navbar-icon"
+                  src={PasswordIcon}
+                  alt="admin-icon"
+                />
               </div>
               <button
                 className="login-button"
                 onClick={handleLogin}
                 disabled={isLoading}
               >
-                {isLoading ? 'מתחבר...' : 'התחבר'}
+                {isLoading ? "מתחבר..." : "התחבר"}
               </button>
             </div>
           </div>

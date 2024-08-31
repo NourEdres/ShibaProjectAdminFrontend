@@ -13,7 +13,11 @@ interface SectorCardProps {
   // onShowConfirm: (object: Admin) => void;
 }
 
-const SectorCard: FC<SectorCardProps> = ({ object, onShowConfirm, onEditAdmin }) => {
+const SectorCard: FC<SectorCardProps> = ({
+  object,
+  onShowConfirm,
+  onEditAdmin,
+}) => {
   console.log("curr objects  " + object);
   return (
     <div className="sector-card">

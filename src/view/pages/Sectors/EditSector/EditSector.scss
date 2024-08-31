@@ -43,7 +43,7 @@
 
   .sector-form-container {
     width: 40vw;
-    height: 40vw;
+    height: 45vw;
     background-image: url("../../../photos/CardBG.jpg");
     background-size: cover;
     background-color: rgba(0, 0, 0, 0.7); // Semi-transparent black overlay
@@ -140,7 +140,6 @@
     .form-buttons {
       display: flex;
       justify-content: center;
-      margin-top: 2vw;
 
       .update-button {
         display: flex;

@@ -9,7 +9,9 @@ import { Admin } from "../../../../redux/models/Interfaces";
 import Loader from "../../../components/Common/LoadingSpinner/Loader";
 
 const EditSector: FC = () => {
-  const sector = useSelector((state: RootState) => state.globalStates.selectedCard) as Admin;
+  const sector = useSelector(
+    (state: RootState) => state.globalStates.selectedCard
+  ) as Admin;
   const navigate = useNavigate();
 
   const [username, setUsername] = useState(sector.username);
@@ -17,7 +19,7 @@ const EditSector: FC = () => {
   const [password, setPassword] = useState("");
   const [passwordChanged, setPasswordChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   useEffect(() => {
     setUsername(sector.username);
@@ -25,7 +27,7 @@ const EditSector: FC = () => {
   }, [sector]);
 
   const isFormValid = (): boolean => {
-    return username.trim() !== '' && sectorName.trim() !== '';
+    return username.trim() !== "" && sectorName.trim() !== "";
   };
 
   const handleSubmit = async () => {
@@ -34,23 +36,27 @@ const EditSector: FC = () => {
       return;
     }
     setIsLoading(true);
-    setLoadingMessage('מעדכן אדמין...');
+    setLoadingMessage("מעדכן אדמין...");
     try {
       const updatedAdmin: Admin = {
         ...sector,
         username,
         sector: sectorName,
       };
-      await adminAPI.updateSectorAdmin(sector.adminID, updatedAdmin, passwordChanged ? password : undefined);
+      await adminAPI.updateSectorAdmin(
+        sector.adminID,
+        updatedAdmin,
+        passwordChanged ? password : undefined
+      );
       alert("אדמין עודכן בהצלחה");
       navigate("/Sectors");
     } catch (error) {
       console.error("Failed to update sector admin:", error);
       alert("עדכון אדמין נכשל");
-      setLoadingMessage('שגיאה בעדכון אדמין');
+      setLoadingMessage("שגיאה בעדכון אדמין");
       setTimeout(() => {
         setIsLoading(false);
-        setLoadingMessage('');
+        setLoadingMessage("");
       }, 2000);
     }
   };
@@ -106,11 +112,15 @@ const EditSector: FC = () => {
             />
           </div>
           {passwordChanged && (
-            <p className="password-note">שים לב: שינוי הסיסמה יעדכן את הסיסמה הקיימת</p>
+            <p className="password-note">
+              שים לב: שינוי הסיסמה יעדכן את הסיסמה הקיימת
+            </p>
           )}
         </div>
         <div className="form-buttons">
-          <button onClick={handleSubmit} className="update-button">עדכון</button>
+          <button onClick={handleSubmit} className="update-button">
+            עדכון
+          </button>
         </div>
       </div>
     </div>

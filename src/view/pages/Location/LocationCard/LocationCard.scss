@@ -42,7 +42,7 @@
   .card-header {
     display: flex;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
     padding: 1vw;
     justify-content: space-between;
     border-radius: 12px;
@@ -52,11 +52,12 @@
       font-weight: 600;
       font-size: 1.5vw;
       color: $secondary-white-color;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
       flex: 1;
       margin-right: 1vw;
+      word-wrap: break-word;
     }
 
     .buttons {
