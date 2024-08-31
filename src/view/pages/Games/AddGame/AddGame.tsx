@@ -5,6 +5,7 @@ import { GameTBC, Unit } from '../../../../redux/models/Interfaces';
 import { useLocation } from 'react-router-dom';
 import { gameAPI } from '../../../../redux/services/GameApi';
 import Loader from '../../../components/Common/LoadingSpinner/Loader';
+import ConfirmationDialog from '../../../components/Common/ConfirmationDialog/ConfirmationDialog';
 
 const AddNewGameHeb = {
     CreateNewGame: "הוספת משחק חדש ",
@@ -12,6 +13,7 @@ const AddNewGameHeb = {
     Description: "תיאור : ",
     AddUnits: "הוספת חוליות",
     Save: "שמירה",
+    Cancel: "ביטול"
 };
 
 function AddGame() {
@@ -23,6 +25,8 @@ function AddGame() {
     const location = useLocation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [showConfirm, setShowConfirm] = useState(false);
+
 
     useEffect(() => {
         const units = location.state?.units || [];
@@ -39,11 +43,24 @@ function AddGame() {
         localStorage.setItem('gameDesc', gameDesc);
     }, [gameName, gameDesc]);
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setGameImage(e.target.files[0]);
-        }
-    };
+    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files && e.target.files[0]) {
+    //         setGameImage(e.target.files[0]);
+    //     }
+    // };
+
+    function clearLocalStorage() {
+        localStorage.removeItem('addUnitName');
+        localStorage.removeItem('addUnitDescription');
+        localStorage.removeItem('addUnitHint');
+        localStorage.removeItem('selectedTask');
+        localStorage.removeItem('selectedLocation');
+        localStorage.removeItem('selectedObject');
+        localStorage.removeItem('gameName');
+        localStorage.removeItem('gameDesc');
+        localStorage.removeItem('units');
+
+    }
 
     const handleSave = async () => {
         const game: GameTBC = { gameName: gameName, description: gameDesc, };
@@ -84,9 +101,14 @@ function AddGame() {
     return (
         <div className='main-container-add-game'>
             <Loader isLoading={isLoading} message={loadingMessage} />
-            <div className='add-game-header'>
-                <div className='sector-name' dir='rtl'>פיזוטרפיה</div>
-            </div>
+            {showConfirm && <ConfirmationDialog
+                onConfirm={() => {
+                    setShowConfirm(false);
+                    navigate('/UnitsPage');
+                    clearLocalStorage();
+                }}
+                onCancel={() => setShowConfirm(false)}
+            />}
             <div className='add-game-container' dir="rtl">
                 <div className='add-game-title'>{AddNewGameHeb.CreateNewGame}</div>
                 <div className='input-group'>
@@ -97,14 +119,16 @@ function AddGame() {
                     <label className='input-label'>{AddNewGameHeb.Description}</label>
                     <textarea className='game-textarea' value={gameDesc} onChange={e => setGameDesc(e.target.value)}></textarea>
                 </div>
-                <div className='input-group'>
+                {/* <div className='input-group'>
                     <label className='input-label'>Upload Image</label>
                     <input type='file' className='game-input' onChange={handleImageChange} />
-                </div>
+                </div> */}
                 <div className='input-group'>
-                    <button className='add-buttons' onClick={() => { navigate('/UnitsPage') }}>{AddNewGameHeb.AddUnits}</button>
+                    <button className='add-buttons' onClick={() => { navigate('/GamesPage') }}>{AddNewGameHeb.AddUnits}</button>
                 </div>
                 <button className='save-button' onClick={handleSave}>{AddNewGameHeb.Save}</button>
+                <button type="button" className='cancel-button' onClick={() => setShowConfirm(true)}>{AddNewGameHeb.Cancel}</button>
+
             </div>
         </div >
     )

@@ -1,8 +1,9 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setCard } from '../../../../redux/slices/GlobalStates';
 import './UnitDetailsView.scss';
 import { Unit } from '../../../../redux/models/Interfaces';
-import './UnitDetailsView.scss';
 
 const UnitDetailsHebrew = {
     UnitDetails: "פרטי החוליה",
@@ -18,14 +19,11 @@ const UnitDetailsHebrew = {
 const UnitDetailsView: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const unit: Unit = location.state.unit;
 
-    const handleNavigateToTask = () => {
-        navigate(`/TaskDetails/${unit.taskID}`);
-    };
-
-    const handleNavigateToObject = () => {
-        navigate(`/ObjectDetails/${unit.objectID}`);
+    const handleSetCard = (ob: any) => {
+        dispatch(setCard(ob));
     };
 
     return (
@@ -46,19 +44,39 @@ const UnitDetailsView: React.FC = () => {
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{UnitDetailsHebrew.Task}</label>
-                    <div className='unit-value' onClick={handleNavigateToTask} style={{ cursor: 'pointer', color: 'blue' }}>
-                        {unit.taskID}
-                    </div>
+                    <Link
+                        to={`/TaskDetails/${encodeURIComponent(unit.taskDTO?.name || '')}`}
+                        className="link"
+                        onClick={() => handleSetCard(unit.taskDTO)}
+                    >
+                        <div className='unit-value' style={{ cursor: 'pointer', color: 'blue' }}>
+                            {unit.taskDTO?.name}
+                        </div>
+                    </Link>
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{UnitDetailsHebrew.Location}</label>
-                    <div className='unit-value'>{unit.locationID}</div>
+                    <Link
+                        to={`/LocationDetails/${encodeURIComponent(unit.locationDTO?.name || '')}`}
+                        className="link"
+                        onClick={() => handleSetCard(unit.locationDTO)}
+                    >
+                        <div className='unit-value' style={{ cursor: 'pointer', color: 'blue' }}>
+                            {unit.locationDTO?.name}
+                        </div>
+                    </Link>
                 </div>
                 <div className='input-group'>
                     <label className='input-label'>{UnitDetailsHebrew.Object}</label>
-                    <div className='unit-value' onClick={handleNavigateToObject} style={{ cursor: 'pointer', color: 'blue' }}>
-                        {unit.objectID}
-                    </div>
+                    <Link
+                        to={`/ObjectDetails/${encodeURIComponent(unit.objectDTO?.name || '')}`}
+                        className="link"
+                        onClick={() => handleSetCard(unit.objectDTO)}
+                    >
+                        <div className='unit-value' style={{ cursor: 'pointer', color: 'blue' }}>
+                            {unit.objectDTO?.name}
+                        </div>
+                    </Link>
                 </div>
                 <button className='back-button' onClick={() => navigate(-1)}>{UnitDetailsHebrew.Back}</button>
             </div>

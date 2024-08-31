@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import '../AddUnit/AddUnit.scss';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ConfirmationDialog from '../../../components/Common/ConfirmationDialog/ConfirmationDialog';
 import { Location, ObjectLocation, Task, Unit } from '../../../../redux/models/Interfaces';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
+import '../AddUnit/AddUnit.scss';
 
 const AddUnitHebrew = {
     CreateNewUnit: "עריכת חוליה",
@@ -31,123 +31,149 @@ function safeParse<T>(json: string | null): T | null {
 }
 
 function EditUnit() {
-    const [unitID, setUnitID] = useState<number | null>(safeParse(localStorage.getItem('editUnitID')));
-    const [unitOrder, setUnitOrder] = useState<number | null>(safeParse(localStorage.getItem('editUnitOrder')));
-    const [name, setName] = useState(localStorage.getItem('editUnitName') || '');
-    const [description, setDescription] = useState(localStorage.getItem('editUnitDescription') || '');
-    const [hint, setHint] = useState(localStorage.getItem('editUnitHint') || '');
-    const [selectedTask, setSelectedTask] = useState<Task | null>(safeParse(localStorage.getItem('selectedTask') || 'null'));
-    const [selectedLocation, setSelectedLocation] = useState<Location | null>(safeParse(localStorage.getItem('selectedLocation') || 'null'));
-    const [selectedObject, setSelectedObject] = useState<ObjectLocation | null>(safeParse(localStorage.getItem('selectedObject') || 'null'));
+    const [unitID, setUnitID] = useState<number | null>(null);
+    const [unitOrder, setUnitOrder] = useState<number | null>(null);
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [hint, setHint] = useState('');
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+    const [selectedObject, setSelectedObject] = useState<ObjectLocation | null>(null);
+    const [showConfirm, setShowConfirm] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
-    const [showConfirm, setShowConfirm] = useState(false);
     const locations = useSelector((state: RootState) => state.AllData.locations);
     const tasks = useSelector((state: RootState) => state.AllData.Tasks);
 
     useEffect(() => {
-        // console.log("in setting unit fields" + JSON.stringify(location.state?.unit));
         const unit: Unit = location.state?.unit || safeParse(localStorage.getItem('editUnit'));
-        console.log("unit " + JSON.stringify(unit))
         if (unit) {
             setUnitID(unit.unitID);
             setUnitOrder(unit.unitOrder);
             setName(unit.name);
             setDescription(unit.description || '');
             setHint(unit.hint);
-            const task = tasks.find((t: Task) => t.taskID === unit.taskID);
-            setSelectedTask(task || null);
-            const loc = locations.find((l: Location) => l.locationID === unit.locationID);
-            setSelectedLocation(loc || null);
-            const object = loc?.objectsList?.find((o: ObjectLocation) => o.objectID === unit.objectID);
-            setSelectedObject(object || null);
 
-            localStorage.setItem('editUnit', JSON.stringify(unit));
-            console.log(" unit id is " + unit.unitID.toString());
-            localStorage.setItem('editUnitID', unit.unitID?.toString());
-            localStorage.setItem('editUnitOrder', unit.unitOrder.toString());
-            localStorage.setItem('editUnitName', unit.name);
-            localStorage.setItem('editUnitDescription', unit.description || '');
-            localStorage.setItem('editUnitHint', unit.hint);
-            localStorage.setItem('selectedTask', JSON.stringify(task || null));
-            localStorage.setItem('selectedLocation', JSON.stringify(loc || null));
-            localStorage.setItem('selectedObject', JSON.stringify(object || null));
+            if (unit.taskDTO) {
+                setSelectedTask(unit.taskDTO);
+            } else if (unit.taskID) {
+                const task = tasks.find((t: Task) => t.taskID === unit.taskID);
+                setSelectedTask(task || null);
+            }
+
+            if (unit.locationDTO) {
+                setSelectedLocation(unit.locationDTO);
+            } else if (unit.locationID) {
+                const loc = locations.find((l: Location) => l.locationID === unit.locationID);
+                setSelectedLocation(loc || null);
+            }
+
+            if (unit.objectDTO) {
+                setSelectedObject(unit.objectDTO);
+            } else if (unit.objectID) {
+                const loc = unit.locationDTO || locations.find((l: Location) => l.locationID === unit.locationID);
+                const object = loc?.objectsList?.find((o: ObjectLocation) => o.objectID === unit.objectID);
+                setSelectedObject(object || null);
+            }
+
+            updateLocalStorage(unit);
         }
     }, [location.state?.unit, tasks, locations]);
 
     useEffect(() => {
         if (location.state) {
-            const state = location.state;
-            if (state.selectedTask) {
-                setSelectedTask(state.selectedTask);
-            }
-            if (state.selectedLocation && state.selectedObject) {
-                setSelectedLocation(state.selectedLocation);
-                setSelectedObject(state.selectedObject);
-            }
+            const { selectedTask, selectedLocation, selectedObject } = location.state;
+            if (selectedTask) setSelectedTask(selectedTask);
+            if (selectedLocation) setSelectedLocation(selectedLocation);
+            if (selectedObject) setSelectedObject(selectedObject);
         }
     }, [location.state]);
 
-    useEffect(() => {
-        localStorage.setItem('editUnitID', unitID?.toString() || '');
-        localStorage.setItem('editUnitOrder', unitOrder?.toString() || '');
-        localStorage.setItem('editUnitName', name);
-        localStorage.setItem('editUnitDescription', description);
-        localStorage.setItem('editUnitHint', hint);
-        localStorage.setItem('selectedTask', JSON.stringify(selectedTask));
-        localStorage.setItem('selectedLocation', JSON.stringify(selectedLocation));
-        localStorage.setItem('selectedObject', JSON.stringify(selectedObject));
-    }, [unitID, unitOrder, name, description, hint, selectedTask, selectedLocation, selectedObject]);
+    // useEffect(() => {
+    //     updateLocalStorage({
+    //         unitID, unitOrder, name, description, hint,
+    //         taskDTO: selectedTask,
+    //         locationDTO: selectedLocation,
+    //         objectDTO: selectedObject
+    //     });
+    // }, [unitID, unitOrder, name, description, hint, selectedTask, selectedLocation, selectedObject]);
+
+    function updateLocalStorage(data: Partial<Unit>) {
+        Object.entries(data).forEach(([key, value]) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        });
+    }
 
     function clearLocalStorage() {
-        localStorage.removeItem('editUnit');
-        localStorage.removeItem('editUnitID');
-        localStorage.removeItem('editUnitOrder');
-        localStorage.removeItem('editUnitName');
-        localStorage.removeItem('editUnitDescription');
-        localStorage.removeItem('editUnitHint');
-        localStorage.removeItem('selectedTask');
-        localStorage.removeItem('selectedLocation');
-        localStorage.removeItem('selectedObject');
+        ['editUnit', 'editUnitID', 'editUnitOrder', 'editUnitName', 'editUnitDescription',
+            'editUnitHint', 'selectedTask', 'selectedLocation', 'selectedObject'].forEach(key => {
+                localStorage.removeItem(key);
+            });
     }
 
     const handleSaveUnit = () => {
         if (!name.trim() || !hint.trim()) {
             alert("Please provide a name and a hint for the task");
-        } else {
-            if (selectedTask && selectedObject && selectedLocation) {
-                let unit: Unit = location.state?.unit || safeParse(localStorage.getItem('editUnit')) || {} as Unit;
-                const updated: Unit = {
-                    unitID: unitID || unit.unitID,
-                    unitOrder: unitOrder || unit.unitOrder,
-                    name,
-                    description,
-                    hint,
-                    taskID: selectedTask.taskID,
-                    objectID: selectedObject.objectID,
-                    locationID: selectedLocation.locationID
-                };
-                console.log("updated is " + JSON.stringify(updated));
-                navigate('/UnitsPage', { state: { updatedUnit: updated } });
-                clearLocalStorage();
-            } else {
-                alert("Please select a task, an object, and a location before saving.");
-            }
+            return;
         }
+        if (!(selectedTask && selectedObject && selectedLocation)) {
+            alert("Please select a task, an object, and a location before saving.");
+            return;
+        }
+
+        const updated: Unit = {
+            unitID: unitID!,
+            unitOrder: unitOrder!,
+            name,
+            description,
+            hint,
+            taskID: selectedTask.taskID,
+            objectID: selectedObject.objectID,
+            locationID: selectedLocation.locationID,
+            taskDTO: selectedTask,
+            objectDTO: selectedObject,
+            locationDTO: selectedLocation
+        };
+
+        navigate('/UnitsPage', { state: { updatedUnit: updated } });
+        clearLocalStorage();
     };
 
+    const handleChooseLocation = () => {
+        const unitToSave = {
+            unitID, unitOrder, name, description, hint,
+            taskID: selectedTask?.taskID,
+            objectID: selectedObject?.objectID,
+            locationID: selectedLocation?.locationID
+        };
+        localStorage.setItem('editUnit', JSON.stringify(unitToSave));
+        navigate('/ChooseLocation-edit');
+    };
 
+    const handleChooseTask = () => {
+        const unitToSave = {
+            unitID, unitOrder, name, description, hint,
+            taskID: selectedTask?.taskID,
+            objectID: selectedObject?.objectID,
+            locationID: selectedLocation?.locationID
+        };
+        localStorage.setItem('editUnit', JSON.stringify(unitToSave));
+        navigate('/ChooseTask-edit');
+    };
 
     return (
         <div className='main-container-add-unit'>
-            {showConfirm && <ConfirmationDialog
-                onConfirm={() => {
-                    setShowConfirm(false);
-                    navigate('/UnitsPage');
-                    clearLocalStorage();
-                }}
-                onCancel={() => setShowConfirm(false)}
-            />}
+            {showConfirm && (
+                <ConfirmationDialog
+                    onConfirm={() => {
+                        setShowConfirm(false);
+                        navigate('/UnitsPage');
+                        clearLocalStorage();
+                    }}
+                    onCancel={() => setShowConfirm(false)}
+                />
+            )}
             <div className='add-unit-container' dir="rtl">
                 <div className='add-unit-title'>{AddUnitHebrew.CreateNewUnit}</div>
                 <div className='input-group'>
@@ -183,55 +209,24 @@ function EditUnit() {
                 <div className='options-container'>
                     <div className="option-section">
                         <div className='add-buttons'>
-                            <button
-                                type="button"
-                                className='option-button'
-                                onClick={() => {
-                                    const unitToSave = {
-                                        unitID,
-                                        unitOrder,
-                                        name,
-                                        description,
-                                        hint,
-                                        taskID: selectedTask?.taskID,
-                                        objectID: selectedObject?.objectID,
-                                        locationID: selectedLocation?.locationID
-                                    };
-                                    localStorage.setItem('editUnit', JSON.stringify(unitToSave));
-                                    navigate('/ChooseLocation-edit');
-                                }}
-                            >
+                            <button type="button" className='option-button' onClick={handleChooseLocation}>
                                 {AddUnitHebrew.ChooseLocation}
                             </button>
-                            <button
-                                type="button"
-                                className='option-button'
-                                onClick={() => {
-                                    const unitToSave = {
-                                        unitID,
-                                        unitOrder,
-                                        name,
-                                        description,
-                                        hint,
-                                        taskID: selectedTask?.taskID,
-                                        objectID: selectedObject?.objectID,
-                                        locationID: selectedLocation?.locationID
-                                    };
-                                    localStorage.setItem('editUnit', JSON.stringify(unitToSave));
-                                    navigate('/ChooseTask-edit');
-                                }}
-                            >
+                            <button type="button" className='option-button' onClick={handleChooseTask}>
                                 {AddUnitHebrew.ChooseTask}
                             </button>
-
                         </div>
                     </div>
                 </div>
                 <div className='options-container'>
                     <div className="option-section">
                         <div className='button-group'>
-                            <button type="button" className='cancel-button' onClick={() => setShowConfirm(true)}>{AddUnitHebrew.Cancel}</button>
-                            <button type="button" className='save-button' onClick={handleSaveUnit}>{AddUnitHebrew.Save}</button>
+                            <button type="button" className='cancel-button' onClick={() => setShowConfirm(true)}>
+                                {AddUnitHebrew.Cancel}
+                            </button>
+                            <button type="button" className='save-button' onClick={handleSaveUnit}>
+                                {AddUnitHebrew.Save}
+                            </button>
                         </div>
                     </div>
                 </div>

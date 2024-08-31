@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './UnitsPage.scss';
-import { Unit } from '../../../../redux/models/Interfaces';
+import { Unit, Game } from '../../../../redux/models/Interfaces';
 
 const UnitsPageHeb = {
     Units: "חוליות",
@@ -12,9 +12,10 @@ const UnitsPageHeb = {
 };
 
 function UnitsPage() {
-
     const [units, setUnits] = useState<Unit[]>([]);
-    const navigate = useNavigate()
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [game, setGame] = useState<Game | null>(null);
+    const navigate = useNavigate();
     const location = useLocation();
     const [tempUnitId, setTempUnitId] = useState<number>(() => {
         const storedUnits = JSON.parse(localStorage.getItem('units') || '[]');
@@ -22,11 +23,15 @@ function UnitsPage() {
     });
 
     useEffect(() => {
-        console.log("set units")
-        const initialUnits = JSON.parse(localStorage.getItem('units') || '[]').sort((a: Unit, b: Unit) => a.unitOrder - b.unitOrder);
-        setUnits(initialUnits);
-        console.log("units are " + localStorage.getItem('units'))
-    }, []);
+        if (location.state?.game) {
+            setIsEditMode(true);
+            setGame(location.state.game);
+            setUnits(location.state.game.units || []);
+        } else {
+            const initialUnits = JSON.parse(localStorage.getItem('units') || '[]').sort((a: Unit, b: Unit) => a.unitOrder - b.unitOrder);
+            setUnits(initialUnits);
+        }
+    }, [location.state]);
 
     useEffect(() => {
         if (location.state?.newUnit) {
@@ -37,12 +42,14 @@ function UnitsPage() {
                     unitOrder: maxOrder + 1
                 };
                 const updatedUnits = [...prevUnits, newUnit];
-                localStorage.setItem('units', JSON.stringify(updatedUnits));
-                navigate('/UnitsPage', { replace: true });
+                if (!isEditMode) {
+                    localStorage.setItem('units', JSON.stringify(updatedUnits));
+                }
+                navigate(isEditMode ? '/EditGame' : '/UnitsPage', { replace: true });
                 return updatedUnits;
             });
         }
-    }, [location.state?.newUnit]);
+    }, [location.state?.newUnit, isEditMode, navigate]);
 
     useEffect(() => {
         if (location.state?.updatedUnit) {
@@ -51,38 +58,45 @@ function UnitsPage() {
                 const updatedUnits = currUnits.map(unit =>
                     unit.unitID === updatedUnit.unitID ? updatedUnit : unit
                 );
-                localStorage.setItem('units', JSON.stringify(updatedUnits));
+                if (!isEditMode) {
+                    localStorage.setItem('units', JSON.stringify(updatedUnits));
+                }
                 return updatedUnits;
             });
-            navigate('/UnitsPage', { replace: true });
+            navigate(isEditMode ? '/EditGame' : '/UnitsPage', { replace: true });
         }
-    }, [location.state?.updatedUnit]);
+    }, [location.state?.updatedUnit, isEditMode, navigate]);
 
     const handleSave = () => {
-        console.log('Save units:', units);
-        navigate('/AddGame', { state: { units } });
-        // localStorage.removeItem('units');
+        if (isEditMode && game) {
+            const updatedGame = { ...game, units };
+            navigate('/EditGame', { state: { updatedGame } });
+        } else {
+            navigate('/AddGame', { state: { units } });
+        }
     };
 
     const handleDelete = (index: number, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation();
         const updatedUnits = units.filter((_, idx) => idx !== index).map((unit, idx) => ({ ...unit, unitOrder: idx + 1 }));
         setUnits(updatedUnits);
-        localStorage.setItem('units', JSON.stringify(updatedUnits));
+        if (!isEditMode) {
+            localStorage.setItem('units', JSON.stringify(updatedUnits));
+        }
     };
-
 
     const handleDuplicate = (unit: Unit, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation();
         const newUnit = { ...unit, unitID: tempUnitId, unitOrder: units.length + 1 };
         setUnits(prevUnits => {
             const updatedUnits = [...prevUnits, newUnit];
-            localStorage.setItem('units', JSON.stringify(updatedUnits));
+            if (!isEditMode) {
+                localStorage.setItem('units', JSON.stringify(updatedUnits));
+            }
             return updatedUnits;
         });
         setTempUnitId(prevId => prevId + 1);
     };
-
 
     const handleDrag = (fromIndex: number, toIndex: number) => {
         const newUnits = [...units];
@@ -90,12 +104,13 @@ function UnitsPage() {
         newUnits.splice(toIndex, 0, item);
         const updatedUnits = newUnits.map((unit, index) => ({ ...unit, unitOrder: index + 1 }));
         setUnits(updatedUnits);
-        localStorage.setItem('units', JSON.stringify(updatedUnits));
+        if (!isEditMode) {
+            localStorage.setItem('units', JSON.stringify(updatedUnits));
+        }
     }
 
-
     const handleEdit = (unit: Unit) => {
-        navigate('/EditUnit', { state: { unit } });
+        navigate('/EditUnit', { state: { unit, isEditMode } });
     };
 
     return (
@@ -133,7 +148,7 @@ function UnitsPage() {
                 <div className='options-container'>
                     <div className="option-section">
                         <div className='add-buttons'>
-                            <Link to='/AddUnit'>
+                            <Link to='/AddUnit' state={{ isEditMode }}>
                                 <button type="button" className='option-button'>{UnitsPageHeb.AddUnits}</button>
                             </Link>
                         </div>
