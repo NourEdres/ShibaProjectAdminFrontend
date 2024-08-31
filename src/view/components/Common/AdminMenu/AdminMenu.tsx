@@ -1,10 +1,13 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { HospitalIcon, ApplicationsIcon, LocationIcon, TaskIcon, LogOutIcon, WhiteLogo, Model } from '../../../photos';
 import './AdminMenu.scss';
 import { buttonsName } from '../../../../redux/models/Types';
 import { Link } from 'react-router-dom';
 import { setPage } from '../../../../redux/slices/GlobalStates';
 import { useDispatch } from 'react-redux';
+import { Admin, UserRole } from '../../../../redux/models/Interfaces';
+import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
+import { trainModelApi } from '../../../../redux/services/TrainModelApi';
 
 interface AdminMenuProps {
     setActiveButton: (buttonName: string) => void;
@@ -13,6 +16,10 @@ interface AdminMenuProps {
 
 const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
     const dispatch = useDispatch();
+    const adminStr = localStorage.getItem('admin');
+    const currAdmin: Admin = adminStr ? { ...JSON.parse(adminStr), role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole] } : null;
+    const [showConfirm, setShowConfirm] = useState(false);
+
 
     const handlePageChange = (page: string) => {
         setActiveButton(page);
@@ -20,8 +27,28 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
         localStorage.setItem('page', page);
     };
 
+    const handleTrainModel = async () => {
+        setShowConfirm(false);
+        try {
+            alert("התחיל אימון מודל")
+            const response = await trainModelApi.retrainModel();
+            console.log('Model retrained successfully:', response.data);
+            alert("אימון מודל הסתיים בהצלחה")
+        } catch (error) {
+            console.error('Failed to retrain model:', error);
+            alert("שגיאה באימון מודל")
+
+        }
+    };
+
     return (
         <div className='admin-menu'>
+            {showConfirm && (
+                <ConfirmationDialog
+                    onConfirm={handleTrainModel}
+                    onCancel={() => setShowConfirm(false)}
+                    message={"האם ברצונך לאמן המודל?" + "\n" + "אימון המודל יקח כמה דקות, נא לא ללחוץ שוב על הכפתור למנוע שמירת מודלים זהים"} />
+            )}
             <div className='title'> חפש את המטמון ב </div>
             <img className='logo' src={WhiteLogo} alt="logo" />
             <div className='buttons'>
@@ -65,8 +92,12 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                     <button
                         className={`menu-button ${activeButton === buttonsName.TrainModel ? "active" : ""}`}
                         onClick={() => {
-                            localStorage.clear();
-                            // handlePageChange(buttonsName.Logout);
+                            if (currAdmin.role !== UserRole.MainAdmin) {
+                                alert("אין לך הרשאות להשתמש במודל");
+                            } else {
+                                setShowConfirm(true);
+                            }
+
                         }}
                     >
                         <div className='button-txt'>{buttonsName.TrainModel}</div>
