@@ -93,25 +93,25 @@ export interface Game {
   gameID: number;
   adminID: number;
   gameName: string;
-  description: string;
+  description?: string;
   qrcodePath: string;
-  gameImage?: GameImage;
+  // gameImage?: GameImage;
   units?: Unit[];
 }
 
 export interface GameTBC {
   gameName: string;
   description: string;
-  gameImage?: GameImage;
+  // gameImage?: GameImage;
   units?: Unit[];
 }
 
-export interface GameImage {
-  gameImgID: number;
-  name: string;
-  type: string;
-  imagePath: string;
-}
+// export interface GameImage {
+//   gameImgID: number;
+//   name: string;
+//   type: string;
+//   imagePath: string;
+// }
 
 export interface Unit {
   unitID: number;
@@ -122,6 +122,9 @@ export interface Unit {
   objectID: number;
   taskID: number;
   locationID: number;
+  locationDTO?: Location;
+  objectDTO?: ObjectLocation;
+  taskDTO?: Task;
 }
 
 export interface Admin {

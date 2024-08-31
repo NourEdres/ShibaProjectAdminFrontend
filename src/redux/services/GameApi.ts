@@ -38,6 +38,32 @@ class GameApi {
       throw error;
     }
   }
+
+  async updateGame(
+    id: number,
+    gameDetails: Game,
+    updatedUnits: Unit[],
+    deletedUnitsIds: number[],
+    newUnits: Unit[]
+  ): Promise<AxiosResponse> {
+    try {
+      const formData = new FormData();
+      formData.append('game', new Blob([JSON.stringify(gameDetails)], { type: 'application/json' }));
+      formData.append('updatedUnits', new Blob([JSON.stringify(updatedUnits)], { type: 'application/json' }));
+      formData.append('deletedUnitsIds', new Blob([JSON.stringify(deletedUnitsIds)], { type: 'application/json' }));
+      formData.append('newUnits', new Blob([JSON.stringify(newUnits)], { type: 'application/json' }));
+
+      const response = await genericAPI.putFormData(`${GameApi.endpoint}/update/${id}`, formData);
+      return response;
+    } catch (error: any) {
+      console.error('Error updating game:', error);
+      if (error.response && error.response.data) {
+        console.error('Error updating game (response data):', error.response.data);
+        throw error.response.data;
+      }
+      throw error;
+    }
+  }
 }
 
 export const gameAPI = new GameApi();

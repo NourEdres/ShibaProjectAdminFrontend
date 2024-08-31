@@ -7,11 +7,12 @@ import { useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setGames } from "../../../redux/slices/saveAllData";
 import { gameAPI } from "../../../redux/services/GameApi";
-import { setPage } from "../../../redux/slices/GlobalStates";
+import { setCard, setPage } from "../../../redux/slices/GlobalStates";
 import { buttonsName } from "../../../redux/models/Types";
 import { Admin, Game, UserRole } from "../../../redux/models/Interfaces";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import Loader from "../../components/Common/LoadingSpinner/Loader";
+import { useNavigate } from "react-router-dom";
 
 const GamesPage: FC = () => {
     const dispatch = useDispatch();
@@ -24,6 +25,8 @@ const GamesPage: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [refetchTrigger, setRefetchTrigger] = useState(0);
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchGames = async () => {
             dispatch(setGames(await gameAPI.getAllGames()))
@@ -33,7 +36,7 @@ const GamesPage: FC = () => {
         };
         fetchGames()
 
-    }, [dispatch]);
+    }, [dispatch, refetchTrigger]);
 
     const handleDelete = (game: Game) => {
         if (currAdmin.adminID !== game.adminID && currAdmin.role !== UserRole.MainAdmin) {
@@ -78,7 +81,8 @@ const GamesPage: FC = () => {
         }
     };
     const handleEdit = (game: Game) => {
-
+        dispatch(setCard(game));
+        navigate("/EditGame");
     }
 
     return (
@@ -87,7 +91,7 @@ const GamesPage: FC = () => {
             <HomePage objects={games} page="Game" Component={(props) => (
                 <GameCard {...props}
                     onShowConfirm={handleDelete}
-                    onEditLocation={handleEdit} />
+                    onEditGame={handleEdit} />
             )}
                 addButton="הוספת משחק חדש" addButtonPath="AddGame" />
             {showConfirm && (

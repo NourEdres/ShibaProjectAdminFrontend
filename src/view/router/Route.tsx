@@ -31,6 +31,7 @@ import UnitsPageView from "../pages/Games/UnitsPage-View/UnitsPageView";
 import UnitDetailsView from "../pages/Games/UnitDetailsView/UnitDetailsView";
 import EditSector from "../pages/Sectors/EditSector/EditSector";
 import EditObject from "../pages/ObjectLocation/EditObject/EditObject";
+import EditGame from "../pages/Games/EditGame/EditGame";
 
 function Layout() {
   return (
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
       {
         path: "/AddGame",
         element: <AddGame />,
+      },
+      {
+        path: "/EditGame",
+        element: <EditGame />,
       },
       {
         path: "/AddUnit",

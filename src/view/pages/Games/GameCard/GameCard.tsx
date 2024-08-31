@@ -2,9 +2,6 @@ import { FC } from "react";
 import "./GameCard.scss";
 import { Game } from "../../../../redux/models/Interfaces";
 import { EditIcon, DeleteIcon } from "../../../photos";
-import { useDispatch } from "react-redux";
-import { setCard } from "../../../../redux/slices/GlobalStates";
-import { Link } from "react-router-dom";
 
 interface GameCardProps {
   object: Game;
@@ -12,22 +9,22 @@ interface GameCardProps {
   onEditGame: (game: Game) => void;
 }
 
-const GameCard: FC<GameCardProps> = ({ object, onShowConfirm }) => {
-  const dispatch = useDispatch();
+const GameCard: FC<GameCardProps> = ({ object, onShowConfirm, onEditGame }) => {
   console.log("object.gameName :", object.gameName);
   return (
     <div className="game-card">
       <div className="card-header">
         <div className="title">{object.gameName}</div>
         <div className="buttons">
-          <Link to="/EditGame">
-            <button
-              className="edit-button"
-              onClick={() => dispatch(setCard(object))}
-            >
-              <img className="edit-icon" src={EditIcon} alt="Edit" />
-            </button>
-          </Link>
+          <button
+            className="edit-button"
+            onClick={(e) => {
+              e.preventDefault();
+              onEditGame(object);
+            }}
+          >
+            <img className="edit-icon" src={EditIcon} alt="Edit" />
+          </button>
           <button
             className="delete-button"
             onClick={(e) => {
