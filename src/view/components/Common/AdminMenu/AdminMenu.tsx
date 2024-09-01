@@ -96,6 +96,7 @@ const AdminMenu: FC<AdminMenuProps> = ({ setActiveButton, activeButton }) => {
                                 alert("אין לך הרשאות להשתמש במודל");
                             } else {
                                 setShowConfirm(true);
+                                setActiveButton(buttonsName.TrainModel);
                             }
 
                         }}

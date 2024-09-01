@@ -63,38 +63,43 @@ function AddGame() {
     }
 
     const handleSave = async () => {
-        const game: GameTBC = { gameName: gameName, description: gameDesc, };
-        const updatedGameUnits = gameUnits.map(unit => ({ ...unit, unitID: -1 }));
-        setIsLoading(true);
-        setLoadingMessage('שומר משחק ...');
-        try {
-            const response = await gameAPI.createGame(game, gameImage, updatedGameUnits);
-            if (response.status === 200) {
-                localStorage.removeItem('gameName');
-                localStorage.removeItem('gameDesc');
-                localStorage.removeItem('units');
-                // navigate('/Games');
-                setLoadingMessage('משחק נשמר בהצלחה!');
-                setTimeout(() => {
-                    setIsLoading(false);
-                    setLoadingMessage('');
-                    navigate('/Games');
-                }, 1000);
-            } else {
-                console.error('Failed to create game. Status code:', response.status);
+        if (!gameName || !gameName.trim()) {
+            alert("חייב להיות שם למשחק")
+        }
+        else {
+            const game: GameTBC = { gameName: gameName, description: gameDesc, };
+            const updatedGameUnits = gameUnits.map(unit => ({ ...unit, unitID: -1 }));
+            setIsLoading(true);
+            setLoadingMessage('שומר משחק ...');
+            try {
+                const response = await gameAPI.createGame(game, gameImage, updatedGameUnits);
+                if (response.status === 200) {
+                    localStorage.removeItem('gameName');
+                    localStorage.removeItem('gameDesc');
+                    localStorage.removeItem('units');
+                    // navigate('/Games');
+                    setLoadingMessage('משחק נשמר בהצלחה!');
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        setLoadingMessage('');
+                        navigate('/Games');
+                    }, 1000);
+                } else {
+                    console.error('Failed to create game. Status code:', response.status);
+                    setLoadingMessage('שגיאה בשמירת משחק');
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        setLoadingMessage('');
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Error creating game:', error);
                 setLoadingMessage('שגיאה בשמירת משחק');
                 setTimeout(() => {
                     setIsLoading(false);
                     setLoadingMessage('');
                 }, 2000);
             }
-        } catch (error) {
-            console.error('Error creating game:', error);
-            setLoadingMessage('שגיאה בשמירת משחק');
-            setTimeout(() => {
-                setIsLoading(false);
-                setLoadingMessage('');
-            }, 2000);
         }
     };
 
@@ -124,7 +129,7 @@ function AddGame() {
                     <input type='file' className='game-input' onChange={handleImageChange} />
                 </div> */}
                 <div className='input-group'>
-                    <button className='add-buttons' onClick={() => { navigate('/GamesPage') }}>{AddNewGameHeb.AddUnits}</button>
+                    <button className='add-buttons' onClick={() => { navigate('/UnitsPage') }}>{AddNewGameHeb.AddUnits}</button>
                 </div>
                 <button className='save-button' onClick={handleSave}>{AddNewGameHeb.Save}</button>
                 <button type="button" className='cancel-button' onClick={() => setShowConfirm(true)}>{AddNewGameHeb.Cancel}</button>
