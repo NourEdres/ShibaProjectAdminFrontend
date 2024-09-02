@@ -15,17 +15,15 @@ function Base({ children }: BaseProps) {
   const [menuActiveButton, setMenuActiveButton] = useState(page);
   const dispatch = useDispatch();
 
-  // Initialize page from localStorage on mount
   useEffect(() => {
     const savedPage = localStorage.getItem("page");
     if (savedPage) {
       dispatch(setPage(savedPage));
     } else {
-      dispatch(setPage(buttonsName.Games)); // Set default page if nothing in localStorage
+      dispatch(setPage(buttonsName.Games)); // Default page
     }
   }, [dispatch]);
 
-  // Update localStorage when page changes
   useEffect(() => {
     if (page) {
       localStorage.setItem("page", page);
