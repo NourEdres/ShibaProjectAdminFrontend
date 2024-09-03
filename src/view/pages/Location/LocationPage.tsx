@@ -15,87 +15,102 @@ import Loader from "../../components/Common/LoadingSpinner/Loader";
 import { useNavigate } from "react-router-dom";
 
 const LocationsPage: FC = () => {
-    const page = useSelector((state: RootState) => state.globalStates.page);
-    const dispatch = useDispatch();
-    const locations = useSelector((state: RootState) => state.AllData.locations);
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [locationToDelete, setLocationToDelete] = useState<Location | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [loadingMessage, setLoadingMessage] = useState<string>('');
-    const [refetchTrigger, setRefetchTrigger] = useState(0);
-    const navigate = useNavigate();
+  const page = useSelector((state: RootState) => state.globalStates.page);
+  const dispatch = useDispatch();
+  const locations = useSelector((state: RootState) => state.AllData.locations);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [locationToDelete, setLocationToDelete] = useState<Location | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>("");
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const navigate = useNavigate();
 
-
-    useEffect(() => {
-        const fetchLocations = async () => {
-            dispatch(setLocations(await locationAPI.getAllLocations()));
-            dispatch(setPage(buttonsName.Locations))
-            console.log("page in locs " + page)
-
-        };
-        fetchLocations()
-
-    }, [dispatch, refetchTrigger]);
-
-    const handleDelete = (location: Location) => {
-        setLocationToDelete(location);
-        setShowConfirm(true);
-
+  useEffect(() => {
+    const fetchLocations = async () => {
+      dispatch(setLocations(await locationAPI.getAllLocations()));
+      dispatch(setPage(buttonsName.Locations));
+      console.log("page in locs " + page);
     };
+    fetchLocations();
+  }, [dispatch, refetchTrigger]);
 
-    const handleDeleteConfirm = async () => {
-        if (locationToDelete) {
-            setShowConfirm(false);
-            setIsLoading(true);
-            setLoadingMessage('מוחק מקום ...');
-            try {
-                const response = await locationAPI.deleteLocation(locationToDelete.locationID);
-                console.log("sttus is " + response.status);
-                if (response.status === 200) {
-                    // const message = locationToDelete.name + "מקום נמחק בהצלחה ";
-                    // alert(message);
-                    dispatch(setLocations(locations.filter(obj => obj.locationID !== locationToDelete.locationID)));
-                    setLoadingMessage('מקום נמחקה בהצלחה!');
-                    setTimeout(() => {
-                        setRefetchTrigger(prev => prev + 1);
-                        setIsLoading(false);
-                        setLoadingMessage('');
-                    }, 500);
-                }
-            } catch (error: any) {
-                dispatch(setLocations(locations));
-                console.error("Error deleting location: ", error);
-                setTimeout(() => {
-                    setIsLoading(false);
-                    setLoadingMessage('');
-                }, 2000);
-                alert("שגיאה במחיקת המקום:\n" + (error || 'Unknown error'));
-            }
+  const handleDelete = (location: Location) => {
+    setLocationToDelete(location);
+    setShowConfirm(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (locationToDelete) {
+      setShowConfirm(false);
+      setIsLoading(true);
+      setLoadingMessage("מוחק מקום ...");
+      try {
+        const response = await locationAPI.deleteLocation(
+          locationToDelete.locationID
+        );
+        console.log("sttus is " + response.status);
+        if (response.status === 200) {
+          // const message = locationToDelete.name + "מקום נמחק בהצלחה ";
+          // alert(message);
+          dispatch(
+            setLocations(
+              locations.filter(
+                (obj) => obj.locationID !== locationToDelete.locationID
+              )
+            )
+          );
+          setLoadingMessage("מקום נמחקה בהצלחה!");
+          setTimeout(() => {
+            setRefetchTrigger((prev) => prev + 1);
+            setIsLoading(false);
+            setLoadingMessage("");
+          }, 500);
         }
-
-    };
-
-    const handleEdit = (location: Location) => {
-        dispatch(setCard(location));
-        navigate("/EditLocation");
+      } catch (error: any) {
+        dispatch(setLocations(locations));
+        console.error("Error deleting location: ", error);
+        setTimeout(() => {
+          setIsLoading(false);
+          setLoadingMessage("");
+        }, 2000);
+        alert("שגיאה במחיקת המקום:\n" + (error || "Unknown error"));
+      }
     }
-    return (
-        <div dir="rtl">
-            <Loader isLoading={isLoading} message={loadingMessage} />
-            {<HomePage objects={locations} page="Location" Component={(props) => (
-                <LocationCard {...props}
-                    onShowConfirm={handleDelete}
-                    onEditLocation={handleEdit} />
-            )} addButton="הוספת חדר חדש" addButtonPath="AddLocation" />}
-            {showConfirm && (
-                <ConfirmationDialog
-                    onConfirm={handleDeleteConfirm}
-                    onCancel={() => setShowConfirm(false)}
-                    message={`את/ה בטוח/ה שאת/ה רוצה למחוק את המקום "${locationToDelete?.name}"?\nפעולה זו תמחק גם את האובייקטים בתוך המקום`}
-                />
-            )}
-        </div>
-    );
+  };
+
+  const handleEdit = (location: Location) => {
+    dispatch(setCard(location));
+    navigate("/EditLocation");
+  };
+  return (
+    <div dir="rtl">
+      <Loader isLoading={isLoading} message={loadingMessage} />
+      {
+        <HomePage
+          objects={locations}
+          page="Location"
+          Component={(props) => (
+            <LocationCard
+              {...props}
+              onShowConfirm={handleDelete}
+              onEditLocation={handleEdit}
+            />
+          )}
+          addButton="הוספת חדר חדש"
+          addButtonPath="AddLocation"
+        />
+      }
+      {showConfirm && (
+        <ConfirmationDialog
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setShowConfirm(false)}
+          message={`את/ה בטוח/ה שאת/ה רוצה למחוק את המקום "${locationToDelete?.name}"?\nפעולה זו תמחק גם את האובייקטים בתוך המקום`}
+        />
+      )}
+    </div>
+  );
 };
 
 export default LocationsPage;

@@ -11,6 +11,7 @@ const UnitsPageHeb = {
   Duplicate: "שכפול",
   Delete: "מחיקה",
   Save: "שמירה",
+  NoUnits: "אין חוליות זמינות. הוסף חוליה חדשה!",
 };
 
 function UnitsPage() {
@@ -35,7 +36,6 @@ function UnitsPage() {
     // Check if we have a game in the state
     if (game) {
       setIsEditMode(true);
-      console.log(game.units);
       setUnits(game.units || []);
     } else {
       // If no game is found, load units from local storage
@@ -44,9 +44,8 @@ function UnitsPage() {
       ).sort((a: Unit, b: Unit) => a.unitOrder - b.unitOrder);
       setUnits(initialUnits);
     }
-  }, [game]); // Removed location.key and use only location.state
+  }, [game]);
 
-  // Handle addition of a new unit
   useEffect(() => {
     if (location.state?.newUnit) {
       setUnits((prevUnits) => {
@@ -68,7 +67,6 @@ function UnitsPage() {
     }
   }, [location.state?.newUnit, isEditMode, navigate]);
 
-  // Handle update of an existing unit
   useEffect(() => {
     if (location.state?.updatedUnit) {
       const updatedUnit = location.state.updatedUnit;
@@ -85,7 +83,6 @@ function UnitsPage() {
     }
   }, [location.state?.updatedUnit, isEditMode, navigate]);
 
-  // Handle saving the unit configuration
   const handleSave = () => {
     if (isEditMode && game) {
       const updatedGame = { ...game, units };
@@ -95,7 +92,6 @@ function UnitsPage() {
     }
   };
 
-  // Handle deleting a unit
   const handleDelete = (
     index: number,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -110,7 +106,6 @@ function UnitsPage() {
     }
   };
 
-  // Handle duplicating a unit
   const handleDuplicate = (
     unit: Unit,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -131,7 +126,6 @@ function UnitsPage() {
     setTempUnitId((prevId) => prevId + 1);
   };
 
-  // Handle dragging units to reorder them
   const handleDrag = (fromIndex: number, toIndex: number) => {
     const newUnits = [...units];
     const item = newUnits.splice(fromIndex, 1)[0];
@@ -146,7 +140,6 @@ function UnitsPage() {
     }
   };
 
-  // Handle editing a unit
   const handleEdit = (unit: Unit) => {
     navigate("/EditUnit", { state: { unit, isEditMode } });
   };
@@ -157,56 +150,69 @@ function UnitsPage() {
       <div className="units-container">
         <h2 className="units-title">{UnitsPageHeb.Units}</h2>
         <div className="units-list">
-          {units.map((unit, index) => (
-            <div
-              key={unit.unitID}
-              className="unit-card"
-              onClick={() => handleEdit(unit)}
-              draggable
-              onDragStart={(e) => {
-                e.dataTransfer.setData("index", index.toString());
-              }}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const fromIndex = parseInt(e.dataTransfer.getData("index"));
-                const toIndex = index;
-                handleDrag(fromIndex, toIndex);
-              }}
-              title={unit.hint}
-            >
-              <div className="unit-name">{unit.name}</div>
-              {unit.description && (
-                <div className="unit-description">{unit.description}</div>
-              )}
-              <div className="unit-actions">
-                <button
-                  className="duplicate-button"
-                  onClick={(e) => {
-                    handleDuplicate(unit, e);
-                  }}
-                >
-                  {UnitsPageHeb.Duplicate}
+          {units.length === 0 ? (
+            <div className="empty-state">
+              <p>{UnitsPageHeb.NoUnits}</p>
+              <Link to="/AddUnit" state={{ isEditMode }}>
+                <button type="button" className="add-unit-button">
+                  {UnitsPageHeb.AddUnits}
                 </button>
-                <button
-                  className="delete-button"
-                  onClick={(e) => handleDelete(index, e)}
-                >
-                  {UnitsPageHeb.Delete}
-                </button>
-              </div>
+              </Link>
             </div>
-          ))}
+          ) : (
+            units.map((unit, index) => (
+              <div
+                key={unit.unitID}
+                className="unit-card"
+                onClick={() => handleEdit(unit)}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("index", index.toString());
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const fromIndex = parseInt(e.dataTransfer.getData("index"));
+                  const toIndex = index;
+                  handleDrag(fromIndex, toIndex);
+                }}
+                title={unit.hint}
+              >
+                <div className="unit-name">{unit.name}</div>
+                {unit.description && (
+                  <div className="unit-description">{unit.description}</div>
+                )}
+                <div className="unit-actions">
+                  <button
+                    className="duplicate-button"
+                    onClick={(e) => {
+                      handleDuplicate(unit, e);
+                    }}
+                  >
+                    {UnitsPageHeb.Duplicate}
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={(e) => handleDelete(index, e)}
+                  >
+                    {UnitsPageHeb.Delete}
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-        <div className="options-container">
-          <div className="add-buttons">
-            <Link to="/AddUnit" state={{ isEditMode }}>
-              <button type="button" className="option-button">
-                {UnitsPageHeb.AddUnits}
-              </button>
-            </Link>
+        {units.length > 0 && (
+          <div className="options-container">
+            <div className="add-buttons">
+              <Link to="/AddUnit" state={{ isEditMode }}>
+                <button type="button" className="option-button">
+                  {UnitsPageHeb.AddUnits}
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
         <button className="save-button" onClick={handleSave}>
           {UnitsPageHeb.Save}
         </button>
