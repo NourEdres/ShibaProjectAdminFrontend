@@ -7,7 +7,11 @@ import ConfirmationDialog from "../../components/Common/ConfirmationDialog/Confi
 import Loader from "../../components/Common/LoadingSpinner/Loader";
 import { RootState } from "../../../redux/store";
 import { setSectors } from "../../../redux/slices/saveAllData";
-import { setCard, setPage, setSector } from "../../../redux/slices/GlobalStates";
+import {
+  setCard,
+  setPage,
+  setSector,
+} from "../../../redux/slices/GlobalStates";
 import { adminAPI } from "../../../redux/services/AdminApi";
 import { buttonsName } from "../../../redux/models/Types";
 import { Admin, UserRole } from "../../../redux/models/Interfaces";
@@ -25,50 +29,61 @@ const SectorsPage: FC = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   const adminStr = localStorage.getItem("admin");
-  const currAdmin: Admin = adminStr
-    ? JSON.parse(adminStr)
-    : null;
+  const currAdmin: Admin = adminStr ? JSON.parse(adminStr) : null;
 
   useEffect(() => {
     const fetchSectors = async () => {
-      const sectors = await adminAPI.getAllAdmins();
-      dispatch(setSectors(sectors));
-      dispatch(setSector(sectors[0]));
+      setIsLoading(true);
+      setLoadingMessage("טוען סקטורים...");
+      try {
+        const sectors = await adminAPI.getAllAdmins();
+        dispatch(setSectors(sectors));
+        dispatch(setSector(sectors[0]));
+        setLoadingMessage("");
+      } catch (error) {
+        console.error("Error fetching sectors:", error);
+        setLoadingMessage("שגיאה בטעינת סקטורים");
+      } finally {
+        setIsLoading(false);
+      }
       dispatch(setPage(buttonsName.Sectors));
     };
     fetchSectors();
   }, [dispatch, refetchTrigger]);
 
   const isMainAdmin = (role: UserRole | string | number): boolean => {
-    if (typeof role === 'string') {
+    if (typeof role === "string") {
       return role === UserRole[UserRole.MainAdmin];
-    } else if (typeof role === 'number') {
+    } else if (typeof role === "number") {
       return role === UserRole.MainAdmin;
     }
     return role === UserRole.MainAdmin;
   };
 
-  const checkAdminPermission = (admin: Admin, action: 'delete' | 'edit'): boolean => {
+  const checkAdminPermission = (
+    admin: Admin,
+    action: "delete" | "edit"
+  ): boolean => {
     if (isMainAdmin(admin.role)) {
-      alert(`אי אפשר ${action === 'delete' ? 'למחוק' : 'לערוך'} מנהל ראשי`);
+      alert(`אי אפשר ${action === "delete" ? "למחוק" : "לערוך"} מנהל ראשי`);
       return false;
     }
     if (!isMainAdmin(currAdmin.role)) {
-      alert(`אין הרשאה ${action === 'delete' ? 'למחוק' : 'לערוך'}`);
+      alert(`אין הרשאה ${action === "delete" ? "למחוק" : "לערוך"}`);
       return false;
     }
     return true;
   };
 
   const handleDelete = (admin: Admin) => {
-    if (checkAdminPermission(admin, 'delete')) {
+    if (checkAdminPermission(admin, "delete")) {
       setAdminToDelete(admin);
       setShowConfirm(true);
     }
   };
 
   const handleEdit = (admin: Admin) => {
-    if (checkAdminPermission(admin, 'edit')) {
+    if (checkAdminPermission(admin, "edit")) {
       dispatch(setCard(admin));
       navigate("/EditSector");
     }
@@ -82,10 +97,12 @@ const SectorsPage: FC = () => {
     if (adminToDelete) {
       try {
         const response = await adminAPI.deleteAdmin(adminToDelete.adminID);
-        console.log(response.status)
         if (response.status === 200) {
-
-          dispatch(setSectors(admins.filter((obj) => obj.adminID !== adminToDelete.adminID)));
+          dispatch(
+            setSectors(
+              admins.filter((obj) => obj.adminID !== adminToDelete.adminID)
+            )
+          );
           setLoadingMessage("אדמין נמחק בהצלחה!");
           setTimeout(() => {
             setRefetchTrigger((prev) => prev + 1);

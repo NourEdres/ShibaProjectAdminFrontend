@@ -2,10 +2,9 @@ import { FC, useEffect, useState } from "react";
 import LocationCard from "./LocationCard/LocationCard";
 import "./LocationPage.scss";
 import HomePage from "../../components/Common/HomePage/HomePage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { locationAPI } from "../../../redux/services/LocationApi";
-import { useDispatch } from "react-redux";
 import { setLocations } from "../../../redux/slices/saveAllData";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import { Location } from "../../../redux/models/Interfaces";
@@ -19,9 +18,7 @@ const LocationsPage: FC = () => {
   const dispatch = useDispatch();
   const locations = useSelector((state: RootState) => state.AllData.locations);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [locationToDelete, setLocationToDelete] = useState<Location | null>(
-    null
-  );
+  const [locationToDelete, setLocationToDelete] = useState<Location | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -29,9 +26,19 @@ const LocationsPage: FC = () => {
 
   useEffect(() => {
     const fetchLocations = async () => {
-      dispatch(setLocations(await locationAPI.getAllLocations()));
+      setIsLoading(true);
+      setLoadingMessage("טוען מקומות...");
+      try {
+        const fetchedLocations = await locationAPI.getAllLocations();
+        dispatch(setLocations(fetchedLocations));
+        setLoadingMessage("");
+      } catch (error) {
+        console.error("Error fetching locations: ", error);
+        setLoadingMessage("שגיאה בטעינת מקומות");
+      } finally {
+        setIsLoading(false);
+      }
       dispatch(setPage(buttonsName.Locations));
-      console.log("page in locs " + page);
     };
     fetchLocations();
   }, [dispatch, refetchTrigger]);
@@ -47,35 +54,17 @@ const LocationsPage: FC = () => {
       setIsLoading(true);
       setLoadingMessage("מוחק מקום ...");
       try {
-        const response = await locationAPI.deleteLocation(
-          locationToDelete.locationID
-        );
-        console.log("sttus is " + response.status);
+        const response = await locationAPI.deleteLocation(locationToDelete.locationID);
         if (response.status === 200) {
-          // const message = locationToDelete.name + "מקום נמחק בהצלחה ";
-          // alert(message);
-          dispatch(
-            setLocations(
-              locations.filter(
-                (obj) => obj.locationID !== locationToDelete.locationID
-              )
-            )
-          );
+          setRefetchTrigger((prev) => prev + 1);
           setLoadingMessage("מקום נמחקה בהצלחה!");
-          setTimeout(() => {
-            setRefetchTrigger((prev) => prev + 1);
-            setIsLoading(false);
-            setLoadingMessage("");
-          }, 500);
         }
       } catch (error: any) {
-        dispatch(setLocations(locations));
         console.error("Error deleting location: ", error);
-        setTimeout(() => {
-          setIsLoading(false);
-          setLoadingMessage("");
-        }, 2000);
         alert("שגיאה במחיקת המקום:\n" + (error || "Unknown error"));
+      } finally {
+        setIsLoading(false);
+        setLoadingMessage("");
       }
     }
   };
@@ -84,24 +73,23 @@ const LocationsPage: FC = () => {
     dispatch(setCard(location));
     navigate("/EditLocation");
   };
+
   return (
     <div dir="rtl">
       <Loader isLoading={isLoading} message={loadingMessage} />
-      {
-        <HomePage
-          objects={locations}
-          page="Location"
-          Component={(props) => (
-            <LocationCard
-              {...props}
-              onShowConfirm={handleDelete}
-              onEditLocation={handleEdit}
-            />
-          )}
-          addButton="הוספת חדר חדש"
-          addButtonPath="AddLocation"
-        />
-      }
+      <HomePage
+        objects={locations}
+        page="Location"
+        Component={(props) => (
+          <LocationCard
+            {...props}
+            onShowConfirm={handleDelete}
+            onEditLocation={handleEdit}
+          />
+        )}
+        addButton="הוספת חדר חדש"
+        addButtonPath="AddLocation"
+      />
       {showConfirm && (
         <ConfirmationDialog
           onConfirm={handleDeleteConfirm}

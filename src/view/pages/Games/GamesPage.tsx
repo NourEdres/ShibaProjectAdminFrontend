@@ -2,8 +2,7 @@ import { FC, useEffect, useState } from "react";
 import GameCard from "./GameCard/GameCard";
 import "./GamesPage.scss";
 import HomePage from "../../components/Common/HomePage/HomePage";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setGames } from "../../../redux/slices/saveAllData";
 import { gameAPI } from "../../../redux/services/GameApi";
@@ -34,9 +33,19 @@ const GamesPage: FC = () => {
 
   useEffect(() => {
     const fetchGames = async () => {
-      dispatch(setGames(await gameAPI.getAllGames()));
+      setIsLoading(true);
+      setLoadingMessage("טוען משחקים...");
+      try {
+        const fetchedGames = await gameAPI.getAllGames();
+        dispatch(setGames(fetchedGames));
+        setLoadingMessage("");
+      } catch (error) {
+        console.error("Error fetching games: ", error);
+        setLoadingMessage("שגיאה בטעינת משחקים");
+      } finally {
+        setIsLoading(false);
+      }
       dispatch(setPage(buttonsName.Games));
-      console.log("page in gms " + page);
     };
     fetchGames();
   }, [dispatch, refetchTrigger]);
@@ -60,33 +69,23 @@ const GamesPage: FC = () => {
       setLoadingMessage("מוחק משחק ...");
       try {
         const response = await gameAPI.deleteGame(gameToDelete.gameID);
-        console.log("response game ", response.data);
-        console.log("sttus is " + response.status);
         if (response.status === 200) {
           const message = gameToDelete.gameName + " משחק נמחק בהצלחה ";
           alert(message);
-          dispatch(
-            setGames(games.filter((obj) => obj.gameID !== gameToDelete.gameID))
-          );
+          setRefetchTrigger((prev) => prev + 1);
           setLoadingMessage("משחק נמחק בהצלחה!");
-          setTimeout(() => {
-            setRefetchTrigger((prev) => prev + 1);
-            setIsLoading(false);
-            setLoadingMessage("");
-          }, 500);
         }
       } catch (error: any) {
-        dispatch(setGames(games));
         console.error("Error deleting game: ", error);
         alert("שגיאה במחיקת המשחק:\n" + error);
         setLoadingMessage("שגיאה במחיקת המשחק:\n" + error);
-        setTimeout(() => {
-          setIsLoading(false);
-          setLoadingMessage("");
-        }, 2000);
+      } finally {
+        setIsLoading(false);
+        setLoadingMessage("");
       }
     }
   };
+
   const handleEdit = (game: Game) => {
     dispatch(setCard(game));
     navigate("/EditGame");

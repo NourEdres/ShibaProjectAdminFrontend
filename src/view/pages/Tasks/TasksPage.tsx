@@ -3,9 +3,8 @@ import TaskCard from "./TaskCard/TaskCard";
 import "./TasksPage.scss";
 import HomePage from "../../components/Common/HomePage/HomePage";
 import { taskAPI } from "../../../redux/services/TaskApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setTasks } from "../../../redux/slices/saveAllData";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import ConfirmationDialog from "../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import { Admin, Task, UserRole } from "../../../redux/models/Interfaces";
@@ -22,16 +21,10 @@ const TasksPage: FC = () => {
   const adminStr = localStorage.getItem("admin");
   const currAdmin: Admin = adminStr
     ? {
-      ...JSON.parse(adminStr),
-      role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole],
-    }
+        ...JSON.parse(adminStr),
+        role: UserRole[JSON.parse(adminStr).role as keyof typeof UserRole],
+      }
     : null;
-
-  console.log("currAdmin in Tasks:", currAdmin);
-  console.log("currAdmin.role:", currAdmin.role);
-  console.log("typeof currAdmin.role:", typeof currAdmin.role);
-  console.log("UserRole.MainAdmin:", UserRole.MainAdmin);
-  console.log("typeof UserRole.MainAdmin:", typeof UserRole.MainAdmin);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
@@ -39,7 +32,18 @@ const TasksPage: FC = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      dispatch(setTasks(await taskAPI.getAllTasks()));
+      setIsLoading(true);
+      setLoadingMessage("טוען משימות...");
+      try {
+        const fetchedTasks = await taskAPI.getAllTasks();
+        dispatch(setTasks(fetchedTasks));
+        setLoadingMessage("");
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        setLoadingMessage("שגיאה בטעינת משימות");
+      } finally {
+        setIsLoading(false);
+      }
       dispatch(setPage(buttonsName.Tasks));
     };
     fetchTasks();
@@ -64,30 +68,17 @@ const TasksPage: FC = () => {
     if (taskToDelete) {
       try {
         const response = await taskAPI.deleteTask(taskToDelete.taskID);
-        console.log("response data is ", response.data);
-
         if (response.status === 200) {
-          // const updatedTasks = await taskAPI.getAllTasks();
-          // dispatch(setTasks(updatedTasks));
-          // alert("Task was deleted successfully");
-          dispatch(
-            setTasks(tasks.filter((obj) => obj.taskID !== taskToDelete.taskID))
-          );
+          setRefetchTrigger((prev) => prev + 1);
           setLoadingMessage("המשימה נמחקה בהצלחה!");
-          setTimeout(() => {
-            setRefetchTrigger((prev) => prev + 1);
-            setIsLoading(false);
-            setLoadingMessage("");
-          }, 500);
         }
       } catch (error: any) {
-        dispatch(setTasks(tasks));
+        console.error("Error deleting task:", error);
+        alert("שגיאה במחיקת המשימה:\n" + (error || "Unknown error"));
         setLoadingMessage("שגיאה במחיקת המשימה");
-        console.error("Error deleting task in tasks page:" + error);
-        setTimeout(() => {
-          setIsLoading(false);
-          setLoadingMessage("");
-        }, 2000);
+      } finally {
+        setIsLoading(false);
+        setLoadingMessage("");
       }
     }
   };
