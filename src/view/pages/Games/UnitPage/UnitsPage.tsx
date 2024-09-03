@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./UnitsPage.scss";
 import { Unit, Game } from "../../../../redux/models/Interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const UnitsPageHeb = {
   Units: "חוליות",
@@ -14,7 +16,9 @@ const UnitsPageHeb = {
 function UnitsPage() {
   const [units, setUnits] = useState<Unit[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [game, setGame] = useState<Game | null>(null);
+  const game: Game = useSelector(
+    (state: RootState) => state.globalStates.selectedCard
+  );
   const navigate = useNavigate();
   const location = useLocation();
   const [tempUnitId, setTempUnitId] = useState<number>(() => {
@@ -28,18 +32,21 @@ function UnitsPage() {
   });
 
   useEffect(() => {
-    if (location.state?.game) {
+    // Check if we have a game in the state
+    if (game) {
       setIsEditMode(true);
-      setGame(location.state.game);
-      setUnits(location.state.game.units || []);
+      console.log(game.units);
+      setUnits(game.units || []);
     } else {
+      // If no game is found, load units from local storage
       const initialUnits = JSON.parse(
         localStorage.getItem("units") || "[]"
       ).sort((a: Unit, b: Unit) => a.unitOrder - b.unitOrder);
       setUnits(initialUnits);
     }
-  }, [location.state]);
+  }, [game]); // Removed location.key and use only location.state
 
+  // Handle addition of a new unit
   useEffect(() => {
     if (location.state?.newUnit) {
       setUnits((prevUnits) => {
@@ -61,6 +68,7 @@ function UnitsPage() {
     }
   }, [location.state?.newUnit, isEditMode, navigate]);
 
+  // Handle update of an existing unit
   useEffect(() => {
     if (location.state?.updatedUnit) {
       const updatedUnit = location.state.updatedUnit;
@@ -77,6 +85,7 @@ function UnitsPage() {
     }
   }, [location.state?.updatedUnit, isEditMode, navigate]);
 
+  // Handle saving the unit configuration
   const handleSave = () => {
     if (isEditMode && game) {
       const updatedGame = { ...game, units };
@@ -86,6 +95,7 @@ function UnitsPage() {
     }
   };
 
+  // Handle deleting a unit
   const handleDelete = (
     index: number,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -100,6 +110,7 @@ function UnitsPage() {
     }
   };
 
+  // Handle duplicating a unit
   const handleDuplicate = (
     unit: Unit,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -120,6 +131,7 @@ function UnitsPage() {
     setTempUnitId((prevId) => prevId + 1);
   };
 
+  // Handle dragging units to reorder them
   const handleDrag = (fromIndex: number, toIndex: number) => {
     const newUnits = [...units];
     const item = newUnits.splice(fromIndex, 1)[0];
@@ -134,6 +146,7 @@ function UnitsPage() {
     }
   };
 
+  // Handle editing a unit
   const handleEdit = (unit: Unit) => {
     navigate("/EditUnit", { state: { unit, isEditMode } });
   };

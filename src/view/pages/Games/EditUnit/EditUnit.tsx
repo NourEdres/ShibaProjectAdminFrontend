@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ConfirmationDialog from "../../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import {
+  Game,
   Location,
   ObjectLocation,
   Task,
@@ -10,6 +11,7 @@ import {
 } from "../../../../redux/models/Interfaces";
 import { RootState } from "../../../../redux/store";
 import "./EditUnit.scss";
+import { setCard } from "../../../../redux/slices/GlobalStates";
 
 const AddUnitHebrew = {
   CreateNewUnit: "עריכת חוליה",
@@ -44,6 +46,9 @@ function EditUnit() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null
+  );
+  const game: Game = useSelector(
+    (state: RootState) => state.globalStates.selectedCard
   );
   const [selectedObject, setSelectedObject] = useState<ObjectLocation | null>(
     null
@@ -127,7 +132,6 @@ function EditUnit() {
       localStorage.removeItem(key);
     });
   }
-
   const handleSaveUnit = () => {
     if (!name.trim() || !hint.trim()) {
       alert("Please provide a name and a hint for the task");
@@ -152,6 +156,11 @@ function EditUnit() {
       locationDTO: selectedLocation,
     };
 
+    const updatedGame = { ...game };
+    updatedGame.units = [...(updatedGame.units || [])];
+
+    updatedGame.units.push(updated);
+    setCard(updatedGame);
     navigate("/UnitsPage", { state: { updatedUnit: updated } });
     clearLocalStorage();
   };
