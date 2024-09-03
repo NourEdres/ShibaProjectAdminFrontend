@@ -5,7 +5,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  padding: 5vw;
+  padding: 4vw;
   position: relative;
   background-image: url("../../../photos/ContenBG.jpg");
   background-size: cover;
@@ -41,8 +41,8 @@
   }
 
   .game-details-content {
-    width: 35vw;
-    height: 30vw;
+    width: 40vw;
+    height: 45vw;
     background: rgba(0, 0, 0, 0.4); // Dark overlay for contrast
     border-radius: 15px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
@@ -164,6 +164,9 @@
           &:hover {
             color: white;
             background-color: $primary-green-logo-color;
+          }
+          .download-icon {
+            width: 1.5vw;
           }
         }
       }

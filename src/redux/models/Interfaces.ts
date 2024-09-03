@@ -94,7 +94,7 @@ export interface Game {
   adminID: number;
   gameName: string;
   description?: string;
-  qrcodePath: string;
+  qrcodeURL: string;
   // gameImage?: GameImage;
   units?: Unit[];
 }

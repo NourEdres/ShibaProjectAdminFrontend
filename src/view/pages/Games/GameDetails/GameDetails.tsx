@@ -4,6 +4,7 @@ import { RootState } from "../../../../redux/store";
 import { Game } from "../../../../redux/models/Interfaces";
 import { Link, useNavigate } from "react-router-dom";
 import "./GameDetails.scss";
+// import { DownloadIcon, LeftArrowIcon } from "../../../photos";
 import { LeftArrowIcon } from "../../../photos";
 import { adminAPI } from "../../../../redux/services/AdminApi";
 
@@ -25,6 +26,7 @@ const GameDetails: React.FC = () => {
   const navigate = useNavigate();
 
   const [sectorName, setSectorName] = useState<string>("כללי");
+  console.log("game in drt ", game);
 
   useEffect(() => {
     console.log(game.gameName);
@@ -46,8 +48,8 @@ const GameDetails: React.FC = () => {
   }, [game.adminID]);
 
   const downloadQRCode = () => {
-    if (game.qrcodePath) {
-      fetch(game.qrcodePath)
+    if (game.qrcodeURL) {
+      fetch(game.qrcodeURL)
         .then((response) => response.blob())
         .then((blob) => {
           const url = window.URL.createObjectURL(blob);
@@ -99,16 +101,21 @@ const GameDetails: React.FC = () => {
               {GameHeb.ViewUnits}
             </button>
           )}
-          {game.qrcodePath && (
+          {game.qrcodeURL && (
             <div className="qr-section">
               <div className="game-qr">
                 <img
-                  src={game.qrcodePath}
+                  src={game.qrcodeURL}
                   alt="QR Code"
                   className="qr-code-image"
                 />
               </div>
               <button className="download-qr-btn" onClick={downloadQRCode}>
+                {/* <img
+                  className="download-icon"
+                  src={DownloadIcon}
+                  alt="Download"
+                /> */}
                 {GameHeb.DownloadQR}
               </button>
             </div>
