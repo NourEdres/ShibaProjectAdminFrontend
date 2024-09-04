@@ -3,11 +3,16 @@ import "./AddUnit.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ConfirmationDialog from "../../../components/Common/ConfirmationDialog/ConfirmationDialog";
 import {
+  Game,
   Location,
   ObjectLocation,
   Task,
   Unit,
 } from "../../../../redux/models/Interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store/store";
+import { setCard } from "../../../../redux/slices/GlobalStates";
+import { useDispatch } from "react-redux";
 
 const AddUnitHebrew = {
   CreateNewUnit: "הוספת חוליה",
@@ -38,6 +43,10 @@ function AddUnit() {
   const [description, setDescription] = useState(
     localStorage.getItem("addUnitDescription") || ""
   );
+  const game: Game = useSelector(
+    (state: RootState) => state.globalStates.selectedCard
+  );
+  const dispatch = useDispatch();
   const [hint, setHint] = useState(localStorage.getItem("addUnitHint") || "");
   const location = useLocation();
   const navigate = useNavigate();
@@ -98,6 +107,9 @@ function AddUnit() {
           objectID: selectedObject.objectID,
           locationID: selectedLocation.locationID,
         };
+        const updatedGame = { ...game };
+        updatedGame.units = [...(updatedGame.units || []), createdUnit];
+        dispatch(setCard(updatedGame));
         navigate("/UnitsPage", { state: { newUnit: createdUnit } });
         clearLocalStorage();
       } else {

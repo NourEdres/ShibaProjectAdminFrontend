@@ -63,6 +63,7 @@ function EditUnit() {
   useEffect(() => {
     const unit: Unit =
       location.state?.unit || safeParse(localStorage.getItem("editUnit"));
+
     if (unit) {
       setUnitID(unit.unitID);
       setUnitOrder(unit.unitOrder);

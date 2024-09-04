@@ -90,11 +90,11 @@ export interface ObjectImage {
 
 
 export interface Game {
-  gameID: number;
-  adminID: number;
-  gameName: string;
+  gameID?: number;
+  adminID?: number;
+  gameName?: string;
   description?: string;
-  qrcodeURL: string;
+  qrcodeURL?: string;
   // gameImage?: GameImage;
   units?: Unit[];
 }

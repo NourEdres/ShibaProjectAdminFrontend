@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import "./AddGame.scss";
 import { useNavigate } from "react-router-dom";
-import { GameTBC, Unit } from "../../../../redux/models/Interfaces";
+import { Game, GameTBC, Unit } from "../../../../redux/models/Interfaces";
 import { useLocation } from "react-router-dom";
 import { gameAPI } from "../../../../redux/services/GameApi";
 import Loader from "../../../components/Common/LoadingSpinner/Loader";
 import ConfirmationDialog from "../../../components/Common/ConfirmationDialog/ConfirmationDialog";
+import { setCard } from "../../../../redux/slices/GlobalStates";
+import { useDispatch } from "react-redux";
 
 const AddNewGameHeb = {
   CreateNewGame: "הוספת משחק חדש ",
@@ -30,7 +32,8 @@ function AddGame() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [showConfirm, setShowConfirm] = useState(false);
-
+  const dispatch = useDispatch();
+  const [newGame, setNewGame] = useState<Game | undefined>();
   useEffect(() => {
     const units = location.state?.units || [];
     setGameUnits(units);
@@ -141,6 +144,8 @@ function AddGame() {
           <button
             className="add-buttons"
             onClick={() => {
+              setNewGame({ gameName: gameName, description: gameDesc });
+              dispatch(setCard(newGame));
               navigate("/UnitsPage");
             }}
           >
