@@ -45,18 +45,20 @@ const AddObjectLocation: React.FC = () => {
   const [loadingMessage, setLoadingMessage] = useState<string>("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
-      const filesWithPreview = Array.from(selectedFiles).map((file) => {
-        const fileWithPreview: FileWithPreview = {
-          ...file,
-          preview: URL.createObjectURL(file),
-        };
-        return fileWithPreview;
-      });
+    const newFiles = event.target.files;
+    if (newFiles) {
+      const filesWithPreview = Array.from(newFiles).map((file) => ({
+        ...file,
+        preview: URL.createObjectURL(file),
+      }));
       setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithPreview]);
-      setPics((prevFiles) => [...prevFiles, ...Array.from(selectedFiles)]);
+      setPics((prevPics) => [...prevPics, ...Array.from(newFiles)]);
     }
+  };
+
+  const handleDeleteImage = (index: number) => {
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, idx) => idx !== index));
+    setPics((prevPics) => prevPics.filter((_, idx) => idx !== index));
   };
 
   const handleSaveObject = async () => {
@@ -76,6 +78,7 @@ const AddObjectLocation: React.FC = () => {
       "locationObject",
       new Blob([JSON.stringify(newObject)], { type: "application/json" })
     );
+    console.log("pics", pics);
     if (pics.length > 0) {
       pics.forEach((pic) => {
         formData.append("images", pic);
@@ -159,23 +162,20 @@ const AddObjectLocation: React.FC = () => {
             <Swiper {...SwiperConfig}>
               {selectedFiles.map((file, index) => (
                 <SwiperSlide key={index} className="swiper-slide">
-                  <img
-                    className="img-media"
-                    src={file.preview}
-                    alt={`Uploaded ${index}`}
-                  />
-                  <button
-                    className="delete-image-btn"
-                    onClick={() => {
-                      const updatedFiles = selectedFiles.filter(
-                        (_, idx) => idx !== index
-                      );
-                      setSelectedFiles(updatedFiles);
-                      setPics(updatedFiles);
-                    }}
-                  >
-                    {AddNewObjectHebrew.Delete_Image}
-                  </button>
+                  <div className="image-wrapper">
+
+                    <img
+                      className="img-media"
+                      src={file.preview}
+                      alt={`Uploaded ${index}`}
+                    />
+                    <button
+                      className="delete-image-btn"
+                      onClick={() => handleDeleteImage(index)}
+                    >
+                      {AddNewObjectHebrew.Delete_Image}
+                    </button>
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>

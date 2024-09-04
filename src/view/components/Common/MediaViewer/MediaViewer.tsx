@@ -8,8 +8,9 @@ import { MediaTask } from '../../../../redux/models/Interfaces';
 import { SwiperConfig } from '../..';
 import PDFViewer from '../PDFViewer/PDFViewer';
 import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+import 'react-h5-audio-player/src/styles.scss';
 import ReactPlayer from 'react-player';
+import './MediaViewer.scss'
 
 interface MediaViewerProps {
     mediaList: MediaTask[];
