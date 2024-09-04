@@ -25,7 +25,7 @@ const HomePage: FC<HomePageProps> = ({
   const dispatch = useDispatch();
   // console.log("home page obj " + objects)
   return (
-    <div className="home-page">
+    <div className="home-page" dir="rtl">
       <div className="content">
         <div className="homePage-grid">
           {objects.map((ob, index) => {
